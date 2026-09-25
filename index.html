@@ -1,1 +1,258 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neris - إدارة المتجر والتكاليف</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Neris">
+
+    <style>
+        :root {
+            --bg: #f8f6f0;
+            --card-bg: #ffffff;
+            --primary: #c5a059;
+            --primary-dark: #a38141;
+            --text: #2c2c2c;
+            --text-light: #777;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --radius: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 15px; max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
+
+        header { text-align: center; padding: 15px 0; border-bottom: 1px solid #e0dcd3; margin-bottom: 15px; }
+        header h1 { color: var(--primary); font-size: 26px; letter-spacing: 2px; }
+        .role-badge { display: inline-block; padding: 3px 10px; background: #eee; border-radius: 12px; font-size: 11px; font-weight: bold; margin-top: 5px; }
+
+        .card { background: var(--card-bg); padding: 15px; border-radius: var(--radius); box-shadow: 0 2px 5px rgba(0,0,0,0.03); margin-bottom: 15px; }
+        .form-group { margin-bottom: 10px; }
+        label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: var(--text-light); }
+        input, select { width: 100%; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; outline: none; }
+        
+        .btn { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        .btn-danger { background: var(--danger); margin-top: 10px; }
+
+        .nav-tabs { display: flex; justify-content: space-around; background: var(--card-bg); padding: 10px; border-radius: var(--radius); margin-bottom: 15px; }
+        .tab-btn { border: none; background: none; font-size: 13px; font-weight: bold; color: var(--text-light); cursor: pointer; padding: 8px 12px; }
+        .tab-btn.active { background: var(--primary); color: white; border-radius: 8px; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .ai-suggestion { background: #f0f7f4; border: 1px solid #2ecc71; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 13px; color: #27ae60; line-height: 1.6; }
+
+        .product-item { background: var(--card-bg); border-radius: var(--radius); padding: 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .product-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; background: #eee; }
+        .product-details { flex-grow: 1; }
+        .cost-tag { font-size: 11px; color: var(--danger); font-weight: bold; }
+        .price-tag { font-size: 13px; color: var(--primary-dark); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- Auth View -->
+    <div id="view-auth" class="card">
+        <h2 style="text-align:center; color: var(--primary); margin-bottom: 15px;">تسجيل الدخول - Neris</h2>
+        <div class="form-group">
+            <label>الدخول كـ:</label>
+            <select id="auth-role">
+                <option value="owner">المالك 👑 (Owner)</option>
+                <option value="staff">موظف 💼 (Staff)</option>
+            </select>
+        </div>
+        <div class="form-group"><label>اسم المستخدم</label><input type="text" id="auth-user" placeholder="أدخل اسمك"></div>
+        <button class="btn" onclick="login()">دخول التطبيق</button>
+    </div>
+
+    <!-- Main App View -->
+    <div id="view-app" style="display: none;">
+        <header>
+            <h1>NERIS</h1>
+            <div class="role-badge" id="user-role-display">المالك</div>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('inventory')">📦 المخزن</button>
+            <button class="tab-btn" onclick="switchTab('sales')">💰 المبيعات</button>
+            <button class="tab-btn owner-only" onclick="switchTab('calc')">🧮 الحاسبة الذكية</button>
+        </div>
+
+        <!-- Inventory Tab -->
+        <div id="tab-inventory" class="tab-content active">
+            <div id="products-list"></div>
+        </div>
+
+        <!-- Smart Calculator Tab (Owner Only) -->
+        <div id="tab-calc" class="tab-content owner-only">
+            <div class="card">
+                <h3>حاسبة التسعير والتكاليف الذكية</h3>
+                <br>
+                <div class="form-group"><label>اسم المنتج</label><input type="text" id="c-name" placeholder="مثال: أسوارة نيريس"></div>
+                <div class="form-group"><label>تكلفة القطعة (ر.س)</label><input type="number" id="c-item-cost" placeholder="30" oninput="calculatePrice()"></div>
+                <div class="form-group"><label>تكلفة الباكج / العلبة (ر.س)</label><input type="number" id="c-pkg-cost" value="5" oninput="calculatePrice()"></div>
+                <div class="form-group"><label>تكلفة الكيس (ر.س)</label><input type="number" id="c-bag-cost" value="3" oninput="calculatePrice()"></div>
+                <div class="form-group"><label>الكمية المتوفرة</label><input type="number" id="c-qty" value="1"></div>
+                <div class="form-group"><label>رابط الصورة (اختياري)</label><input type="text" id="c-img"></div>
+
+                <div class="ai-suggestion" id="ai-pricing-result">
+                    أدخل التكاليف لحساب السعر الموصى به تلقائياً.
+                </div>
+                <br>
+                <div class="form-group"><label>سعر البيع النهائي المعتمد (ر.س)</label><input type="number" id="c-final-price"></div>
+                <button class="btn" onclick="saveSmartProduct()">حفظ المنتج في المخزن</button>
+            </div>
+        </div>
+
+        <!-- Sales Tab -->
+        <div id="tab-sales" class="tab-content">
+            <div class="card">
+                <h3>تسجيل عملية بيع</h3>
+                <div id="sales-products-list"></div>
+            </div>
+        </div>
+
+        <button class="btn btn-danger" onclick="logout()">تسجيل الخروج</button>
+    </div>
+
+    <script>
+        let currentRole = 'staff';
+        let store = JSON.parse(localStorage.getItem('neris_store_db')) || [];
+
+        function saveData() {
+            localStorage.setItem('neris_store_db', JSON.stringify(store));
+            render();
+        }
+
+        function login() {
+            currentRole = document.getElementById('auth-role').value;
+            localStorage.setItem('neris_role', currentRole);
+            initApp();
+        }
+
+        function logout() {
+            document.getElementById('view-app').style.display = 'none';
+            document.getElementById('view-auth').style.display = 'block';
+        }
+
+        function initApp() {
+            document.getElementById('view-auth').style.display = 'none';
+            document.getElementById('view-app').style.display = 'block';
+            
+            currentRole = localStorage.getItem('neris_role') || 'staff';
+            document.getElementById('user-role-display').innerText = currentRole === 'owner' ? '👑 المالك' : '💼 موظف';
+
+            if (currentRole !== 'owner') {
+                document.querySelectorAll('.owner-only').forEach(e => e.style.display = 'none');
+            } else {
+                document.querySelectorAll('.owner-only').forEach(e => e.style.display = 'inline-block');
+            }
+
+            render();
+        }
+
+        function calculatePrice() {
+            const item = parseFloat(document.getElementById('c-item-cost').value) || 0;
+            const pkg = parseFloat(document.getElementById('c-pkg-cost').value) || 0;
+            const bag = parseFloat(document.getElementById('c-bag-cost').value) || 0;
+
+            const totalCost = item + pkg + bag;
+            const suggestedPrice = Math.round(totalCost * 2.1); 
+
+            document.getElementById('ai-pricing-result').innerHTML = `
+                <strong>إجمالي التكلفة الحقيقية:</strong> ${totalCost} ر.س <br>
+                <strong>السعر الموصى به للبيع:</strong> ${suggestedPrice} ر.س <br>
+                <small>💡 صافي الربح المتوقع لكل قطعة: <strong>${suggestedPrice - totalCost} ر.س</strong></small>
+            `;
+            document.getElementById('c-final-price').value = suggestedPrice;
+        }
+
+        function saveSmartProduct() {
+            const name = document.getElementById('c-name').value;
+            const itemCost = parseFloat(document.getElementById('c-item-cost').value) || 0;
+            const pkgCost = parseFloat(document.getElementById('c-pkg-cost').value) || 0;
+            const bagCost = parseFloat(document.getElementById('c-bag-cost').value) || 0;
+            const price = parseFloat(document.getElementById('c-final-price').value) || 0;
+            const qty = parseInt(document.getElementById('c-qty').value) || 0;
+            const img = document.getElementById('c-img').value || 'https://via.placeholder.com/60?text=Neris';
+
+            if(!name) return alert('أدخل اسم المنتج');
+
+            store.push({
+                id: Date.now(),
+                name, itemCost, pkgCost, bagCost,
+                totalCost: itemCost + pkgCost + bagCost,
+                price, qty, img
+            });
+
+            saveData();
+            alert("تم إضافة المنتج بنجاح إلى المخزن!");
+            
+            document.getElementById('c-name').value = '';
+            document.getElementById('c-item-cost').value = '';
+            switchTab('inventory');
+        }
+
+        function sell(id) {
+            const prod = store.find(p => p.id === id);
+            if (prod && prod.qty > 0) {
+                prod.qty -= 1;
+                saveData();
+                alert(`تم تسجيل بيع قطعة من ${prod.name}`);
+            } else {
+                alert('المنتج نفد من المخزن!');
+            }
+        }
+
+        function render() {
+            const inv = document.getElementById('products-list');
+            const pos = document.getElementById('sales-products-list');
+            inv.innerHTML = '';
+            pos.innerHTML = '';
+
+            if(store.length === 0) {
+                inv.innerHTML = '<div style="text-align:center; color:#888; padding:20px;">لا توجد منتجات بالمخزن بعد</div>';
+            }
+
+            store.forEach(p => {
+                const costInfo = currentRole === 'owner' ? `<div class="cost-tag">التكلفة: ${p.totalCost || 0} ر.س (ربحك: ${p.price - p.totalCost} ر.س)</div>` : '';
+
+                inv.innerHTML += `
+                    <div class="product-item">
+                        <img src="${p.img}" class="product-img">
+                        <div class="product-details">
+                            <div style="font-weight:bold">${p.name}</div>
+                            <div class="price-tag">سعر البيع: ${p.price} ر.س</div>
+                            ${costInfo}
+                            <div style="font-size:12px; color:#666">المتبقي: ${p.qty} قطعة</div>
+                        </div>
+                    </div>
+                `;
+
+                pos.innerHTML += `
+                    <div class="product-item">
+                        <img src="${p.img}" class="product-img">
+                        <div class="product-details">
+                            <div style="font-weight:bold">${p.name}</div>
+                            <div class="price-tag">${p.price} ر.س</div>
+                            <div style="font-size:11px; color:#888">المتبقي: ${p.qty}</div>
+                        </div>
+                        <button class="btn" style="width:auto; padding:6px 12px;" onclick="sell(${p.id})">تسجيل بيع 💰</button>
+                    </div>
+                `;
+            });
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+    </script>
+</body>
+</html>
