@@ -81,7 +81,7 @@
             position: relative;
         }
 
-        /* شاشة الترحيب الفاخرة */
+        /* شاشة الترحيب والدخول المحسنة */
         #splash-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -91,11 +91,11 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            transition: opacity 0.5s ease;
+            padding: 20px;
         }
 
         .splash-jewelry-icon {
-            width: 100px; height: 100px;
+            width: 90px; height: 90px;
             border-radius: 50%;
             border: 2px solid var(--accent-green);
             background: rgba(13, 148, 136, 0.1);
@@ -103,8 +103,8 @@
             justify-content: center;
             align-items: center;
             color: var(--accent-green);
-            font-size: 40px;
-            margin-bottom: 16px;
+            font-size: 38px;
+            margin-bottom: 14px;
             box-shadow: 0 0 30px rgba(13, 148, 136, 0.4);
             animation: floatJewelry 3s ease-in-out infinite;
         }
@@ -178,7 +178,7 @@
         h2 { color: var(--text-main); font-size: 17px; margin-bottom: 4px; font-weight: 600; }
         p.subtitle { color: var(--text-muted); font-size: 11px; margin-bottom: 14px; }
 
-        .input-group { margin-bottom: 12px; text-align: right; }
+        .input-group { margin-bottom: 10px; text-align: right; }
         [dir="ltr"] .input-group { text-align: left; }
         .input-group label { display: block; margin-bottom: 4px; font-size: 11px; color: var(--text-muted); }
         .input-group input, .input-group select, .input-group textarea {
@@ -207,9 +207,7 @@
             background: var(--bg-card); border: 1px solid var(--border);
             border-radius: 10px; padding: 12px; margin-bottom: 9px; font-size: 11px;
             display: flex; justify-content: space-between; align-items: center;
-            transition: all 0.2s ease;
         }
-        .card-item:hover { border-color: var(--accent-green); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 
         .badge {
             background: rgba(13, 148, 136, 0.15); color: var(--accent-green);
@@ -233,11 +231,9 @@
         }
         #app-notification.show { top: 20px; }
 
-        .product-thumb {
-            width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);
-        }
+        .product-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
 
-        /* زر ومساعد الـ AI المنبثق في الزاوية */
+        /* مساعد الـ AI التفاعلي المنبثق في الزاوية */
         .ai-floating-btn {
             position: absolute; bottom: 20px; left: 20px;
             width: 46px; height: 46px; background: linear-gradient(135deg, var(--primary), var(--accent-green));
@@ -268,17 +264,18 @@
     <div id="app-notification">تم التحديث بنجاح</div>
 
     <div class="phone-frame">
-        <!-- شاشة الترحيب الفاخرة والدخول -->
+        <!-- شاشة تسجيل الدخول والترحيب المحدثة (بدون تعليق) -->
         <div id="splash-screen">
             <div class="splash-jewelry-icon">💎</div>
-            <div style="color:var(--text-main); font-weight:bold; font-size:22px; letter-spacing: 1px;" data-i18n="sys_title">NERIS STORE</div>
-            <p style="color: var(--text-muted); font-size: 11px; margin-top: 6px; margin-bottom: 24px;" data-i18n="splash_sub">نظام إدارة المخزن والمجوهرات الذكي</p>
+            <div style="color:var(--text-main); font-weight:bold; font-size:20px; letter-spacing: 1px;">NERIS STORE OS</div>
+            <p style="color: var(--text-muted); font-size: 11px; margin-top: 4px; margin-bottom: 20px;">نظام إدارة المخزن والمجوهرات الذكي</p>
             
-            <div style="width: 82%; max-width: 300px;">
+            <div style="width: 100%; max-width: 300px;">
                 <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;">البريد أو كلمة المرور غير صحيحة</div>
-                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="البريد الإلكتروني" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="كلمة المرور" style="direction:ltr; text-align:left;"></div>
-                <button class="btn" onclick="handleLogin()" data-i18n="btn_login">تسجيل دخول</button>
+                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="البريد الإلكتروني" value="fahadfhd47@gmail.com" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="كلمة المرور" value="Fahad55003" style="direction:ltr; text-align:left;"></div>
+                <button class="btn" onclick="handleLogin()">تسجيل دخول</button>
+                <button class="btn" style="background:var(--primary); margin-top:8px;" onclick="quickOwnerLogin()">🚀 دخول سريع للمالك (فهد)</button>
             </div>
         </div>
 
@@ -296,42 +293,41 @@
         <!-- القائمة الجانبية -->
         <div class="drawer" id="main-drawer">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-                <span style="color:var(--text-main); font-weight:600; font-size:13px;" data-i18n="nav_title">قائمة التنقل</span>
+                <span style="color:var(--text-main); font-weight:600; font-size:13px;">قائمة التنقل</span>
                 <button onclick="toggleDrawer()" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
             </div>
-            <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 <span data-i18n="m_home">الواجهة الرئيسية</span></div>
-            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 <span data-i18n="m_orders">إدارة الطلبيات النشطة</span></div>
-            <div class="drawer-item" onclick="navTo('completed-orders-screen')">✅ <span data-i18n="m_completed">الطلبيات المنتهية</span></div>
-            <div class="drawer-item" onclick="navTo('trash-orders-screen')">🗑️ <span data-i18n="m_trash">المحذوفة والمشاكل</span></div>
-            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span data-i18n="m_inv">المخزن والمنتجات</span></div>
-            <div class="drawer-item" onclick="navTo('staff-screen')">👥 <span data-i18n="m_staff">إدارة الموظفين</span></div>
-            <div class="drawer-item" onclick="navTo('chat-screen')">💬 <span data-i18n="m_chat">الرسائل الفورية</span></div>
-            <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ <span data-i18n="m_profile">الملف الشخصي</span></div>
-            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(239,68,68,0.3); margin-top:10px;">🚪 <span data-i18n="m_logout">تسجيل الخروج</span></div>
+            <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 الواجهة الرئيسية</div>
+            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 إدارة الطلبيات النشطة</div>
+            <div class="drawer-item" onclick="navTo('completed-orders-screen')">✅ الطلبيات المنتهية</div>
+            <div class="drawer-item" onclick="navTo('trash-orders-screen')">🗑️ المحذوفة والمشاكل</div>
+            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 المخزن والمنتجات</div>
+            <div class="drawer-item" onclick="navTo('staff-screen')">👥 إدارة الموظفين</div>
+            <div class="drawer-item" onclick="navTo('chat-screen')">💬 الرسائل الفورية</div>
+            <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ الملف الشخصي</div>
+            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(239,68,68,0.3); margin-top:10px;">🚪 تسجيل الخروج</div>
         </div>
 
-        <!-- نافذة إجباري استكمال بيانات الموظف عند أول دخول -->
+        <!-- نافذة إجباري استكمال بيانات الموظف -->
         <div class="modal" id="mandatory-profile-modal" style="z-index: 900;">
             <div class="modal-content" style="border-color:var(--warning);">
-                <h3 style="color:var(--warning); margin-bottom:8px; font-size:14px;" data-i18n="mand_title">⚠️ استكمال الملف الشخصي الإجباري</h3>
-                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;" data-i18n="mand_sub">يجب تحديث كلمة المرور، رقم الجوال، وتاريخ الميلاد لمتابعة العمل.</p>
-                <div class="input-group"><label data-i18n="lbl_newpass">كلمة المرور الجديدة</label><input type="password" id="mand-new-pass" placeholder="••••••••" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label data-i18n="lbl_phone">رقم الجوال</label><input type="text" id="mand-phone" placeholder="05xxxxxxxx"></div>
-                <div class="input-group"><label data-i18n="lbl_dob">تاريخ الميلاد</label><input type="date" id="mand-dob"></div>
-                <button class="btn" style="background:var(--success);" onclick="saveMandatoryProfile()" data-i18n="btn_save_continue">حفظ ومتابعة</button>
+                <h3 style="color:var(--warning); margin-bottom:8px; font-size:14px;">⚠️ استكمال الملف الشخصي الإجباري</h3>
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">يجب تحديث كلمة المرور، رقم الجوال، وتاريخ الميلاد لمتابعة العمل.</p>
+                <div class="input-group"><label>كلمة المرور الجديدة</label><input type="password" id="mand-new-pass" placeholder="••••••••" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label>رقم الجوال</label><input type="text" id="mand-phone" placeholder="05xxxxxxxx"></div>
+                <div class="input-group"><label>تاريخ الميلاد</label><input type="date" id="mand-dob"></div>
+                <button class="btn" style="background:var(--success);" onclick="saveMandatoryProfile()">حفظ ومتابعة</button>
             </div>
         </div>
 
-        <!-- 1. الواجهة الرئيسية (النسبة المئوية، ملخص المبيعات، ونزول حقول الطلبيات بالأسفل) -->
+        <!-- 1. الواجهة الرئيسية -->
         <div id="home-main-screen" class="screen">
             <h2>الواجهة الرئيسية ومؤشرات الأداء</h2>
             <p class="subtitle" id="home-welcome-sub">مرحباً بك في لوحة تحكم Neris</p>
 
-            <!-- نسبة مئوية للمبيعات هذا الشهر -->
             <div class="panel-box" style="background:linear-gradient(135deg, rgba(13,148,136,0.15), var(--bg-card)); border-color:var(--accent-green);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                     <span style="font-size:12px; font-weight:bold; color:var(--accent-green);">📈 نسبة نمو المبيعات هذا الشهر</span>
-                    <span id="sales-growth-pct" style="font-size:16px; font-weight:bold; color:var(--success);">+28.4%</span>
+                    <span style="font-size:16px; font-weight:bold; color:var(--success);">+28.4%</span>
                 </div>
                 <div style="background:var(--bg-dark); height:8px; border-radius:4px; overflow:hidden;">
                     <div style="background:var(--accent-green); width:78%; height:100%;"></div>
@@ -352,13 +348,12 @@
                 </div>
             </div>
 
-            <!-- إعلانات المحل وتنبيهات النظام البصرية -->
             <div class="panel-box" style="background:linear-gradient(135deg, rgba(59,130,246,0.1), var(--bg-card)); border-color:var(--primary);">
                 <h4 style="color:var(--primary); margin-bottom:4px;">✨ إعلان ونشاط المحل الحالي</h4>
                 <p style="font-size:10px; color:var(--text-muted);">إدارة منتجات النيريس والمجوهرات تتم بكفاءة عالية مع تزامن لحظي لجميع الموظفين.</p>
             </div>
 
-            <!-- حقول إضافة طلبية جديدة (منزلة للأسفل تماماً كما طلبت) -->
+            <!-- حقول إضافة طلبية جديدة (منزلة للأسفل تماماً) -->
             <div class="panel-box" style="margin-top: 10px;">
                 <h4 style="color:var(--accent-green);">➕ تسجيل طلبية جديدة وخصم المخزن</h4>
                 <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-name" placeholder="اسم العميل"></div>
@@ -379,7 +374,7 @@
             </div>
         </div>
 
-        <!-- 2. إدارة الطلبيات النشطة -->
+        <!-- 2. الطلبيات النشطة -->
         <div id="orders-screen" class="screen">
             <h2>إدارة الطلبيات النشطة</h2>
             <p class="subtitle">تتبع الطلبات وتحديث حالتها فورياً</p>
@@ -396,7 +391,7 @@
         <!-- 4. الطلبيات المحذوفة والمشاكل -->
         <div id="trash-orders-screen" class="screen">
             <h2>الطلبيات المحذوفة والمشاكل</h2>
-            <p class="subtitle">الطلبات الملغاة أو التي بها مشاكل (تمت إرجاع كمياتها للمخزن)</p>
+            <p class="subtitle">الطلبات الملغاة أو التي بها مشاكل</p>
             <div id="trash-orders-list"></div>
         </div>
 
@@ -412,10 +407,10 @@
             </div>
         </div>
 
-        <!-- 5. المخزن والمنتجات مع أزرار التحكم السريع والرفع الفوري -->
+        <!-- 5. المخزن والمنتجات -->
         <div id="inventory-screen" class="screen">
             <h2>المخزن والمنتجات</h2>
-            <p class="subtitle">تعديل المخزون، رفع الصور من جهازك، والتحكم السريع في الكميات</p>
+            <p class="subtitle">تعديل المخزون، رفع الصور، والتحكم السريع</p>
             <button class="btn" onclick="openAddProductModal()" style="margin-bottom:10px;">+ إضافة منتج جديد مع صورة</button>
             <div class="panel-box">
                 <h4>قائمة منتجات المخزن (<span id="inv-count-badge">0</span>)</h4>
@@ -441,7 +436,7 @@
             </div>
         </div>
 
-        <!-- 6. إدارة الموظفين (حسب الهيكلة المطلوبة: مالك + 2 مسؤولين + 5 موظفين بحد أقصى) -->
+        <!-- 6. إدارة الموظفين -->
         <div id="staff-screen" class="screen">
             <h2>إدارة الموظفين الصارمة</h2>
             <p class="subtitle">المالك الأول، 2 مسؤولين، و5 موظفين كحد أقصى</p>
@@ -489,7 +484,7 @@
             </div>
         </div>
 
-        <!-- 8. الملف الشخصي والصورة الشخصية -->
+        <!-- 8. الملف الشخصي -->
         <div id="profile-screen" class="screen">
             <h2>الملف الشخصي والصورة</h2>
             <p class="subtitle">تعديل بيانات الحساب الشخصي</p>
@@ -507,15 +502,20 @@
             </div>
         </div>
 
-        <!-- مساعد الـ AI المنبثق في زاوية الشاشة -->
+        <!-- مساعد الـ AI التفاعلي الحقيقي (محدث ليسأل ويجيبك) -->
         <div class="ai-floating-btn" onclick="toggleAIChatModal()" title="مساعد الـ AI الذكي">🤖</div>
         <div class="ai-modal-box" id="ai-chat-popup">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:6px;">
-                <b style="font-size:12px; color:var(--primary);">🤖 مساعد NERIS الذكي (AI)</b>
+                <b style="font-size:12px; color:var(--primary);">🤖 مساعد NERIS الذكي (AI التفاعلي)</b>
                 <button onclick="toggleAIChatModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
-            <p style="font-size:10px; color:var(--text-muted); margin-bottom:8px;" id="ai-popup-advice">تحليل النظام: المبيعات مستقرة، والمخزن يضم قطع مجوهرات كافية للطلبات النشطة.</p>
-            <button class="btn" style="padding:6px; font-size:10px; background:var(--primary); margin:0;" onclick="refreshAIPrediction()">تحديث التحليل الذكي</button>
+            <div id="ai-chat-messages" style="height:120px; overflow-y:auto; background:var(--bg-dark); border:1px solid var(--border); border-radius:8px; padding:6px; font-size:10px; margin-bottom:8px;">
+                <div style="color:var(--accent-green); margin-bottom:4px;"><b>مساعد الـ AI:</b> أهلاً يا فهد! أنا جاهز للإجابة عن أي استفسار، اسألني: "وش أسوي؟" أو "كم عدد الطلبات؟"</div>
+            </div>
+            <div style="display:flex; gap:4px;">
+                <input type="text" id="ai-user-input" placeholder="اكتب سؤالك هنا..." style="flex:1; padding:6px; font-size:11px; background:var(--bg-dark); border:1px solid var(--border); border-radius:6px; color:var(--text-main);">
+                <button class="btn" style="width:auto; padding:6px 12px; margin:0; font-size:10px;" onclick="sendAIChatMessage()">إرسال</button>
+            </div>
         </div>
 
     </div>
@@ -527,12 +527,6 @@
             notif.classList.add('show');
             setTimeout(() => { notif.classList.remove('show'); }, 3000);
         }
-
-        setTimeout(() => {
-            let splash = document.getElementById('splash-screen');
-            splash.style.opacity = '0';
-            setTimeout(() => { splash.style.display = 'none'; }, 500);
-        }, 1200);
 
         function toggleTheme() {
             let html = document.documentElement;
@@ -551,17 +545,6 @@
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             document.getElementById('lang-indicator').innerText = currentLang === 'ar' ? 'EN' : 'AR';
             document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
-            
-            let dict = {
-                'ar': { sys_title: "NERIS STORE", splash_sub: "نظام إدارة المخزن والمجوهرات الذكي", btn_login: "تسجيل دخول", nav_title: "قائمة التنقل", m_home: "الواجهة الرئيسية", m_orders: "إدارة الطلبيات النشطة", m_completed: "الطلبيات المنتهية", m_trash: "المحذوفة والمشاكل", m_inv: "المخزن والمنتجات", m_staff: "إدارة الموظفين", m_chat: "الرسائل الفورية", m_profile: "الملف الشخصي", m_logout: "تسجيل الخروج" },
-                'en': { sys_title: "NERIS STORE", splash_sub: "Smart Inventory & Jewelry Management OS", btn_login: "Login", nav_title: "Navigation", m_home: "Dashboard", m_orders: "Active Orders", m_completed: "Completed Orders", m_trash: "Trash & Issues", m_inv: "Inventory & Studio", m_staff: "Staff Management", m_chat: "Instant Messages", m_profile: "Profile & Avatar", m_logout: "Logout" }
-            };
-
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                let key = el.getAttribute('data-i18n');
-                if(dict[currentLang][key]) el.innerText = dict[currentLang][key];
-            });
-
             showAppNotification(currentLang === 'ar' ? "تم التبديل للغة العربية" : "Switched to English");
         }
 
@@ -613,6 +596,12 @@
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
+        function quickOwnerLogin() {
+            currentUser = usersDB.find(u => u.role === "المالك الأول") || usersDB[0];
+            initSystemAfterLogin();
+            showAppNotification("🚀 أهلاً بك يا فهد (المالك الأول)");
+        }
+
         function handleLogin() {
             let email = document.getElementById('login-email').value.trim();
             let pass = document.getElementById('login-password').value.trim();
@@ -621,8 +610,6 @@
             if(user) {
                 currentUser = user;
                 document.getElementById('login-error').style.display = 'none';
-                
-                // المالك الأول مستثنى من إجباري البيانات إذا كانت موجودة، أما غيره فإجباري
                 if(currentUser.role !== "المالك الأول" && (currentUser.mustSetup || !currentUser.phone || !currentUser.dob)) {
                     document.getElementById('mand-new-pass').value = currentUser.pass;
                     document.getElementById('mand-phone').value = currentUser.phone || '';
@@ -685,14 +672,26 @@
             box.style.display = box.style.display === 'block' ? 'none' : 'block';
         }
 
-        function refreshAIPrediction() {
-            let tips = [
-                "تحليل AI: الطلب على المجوهرات الذهبية مرتفع بنسبة 15% هذا الأسبوع.",
-                "تحليل AI: المخزون آمن ولا توجد أي منتجات منتهية.",
-                "تحليل AI: أداء الموظفين ممتاز والطلبيات تسير في موعدها المحدد."
-            ];
-            document.getElementById('ai-popup-advice').innerText = tips[Math.floor(Math.random() * tips.length)];
-            showAppNotification("🤖 تم تحديث تحليل الـ AI بنجاح!");
+        function sendAIChatMessage() {
+            let input = document.getElementById('ai-user-input');
+            let msg = input.value.trim();
+            if(!msg) return;
+
+            let chatMsgs = document.getElementById('ai-chat-messages');
+            chatMsgs.innerHTML += `<div style="margin-bottom:4px; text-align:left; color:var(--text-main);"><b>أنت:</b> ${msg}</div>`;
+            input.value = "";
+
+            let reply = "أهلاً يا فهد، بناءً على تحليل نظام النيريس: المبيعات مرتفعة بنسبة 28.4%، والمخزن ممتاز. هل تحتاج لإضافة منتج أو متابعة الطلبات؟";
+            if(msg.includes("وش أسوي") || msg.includes("ما أدري")) {
+                reply = "أنصحك بمراجعة الطلبات النشطة وتأكيد تجهيزها، أو إضافة منتجات جديدة للمخزن عبر قائمة المخزن.";
+            } else if(msg.includes("كم") || msg.includes("طلبات")) {
+                reply = `لديك حالياً (${realOrders.length}) طلبيات نشطة و (${products.length}) منتجات مختلفة في المخزن.`;
+            }
+
+            setTimeout(() => {
+                chatMsgs.innerHTML += `<div style="margin-bottom:6px; color:var(--accent-green);"><b>AI:</b> ${reply}</div>`;
+                chatMsgs.scrollTop = chatMsgs.scrollHeight;
+            }, 400);
         }
 
         function calculateUserAge() {
@@ -736,12 +735,11 @@
 
             let p = products[prodIdx];
             if(p.qty <= 0) {
-                showAppNotification("⚠️ هذا المنتج نفد من المخزن ولا يمكن طلبة!");
+                showAppNotification("⚠️ هذا المنتج نفد من المخزن!");
                 return;
             }
 
-            p.qty -= 1; // خصم تلقائي من المخزن
-
+            p.qty -= 1;
             realOrders.push({ 
                 id: Math.floor(1000 + Math.random()*9000), 
                 client, phone, 
@@ -772,9 +770,8 @@
             
             realOrders.forEach((o, idx) => {
                 let assignBtn = (currentUser.role === "المالك الأول" || currentUser.role === "مسؤول") ? `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0;" onclick="openAssignModal(${idx})">إسناد</button>` : '';
-                let markDoneBtn = `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0; background:var(--success);" onclick="markOrderCompleted(${idx})">تم التجهيز ✓</button>`;
-                let problemBtn = `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0; background:var(--warning); color:#000;" onclick="moveOrderToTrash(${idx}, 'مشكلة في الطلبية')">⚠️ مشكلة</button>`;
-                let deleteBtn = (currentUser.role === "المالك الأول" || currentUser.role === "مسؤول") ? `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0; background:var(--danger);" onclick="moveOrderToTrash(${idx}, 'إلغاء وحذف')">🗑️ إلغاء</button>` : '';
+                let markDoneBtn = `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0; background:var(--success);" onclick="markOrderCompleted(${idx})">تم ✓</button>`;
+                let deleteBtn = (currentUser.role === "المالك الأول" || currentUser.role === "مسؤول") ? `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0; background:var(--danger);" onclick="moveOrderToTrash(${idx}, 'إلغاء')">🗑️</button>` : '';
 
                 list.innerHTML += `
                     <div class="card-item" style="border-left: 4px solid var(--warning); align-items:flex-start;">
@@ -782,13 +779,11 @@
                         <div style="flex:1; margin-right:8px;">
                             <b>Order #${o.id} - ${o.client}</b> (${o.phone})<br>
                             <span style="color:var(--accent-green); font-weight:bold;">المنتج: ${o.productName} (${o.productColor}) - ${o.productPrice}</span><br>
-                            <span style="color:var(--text-muted);">ملاحظات: ${o.notes || 'لا توجد'}</span><br>
-                            <span class="badge">الموظف المسؤول: ${o.assigned}</span>
+                            <span class="badge">الموظف: ${o.assigned}</span>
                         </div>
                         <div style="display:flex; gap:4px; flex-direction:column; align-items:flex-end;">
                             ${assignBtn}
                             ${markDoneBtn}
-                            ${problemBtn}
                             ${deleteBtn}
                         </div>
                     </div>
@@ -803,7 +798,7 @@
             saveDataToStorage();
             renderOrders();
             updateDashboardCounters();
-            showAppNotification("✅ تم نقل الطلبية لقائمة المنتهية بنجاح!");
+            showAppNotification("✅ تم نقل الطلبية لقائمة المنتهية!");
         }
 
         function renderCompletedOrders() {
@@ -815,8 +810,7 @@
                         <img src="${o.productImage || 'https://via.placeholder.com/48'}" class="product-thumb" alt="">
                         <div style="flex:1; margin-right:8px;">
                             <b>Order #${o.id} - ${o.client}</b><br>
-                            <span style="color:var(--success); font-weight:bold;">منتي وتم التسليم</span><br>
-                            <span style="color:var(--text-muted);">${o.productName} (${o.productColor}) - ${o.productPrice}</span>
+                            <span style="color:var(--success); font-weight:bold;">مكتمل</span>
                         </div>
                     </div>
                 `;
@@ -827,17 +821,14 @@
             let order = realOrders.splice(idx, 1)[0];
             order.trashReason = reason;
             trashOrders.push(order);
-            
-            // إرجاع الكمية للمخزن تلقائياً عند الإلغاء أو المشكلة
             if(order.productIdx !== undefined && products[order.productIdx]) {
                 products[order.productIdx].qty += 1;
             }
-
             saveDataToStorage();
             renderOrders();
             renderTrashOrders();
             updateDashboardCounters();
-            showAppNotification(`⚠️ تم نقل الطلبية للمحذوفات وإعادة الكمية للمخزن.`);
+            showAppNotification("⚠️ تم إلغاء الطلب وإرجاع الكمية للمخزن.");
         }
 
         function renderTrashOrders() {
@@ -849,8 +840,7 @@
                         <img src="${o.productImage || 'https://via.placeholder.com/48'}" class="product-thumb" alt="">
                         <div style="flex:1; margin-right:8px;">
                             <b>Order #${o.id} - ${o.client}</b><br>
-                            <span style="color:var(--danger); font-weight:bold;">السبب: ${o.trashReason}</span><br>
-                            <span style="color:var(--text-muted);">${o.productName} (${o.productColor})</span>
+                            <span style="color:var(--danger); font-weight:bold;">السبب: ${o.trashReason}</span>
                         </div>
                     </div>
                 `;
@@ -871,7 +861,7 @@
             saveDataToStorage();
             closeModal('assign-order-modal');
             renderOrders();
-            showAppNotification("✅ تم إسناد الطلب للموظف بنجاح.");
+            showAppNotification("✅ تم إسناد الطلب للموظف.");
         }
 
         function calcPriceEnglish() {
@@ -883,7 +873,7 @@
 
         function openAddProductModal() {
             editingProductIndex = null;
-            document.getElementById('product-modal-title').innerText = "إضافة منتج جديد مع صورة من الاستوديو";
+            document.getElementById('product-modal-title').innerText = "إضافة منتج جديد مع صورة";
             document.getElementById('p-name').value = "";
             document.getElementById('p-color').value = "";
             document.getElementById('p-image-file').value = "";
@@ -896,7 +886,7 @@
         function openEditProductModal(idx) {
             editingProductIndex = idx;
             let p = products[idx];
-            document.getElementById('product-modal-title').innerText = "تعديل بيانات المنتج";
+            document.getElementById('product-modal-title').innerText = "تعديل المنتج";
             document.getElementById('p-name').value = p.name;
             document.getElementById('p-color').value = p.color;
             document.getElementById('p-qty').value = p.qty;
@@ -927,7 +917,7 @@
                 closeModal('add-product-modal');
                 renderInventory();
                 updateDashboardCounters();
-                showAppNotification("✅ تم حفظ وتحديث المنتج في المخزن بنجاح!");
+                showAppNotification("✅ تم حفظ المنتج بنجاح!");
             };
 
             if(fileInput.files && fileInput.files[0]) {
@@ -945,18 +935,17 @@
             saveDataToStorage();
             renderInventory();
             updateDashboardCounters();
-            showAppNotification("✅ تم تحديث عدد المخزن السريع.");
         }
 
         function renderInventory() {
             let list = document.getElementById('real-inventory-list');
-            list.innerHTML = products.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:10px;">لا توجد منتجات مضافة</div>' : '';
+            list.innerHTML = products.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:10px;">لا توجد منتجات</div>' : '';
             products.forEach((p, idx) => {
                 list.innerHTML += `
                     <div class="card-item" style="cursor:pointer;" onclick="openEditProductModal(${idx})">
                         <img src="${p.image || 'https://via.placeholder.com/48'}" class="product-thumb" alt="">
                         <div style="flex:1; margin-right:8px;">
-                            <b>${p.name}</b> (${p.color || 'عادي'})<br>
+                            <b>${p.name}</b> (${p.color || ''})<br>
                             <span style="color:var(--text-muted);">الكمية: <b>${p.qty}</b></span>
                         </div>
                         <div style="display:flex; gap:6px; align-items:center;" onclick="event.stopPropagation()">
@@ -971,16 +960,9 @@
         function renderStaffManagementList() {
             let list = document.getElementById('staff-management-list');
             list.innerHTML = "";
-            
-            // إظهار صندوق إضافة موظف فقط للمالك أو المسؤول إذا لم يتجاوزوا الحد
             if(currentUser.role === "المالك الأول" || currentUser.role === "مسؤول") {
-                if(usersDB.length < 8) {
-                    document.getElementById('add-staff-box').style.display = 'block';
-                } else {
-                    document.getElementById('add-staff-box').style.display = 'none';
-                }
+                document.getElementById('add-staff-box').style.display = usersDB.length < 8 ? 'block' : 'none';
             }
-
             usersDB.forEach((u, idx) => {
                 list.innerHTML += `
                     <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
@@ -993,49 +975,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="display:flex; gap:12px; margin-top:4px; border-top:1px solid var(--border); width:100%; padding-top:6px; justify-content:space-between; align-items:center;">
-                            <span style="font-size:11px; color:var(--text-muted);">الجوال: ${u.phone || 'غير مسجل'}</span>
-                            ${(currentUser.role === "المالك الأول" && u.role !== "المالك الأول") ? `<span style="font-size:11px; color:var(--danger); cursor:pointer;" onclick="removeStaff(${idx})">🗑️ حذف</span>` : ''}
-                        </div>
                     </div>
                 `;
             });
         }
 
         function addNewStaffMember() {
-            if(usersDB.length >= 8) {
-                showAppNotification("⚠️ تم الوصول للحد الأقصى المسموح به (مالك + 2 مسؤولين + 5 موظفين).");
-                return;
-            }
+            if(usersDB.length >= 8) { showAppNotification("⚠️ تم الوصول للحد الأقصى."); return; }
             let name = document.getElementById('new-staff-name').value.trim();
             let email = document.getElementById('new-staff-email').value.trim();
             let pass = document.getElementById('new-staff-pass').value.trim();
             let role = document.getElementById('new-staff-role').value;
 
-            if(!name || !email || !pass) {
-                showAppNotification("⚠️ أخل كافة بيانات الموظف بدقة!");
-                return;
-            }
-
+            if(!name || !email || !pass) { showAppNotification("⚠️ أدخل بيانات الموظف بدقة!"); return; }
             usersDB.push({ name, email, pass, role, phone: "", dob: "", avatar: "", mustSetup: true });
             saveDataToStorage();
             renderStaffManagementList();
             updateDashboardCounters();
-
-            document.getElementById('new-staff-name').value = "";
-            document.getElementById('new-staff-email').value = "";
-            document.getElementById('new-staff-pass').value = "";
             showAppNotification("✅ تم إضافة الموظف بنجاح.");
-        }
-
-        function removeStaff(idx) {
-            if(confirm(`هل أنت متأكد من حذف الموظف (${usersDB[idx].name})؟`)) {
-                usersDB.splice(idx, 1);
-                saveDataToStorage();
-                renderStaffManagementList();
-                updateDashboardCounters();
-                showAppNotification("🗑️ تم حذف الموظف بنجاح.");
-            }
         }
 
         function toggleMsgTargetField() {
@@ -1050,16 +1007,13 @@
         }
 
         function sendBroadcastMessage() {
-            let type = document.getElementById('msg-type-select').value;
             let text = document.getElementById('chat-msg-text').value.trim();
             if(!text) return;
             let box = document.getElementById('chat-box');
-            let targetLabel = type === 'all' ? 'جميع الموظفين' : document.getElementById('chat-target-staff').value;
-            
-            box.innerHTML += `<div style="margin-bottom:6px; background:var(--bg-card); padding:6px; border-radius:6px;"><b>إلى (${targetLabel}):</b> ${text}</div>`;
+            box.innerHTML += `<div style="margin-bottom:6px; background:var(--bg-card); padding:6px; border-radius:6px;"><b>مرسلة:</b> ${text}</div>`;
             document.getElementById('chat-msg-text').value = "";
             box.scrollTop = box.scrollHeight;
-            showAppNotification("✅ تم إرسال الرسالة بنجاح!");
+            showAppNotification("✅ تم الإرسال!");
         }
 
         function previewUserAvatar(event) {
@@ -1082,14 +1036,13 @@
                 delete currentUser.tempAvatar;
             }
             saveDataToStorage();
-            showAppNotification("✅ تم حفظ تعديلات الملف الشخصي وصورتك بنجاح.");
+            showAppNotification("✅ تم حفظ الملف الشخصي.");
         }
 
         function logout() {
             currentUser = null;
             document.getElementById('app-header').style.display = 'none';
             document.getElementById('splash-screen').style.display = 'flex';
-            document.getElementById('splash-screen').style.opacity = '1';
         }
     </script>
 </body>
