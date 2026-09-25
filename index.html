@@ -4,16 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NERIS OS - التطبيق الشامل</title>
+    <title>NERIS OS - النظام الإداري المتكامل</title>
     <style>
         :root {
-            --bg-dark: #0b1315;
-            --bg-card: #121c1f;
+            --bg-dark: #0f1d1a;
+            --bg-card: #152622;
             --accent-gold: #d4af37;
             --accent-gold-hover: #e6c252;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border: #23363b;
+            --border: #233d37;
             --danger: #ef4444;
             --success: #22c55e;
             --primary: #3b82f6;
@@ -33,30 +33,68 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 10px;
         }
 
         .phone-frame {
             width: 100%;
             max-width: 410px;
             background: var(--bg-card);
-            border: 3px solid var(--border);
-            border-radius: 30px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+            border: 4px solid var(--accent-gold);
+            border-radius: 35px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            min-height: 750px;
+            height: 820px;
             position: relative;
         }
 
+        /* شاشة البداية (Splash Screen) */
+        #splash-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #0f1d1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .splash-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-gold);
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .splash-title {
+            color: var(--accent-gold);
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+
         .header-bar {
-            padding: 18px 20px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
-            background: rgba(11, 19, 21, 0.8);
+            background: rgba(15, 29, 26, 0.9);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--accent-gold);
+            font-size: 22px;
+            cursor: pointer;
         }
 
         .brand-title {
@@ -66,14 +104,48 @@
             letter-spacing: 2px;
         }
 
-        /* الشاشات */
+        /* القائمة الجانبية (Drawer) */
+        .drawer {
+            position: absolute;
+            top: 0; right: -280px;
+            width: 280px; height: 100%;
+            background: #11221e;
+            border-left: 1px solid var(--border);
+            z-index: 500;
+            transition: right 0.3s ease;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer.open {
+            right: 0;
+        }
+
+        .drawer-item {
+            padding: 12px 15px;
+            color: var(--text-main);
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .drawer-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+        }
+
+        /* الشاشات الداخلية */
         .screen {
             display: none;
-            padding: 25px;
+            padding: 20px;
             flex: 1;
-            flex-direction: column;
-            justify-content: center;
             overflow-y: auto;
+            flex-direction: column;
         }
 
         .screen.active {
@@ -82,40 +154,39 @@
 
         h2 {
             color: var(--accent-gold);
-            font-size: 22px;
-            margin-bottom: 8px;
+            font-size: 20px;
+            margin-bottom: 5px;
             text-align: right;
         }
 
         p.subtitle {
             color: var(--text-muted);
-            font-size: 13px;
-            margin-bottom: 25px;
+            font-size: 12px;
+            margin-bottom: 20px;
             text-align: right;
         }
 
         .input-group {
-            margin-bottom: 18px;
+            margin-bottom: 15px;
             text-align: right;
         }
 
         .input-group label {
             display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
+            margin-bottom: 5px;
+            font-size: 12px;
             color: var(--text-muted);
         }
 
-        .input-group input {
+        .input-group input, .input-group select {
             width: 100%;
-            padding: 12px 15px;
-            background: #0b1315;
+            padding: 10px 12px;
+            background: #0f1d1a;
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 8px;
             color: white;
-            font-size: 15px;
+            font-size: 14px;
             outline: none;
-            transition: border-color 0.3s;
         }
 
         .input-group input:focus {
@@ -124,341 +195,476 @@
 
         .btn {
             width: 100%;
-            padding: 13px;
+            padding: 12px;
             background: var(--accent-gold);
-            color: #0b1315;
+            color: #0f1d1a;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            margin-top: 10px;
+            transition: background 0.3s;
+            margin-top: 5px;
         }
 
         .btn:hover {
             background: var(--accent-gold-hover);
         }
 
-        .switch-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .switch-link span {
-            color: var(--accent-gold);
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* لوحة التحكم داخل إطار الجوال */
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
-        }
-
-        .badge {
-            background: rgba(212, 175, 55, 0.1);
-            color: var(--accent-gold);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
         .panel-box {
-            background: #0b1315;
+            background: #0f1d1a;
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
         }
 
         .panel-box h4 {
             font-size: 13px;
             color: var(--accent-gold);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .staff-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+        .product-card, .order-card, .chat-bubble {
+            background: #152622;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
             font-size: 12px;
-        }
-
-        .action-btns {
             display: flex;
-            gap: 5px;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .edit-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 11px;
-        }
-
-        .danger-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 11px;
+        .badge {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
         .error-msg {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid var(--danger);
             color: var(--danger);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            margin-bottom: 10px;
             text-align: center;
             display: none;
+        }
+
+        .ai-chat-box {
+            background: #0f1d1a;
+            border: 1px solid var(--accent-gold);
+            border-radius: 10px;
+            padding: 10px;
+            height: 250px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
 
     <div class="phone-frame">
-        <div class="header-bar">
-            <span style="font-size: 12px; color: var(--text-muted);">NERIS v2.0</span>
+        <!-- شاشة البداية بالشعار المطلوب -->
+        <div id="splash-screen">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23152622' stroke='%23d4af37' stroke-width='2'/><path d='M50 25 C55 40 70 45 75 50 C70 55 55 60 50 75 C45 60 30 55 25 50 C30 45 45 40 50 25 Z' fill='%23d4af37'/></svg>" class="splash-logo" alt="NERIS Logo">
+            <div class="splash-title">NERIS OS</div>
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">جاري التحميل...</p>
+        </div>
+
+        <!-- الشريط العُلوي والقائمة الجانبية -->
+        <div class="header-bar" id="app-header" style="display:none;">
+            <button class="menu-btn" onclick="toggleDrawer()">☰</button>
             <div class="brand-title">NERIS OS</div>
+            <span class="badge" id="current-role-badge">صلاحية النظام</span>
+        </div>
+
+        <!-- القائمة الجانبية الثلاث شرطات -->
+        <div class="drawer" id="main-drawer">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <span style="color:var(--accent-gold); font-weight:bold;">قائمة التنقل</span>
+                <button onclick="toggleDrawer()" style="background:none; border:none; color:white; font-size:16px; cursor:pointer;">✕</button>
+            </div>
+            <div class="drawer-item" onclick="navTo('dashboard-screen')">📊 لوحة التحكم الرئيسية</div>
+            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 إدارة المخزن والمنتجات</div>
+            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 إدارة الطلبيات</div>
+            <div class="drawer-item" onclick="navTo('ai-screen')">🤖 مساعد الذكاء الاصطناعي AI</div>
+            <div class="drawer-item" onclick="navTo('chat-screen')">💬 الرسائل والمحادثات</div>
+            <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ الملف الشخصي وتعديل البيانات</div>
+            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:var(--danger);">🚪 تسجيل الخروج</div>
         </div>
 
         <!-- 1. شاشة تسجيل الدخول -->
-        <div id="login-screen" class="screen active">
+        <div id="login-screen" class="screen">
             <h2>تسجيل الدخول - نيريس</h2>
-            <p class="subtitle">أدخل بريدك وكلمة المرور المسجلة</p>
+            <p class="subtitle">أدخل بيانات الاعتماد الخاصة بك</p>
             
-            <div id="login-error" class="error-msg">البريد الإلكتروني أو كلمة المرور غير صحيحة</div>
+            <div id="login-error" class="error-msg">البيانات غير صحيحة</div>
 
             <div class="input-group">
                 <label>البريد الإلكتروني</label>
-                <input type="email" id="login-email" value="fahadfhd47@gmail.com">
+                <input type="email" id="login-email" placeholder="name@neris.com">
             </div>
 
             <div class="input-group">
                 <label>كلمة المرور</label>
-                <input type="password" id="login-password" value="Fahad@55003">
+                <input type="password" id="login-password" placeholder="••••••••">
             </div>
 
             <button class="btn" onclick="handleLogin()">دخول للنظام</button>
             
-            <div class="switch-link">
-                حساب جديد؟ <span onclick="switchScreen('register-screen')">سجل الآن</span>
+            <div style="margin-top: 15px; font-size: 11px; color: var(--text-muted); text-align: center;">
+                حسابات تجريبية للاختبار:<br>
+                <b>المالك الأول:</b> owner1@neris.com / 12345<br>
+                <b>المالك الثاني:</b> owner2@neris.com / 12345<br>
+                <b>موظف:</b> staff@neris.com / 12345
             </div>
         </div>
 
-        <!-- 2. شاشة إنشاء الحساب -->
-        <div id="register-screen" class="screen">
-            <h2>إنشاء حساب جديد</h2>
-            <p class="subtitle">انضم إلى نظام نيريس الإداري</p>
+        <!-- 2. شاشة تغيير كلمة المرور الإجبارية (أول دخول) -->
+        <div id="force-pass-screen" class="screen">
+            <h2>تحديث إلزامي لكلمة المرور</h2>
+            <p class="subtitle">هذه المرة الأولى لدخولك، يجب عليك تعيين كلمة مرور جديدة خاصة بك</p>
 
             <div class="input-group">
-                <label>البريد الإلكتروني</label>
-                <input type="email" id="reg-email" placeholder="name@example.com">
+                <label>كلمة المرور الجديدة</label>
+                <input type="password" id="new-forced-pass" placeholder="أدخل كلمة مرور قوية">
             </div>
-
             <div class="input-group">
-                <label>كلمة المرور</label>
-                <input type="password" id="reg-password" placeholder="••••••••">
+                <label>تأكيد كلمة المرور</label>
+                <input type="password" id="confirm-forced-pass" placeholder="أعد إدخال كلمة المرور">
             </div>
-
-            <button class="btn" onclick="handleRegister()">إنشاء الحساب</button>
-
-            <div class="switch-link">
-                لديك حساب بالفعل؟ <span onclick="switchScreen('login-screen')">تسجيل الدخول</span>
-            </div>
+            <button class="btn" onclick="saveForcedPassword()">حفظ ومتابعة للنظام</button>
         </div>
 
-        <!-- 3. لوحة التحكم (المالك أو الموظف) -->
+        <!-- 3. لوحة التحكم الرئيسية -->
         <div id="dashboard-screen" class="screen">
-            <div class="dashboard-header">
-                <div>
-                    <h3 style="color: var(--accent-gold); font-size: 15px;" id="welcome-user-title">لوحة التحكم</h3>
-                    <span class="badge" id="role-badge">المالك الأساسي</span>
-                </div>
-                <button class="danger-btn" onclick="logout()">خروج</button>
-            </div>
+            <h2>لوحة التحكم</h2>
+            <p class="subtitle" id="welcome-sub">مرحباً بك في نظام نيريس الإداري</p>
 
-            <!-- لوحة إدارة الموظفين (تظهر للمالك فقط أو حسب الصلاحية) -->
-            <div class="panel-box" id="admin-panel-section">
-                <h4>
-                    <span>إدارة الموظفين والمسؤولين</span>
-                    <button class="btn" style="padding: 4px 10px; font-size: 11px; margin-top:0; width:auto;" onclick="addStaff()">+ إضافة</button>
-                </h4>
-                <div id="staff-list">
-                    <!-- تعبئة ديناميكية -->
-                </div>
-            </div>
-
-            <!-- لوحة تغيير كلمة المرور الشخصية -->
             <div class="panel-box">
-                <h4>إدارة الحساب الشخصي</h4>
-                <button class="btn" style="padding: 8px; font-size: 12px; margin-top:5px; background: #1e293b; color: var(--accent-gold); border: 1px solid var(--accent-gold);" onclick="changeMyPassword()">تغيير كلمة المرور الخاصة بي</button>
+                <h4>نظرة عامة</h4>
+                <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted);">
+                    <span>إجمالي المنتجات: <b id="stat-products" style="color:var(--accent-gold);">0</b></span>
+                    <span>الطلبيات النشطة: <b id="stat-orders" style="color:var(--accent-gold);">1</b></span>
+                    <span>التنبيهات: <b style="color:var(--success);">مفعلة</b></span>
+                </div>
             </div>
 
-            <!-- لوحة إرسال التنبيهات الإدارية -->
-            <div class="panel-box" id="broadcast-section">
-                <h4>إرسال تنبيه إداري فوري</h4>
-                <input type="text" id="broadcast-msg" placeholder="اكتب التنبيه هنا..." style="width:100%; padding:8px; background:#0b1315; border:1px solid var(--border); color:white; border-radius:6px; margin-bottom:8px; font-size:12px;">
-                <button class="btn" style="padding: 8px; font-size: 12px; margin-top:0;" onclick="sendBroadcast()">إرسال تعميم</button>
+            <div class="panel-box" id="owner-management-box">
+                <h4>إدارة صلاحيات المالكين والموظفين</h4>
+                <div id="users-list-container"></div>
+                <button class="btn" style="padding:6px; font-size:12px; margin-top:8px;" onclick="addNewUser()">+ إضافة مستخدم جديد</button>
             </div>
         </div>
+
+        <!-- 4. إدارة المخزن والمنتجات -->
+        <div id="inventory-screen" class="screen">
+            <h2>إدارة المخزن والمنتجات</h2>
+            <p class="subtitle">إضافة وتعديل المنتجات وأسعارها ورفع صورها</p>
+
+            <div class="panel-box">
+                <h4>إضافة منتج جديد</h4>
+                <div class="input-group"><label>اسم المنتج</label><input type="text" id="prod-name" placeholder="مثال: عطر نيريس الملكي"></div>
+                <div class="input-group"><label>السعر المقترح (ريال)</label><input type="number" id="prod-price" placeholder="150"></div>
+                <div class="input-group"><label>صورة المنتج (من الاستوديو)</label><input type="file" id="prod-img" accept="image/*"></div>
+                <button class="btn" onclick="addProduct()">حفظ وإضافة للمخزن</button>
+            </div>
+
+            <div class="panel-box">
+                <h4>قائمة المنتجات الحالية</h4>
+                <div id="inventory-list"></div>
+            </div>
+        </div>
+
+        <!-- 5. إدارة الطلبيات -->
+        <div id="orders-screen" class="screen">
+            <h2>إدارة الطلبيات والتجهيز</h2>
+            <p class="subtitle">اضغط على الطلبية لتنبيه الموظف فوراً</p>
+            <div id="orders-list-container">
+                <div class="order-card">
+                    <div>
+                        <b>طلب رقم #1001</b><br>
+                        <span style="color:var(--text-muted);">عطر نيريس الملكي (عدد 2)</span><br>
+                        <span id="order-status-1" class="badge" style="background:rgba(59,130,246,0.1); color:#3b82f6; border-color:#3b82f6;">بانتظار التجهيز</span>
+                    </div>
+                    <button class="btn" style="width:auto; padding:6px 12px; font-size:11px; margin:0;" onclick="updateOrderStatus(1)">ابدأ التجهيز</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. مساعد الذكاء الاصطناعي AI -->
+        <div id="ai-screen" class="screen">
+            <h2>مساعد الذكاء الاصطناعي AI</h2>
+            <p class="subtitle">اسأله عن الأسعار، الخصومات، والتوصيات التجارية</p>
+            
+            <div class="ai-chat-box" id="ai-messages">
+                <div style="margin-bottom:8px; color:var(--accent-gold);">مرحباً بك! أنا مساعدك الذكي في Neris OS. اسألني عن أسعار المنتجات أو استشرني في عمل خصومات هذا الأسبوع.</div>
+            </div>
+
+            <div class="input-group" style="margin-bottom:8px;">
+                <input type="text" id="ai-input" placeholder="اكتب سؤالك هنا (مثال: هل أسوي خصم هذا الأسبوع؟)">
+            </div>
+            <button class="btn" onclick="askAI()">إرسال للمساعد الذكي</button>
+        </div>
+
+        <!-- 7. الرسائل والمحادثات -->
+        <div id="chat-screen" class="screen">
+            <h2>الرسائل والمحادثات الخاصة</h2>
+            <p class="subtitle">تواصل مباشر بين الإدارة والموظفين</p>
+
+            <div class="ai-chat-box" id="chat-messages" style="height:220px;">
+                <div style="color:var(--text-muted); text-align:center; padding:20px;">لا توجد رسائل حالياً. ابدأ المحادثة الآن.</div>
+            </div>
+
+            <div class="input-group" style="margin-bottom:8px;">
+                <input type="text" id="chat-input" placeholder="اكتب رسالتك...">
+            </div>
+            <button class="btn" onclick="sendChatMessage()">إرسال رسالة</button>
+        </div>
+
+        <!-- 8. الملف الشخصي وتعديل البيانات -->
+        <div id="profile-screen" class="screen">
+            <h2>الملف الشخصي والبيانات</h2>
+            <p class="subtitle">تعديل البريد، الجوال، وتاريخ الميلاد</p>
+
+            <div class="panel-box">
+                <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="prof-email"></div>
+                <div class="input-group"><label>رقم الجوال</label><input type="text" id="prof-phone" placeholder="05xxxxxxxx"></div>
+                <div class="input-group"><label>تاريخ الميلاد</label><input type="date" id="prof-dob"></div>
+                <div class="input-group"><label>كلمة المرور الجديدة</label><input type="password" id="prof-pass" placeholder="اتركها فارغة إن لم ترد تغييرها"></div>
+                <button class="btn" onclick="saveProfile()">حفظ التعديلات</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        let owner = { email: "fahadfhd47@gmail.com", pass: "Fahad@55003", role: "المالك الأساسي" };
-        let staffList = [
-            { id: 1, email: "manager1@neris.com", pass: "12345", role: "مسؤول" },
-            { id: 2, email: "employee1@neris.com", pass: "12345", role: "موظف" }
+        // إخفاء شاشة البداية بعد ثانيتين
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 500);
+        }, 2000);
+
+        // قاعدة بيانات المستخدمين
+        let users = [
+            { email: "owner1@neris.com", pass: "12345", role: "المالك الأول", phone: "0500000001", dob: "2006-07-31", firstLogin: true },
+            { email: "owner2@neris.com", pass: "12345", role: "المالك الثاني", phone: "0500000002", dob: "2006-01-01", firstLogin: true },
+            { email: "staff@neris.com", pass: "12345", role: "موظف", phone: "0500000003", dob: "2005-05-05", firstLogin: true }
         ];
 
         let currentUser = null;
+        let products = [
+            { name: "عطر نيريس الملكي", price: 180, img: "" }
+        ];
+        let chatLogs = [];
 
-        function switchScreen(screenId) {
+        function toggleDrawer() {
+            document.getElementById('main-drawer').classList.toggle('open');
+        }
+
+        function navTo(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
-            let err = document.getElementById('login-error');
-            if(err) err.style.display = 'none';
+            toggleDrawer();
+            if(screenId === 'inventory-screen') renderInventory();
+            if(screenId === 'dashboard-screen') updateStats();
         }
 
         function handleLogin() {
             let email = document.getElementById('login-email').value.trim();
             let pass = document.getElementById('login-password').value.trim();
 
-            if (email === owner.email && pass === owner.pass) {
-                currentUser = owner;
-                document.getElementById('role-badge').innerText = "المالك (فهد)";
-                document.getElementById('welcome-user-title').innerText = "مرحباً، فهد";
-                document.getElementById('admin-panel-section').style.display = 'block';
-                document.getElementById('broadcast-section').style.display = 'block';
-                renderStaff();
-                switchScreen('dashboard-screen');
-                return;
-            }
-
-            let found = staffList.find(s => s.email === email && s.pass === pass);
-            if (found) {
+            let found = users.find(u => u.email === email && u.pass === pass);
+            if(found) {
                 currentUser = found;
-                document.getElementById('role-badge').innerText = found.role;
-                document.getElementById('welcome-user-title').innerText = "لوحة الموظف";
-                document.getElementById('admin-panel-section').style.display = 'none'; // الموظف العادي لا يدير الموظفين
-                document.getElementById('broadcast-section').style.display = 'none';
-                switchScreen('dashboard-screen');
-                return;
+                if(currentUser.firstLogin) {
+                    navToScreen('force-pass-screen');
+                } else {
+                    completeLoginProcess();
+                }
+            } else {
+                document.getElementById('login-error').style.display = 'block';
             }
-
-            document.getElementById('login-error').style.display = 'block';
         }
 
-        function handleRegister() {
-            let email = document.getElementById('reg-email').value.trim();
-            let pass = document.getElementById('reg-password').value.trim();
-            if(!email || !pass) {
-                alert("الرجاء إدخال البريد وكلمة المرور");
-                return;
-            }
-            staffList.push({ id: Date.now(), email, pass, role: "موظف" });
-            alert("تم إنشاء الحساب بنجاح!");
-            switchScreen('login-screen');
+        function navToScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
-        function renderStaff() {
-            let container = document.getElementById('staff-list');
+        function saveForcedPassword() {
+            let p1 = document.getElementById('new-forced-pass').value;
+            let p2 = document.getElementById('confirm-forced-pass').value;
+            if(!p1 || p1 !== p2) {
+                alert("كلمتا المرور غير متطابتين أو فارغتين!");
+                return;
+            }
+            currentUser.pass = p1;
+            currentUser.firstLogin = false;
+            alert("تم تغيير كلمة المرور المؤقتة بنجاح وتحديث الحساب!");
+            completeLoginProcess();
+        }
+
+        function completeLoginProcess() {
+            document.getElementById('app-header').style.display = 'flex';
+            document.getElementById('current-role-badge').innerText = currentUser.role;
+            document.getElementById('welcome-sub').innerText = `مرحباً بك، (${currentUser.role})`;
+            
+            if(currentUser.role.includes("موظف")) {
+                document.getElementById('owner-management-box').style.display = 'none';
+            } else {
+                document.getElementById('owner-management-box').style.display = 'block';
+                renderUsersList();
+            }
+
+            // تحميل بيانات الملف الشخصي
+            document.getElementById('prof-email').value = currentUser.email;
+            document.getElementById('prof-phone').value = currentUser.phone || '';
+            document.getElementById('prof-dob').value = currentUser.dob || '';
+
+            navToScreen('dashboard-screen');
+            alert(`⚠️ تنبيه إداري: تم تسجيل دخول ${currentUser.role} بنجاح وإرسال إشعار للحساب الرئيسي.`);
+        }
+
+        function updateStats() {
+            document.getElementById('stat-products').innerText = products.length;
+        }
+
+        function renderUsersList() {
+            let container = document.getElementById('users-list-container');
             container.innerHTML = "";
-            if(staffList.length === 0) {
-                container.innerHTML = "<p style='color:var(--text-muted); font-size:11px; text-align:center; padding:10px;'>لا يوجد موظفين حالياً</p>";
-                return;
-            }
-            staffList.forEach(s => {
+            users.forEach((u, idx) => {
                 container.innerHTML += `
-                    <div class="staff-item">
-                        <span>${s.email}<br><small style="color:var(--text-muted);">${s.role}</small></span>
-                        <div class="action-btns">
-                            <button class="edit-btn" onclick="editStaff(${s.id})">تعديل</button>
-                            <button class="danger-btn" onclick="removeStaff(${s.id})">طرد</button>
-                        </div>
+                    <div class="product-card">
+                        <span><b>${u.role}</b><br><small style="color:var(--text-muted);">${u.email}</small></span>
+                        <span class="badge">${u.phone || 'بدون جوال'}</span>
                     </div>
                 `;
             });
         }
 
-        function addStaff() {
-            let email = prompt("أدخل بريد الموظف/المسؤول الجديد:");
+        function addNewUser() {
+            let email = prompt("أدخل بريد المستخدم الجديد:");
             if(!email) return;
             let pass = prompt("أدخل كلمة المرور المؤقتة:");
             if(!pass) return;
-            let roleChoice = prompt("اختر الصلاحية (اكتب: مسؤول أو موظف):", "موظف");
-            let role = roleChoice && roleChoice.includes("مسؤول") ? "مسؤول" : "موظف";
-
-            staffList.push({ id: Date.now(), email, pass, role });
-            renderStaff();
-            alert("تم إضافة الحساب بنجاح!");
+            let role = prompt("اختر الصلاحية (المالك الثاني أو موظف):", "موظف");
+            users.push({ email, pass, role, phone: "", dob: "", firstLogin: true });
+            renderUsersList();
+            alert("تم إضافة المستخدم بنجاح وسيُطلب منه تغيير كلمة المرور عند أول دخول.");
         }
 
-        function editStaff(id) {
-            let s = staffList.find(item => item.id === id);
-            if(!s) return;
-            let newEmail = prompt("تعديل البريد الإلكتروني:", s.email);
-            if(newEmail) s.email = newEmail;
-            let newPass = prompt("تعديل كلمة المرور:", s.pass);
-            if(newPass) s.pass = newPass;
-            renderStaff();
-            alert("تم تحديث بيانات الحساب بنجاح.");
-        }
-
-        function removeStaff(id) {
-            if(confirm("هل أنت متأكد من طرد هذا الحساب وحذفه نهائياً؟")) {
-                staffList = staffList.filter(s => s.id !== id);
-                renderStaff();
-                alert("تم طرد الحساب بنجاح.");
+        function addProduct() {
+            let name = document.getElementById('prod-name').value;
+            let price = document.getElementById('prod-price').value;
+            let fileInput = document.getElementById('prod-img');
+            
+            if(!name || !price) {
+                alert("الرجاء إدخال اسم المنتج والسعر!");
+                return;
             }
-        }
 
-        function changeMyPassword() {
-            let newPass = prompt("أدخل كلمة المرور الجديدة:");
-            if(!newPass) return;
-            if(currentUser.email === owner.email) {
-                owner.pass = newPass;
-            } else {
-                let s = staffList.find(item => item.email === currentUser.email);
-                if(s) s.pass = newPass;
+            let imgUrl = "";
+            if(fileInput.files && fileInput.files[0]) {
+                imgUrl = URL.createObjectURL(fileInput.files[0]);
             }
-            alert("تم تغيير كلمة المرور الخاصة بك بنجاح!");
+
+            products.push({ name, price, img: imgUrl });
+            document.getElementById('prod-name').value = "";
+            document.getElementById('prod-price').value = "";
+            document.getElementById('prod-img').value = "";
+            renderInventory();
+            alert("تمت إضافة المنتج بنجاح إلى المخزن!");
         }
 
-        function sendBroadcast() {
-            let msg = document.getElementById('broadcast-msg').value;
-            if(!msg) return;
-            alert("تم تعميم التنبيه بنجاح لكافة أعضاء الفريق: " + msg);
-            document.getElementById('broadcast-msg').value = "";
+        function renderInventory() {
+            let container = document.getElementById('inventory-list');
+            container.innerHTML = "";
+            if(products.length === 0) {
+                container.innerHTML = "<p style='color:var(--text-muted); font-size:11px; text-align:center;'>المخزن فارغ حالياً</p>";
+                return;
+            }
+            products.forEach((p, idx) => {
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div>
+                            <b>${p.name}</b><br>
+                            <span style="color:var(--accent-gold);">${p.price} ريال</span>
+                        </div>
+                        <button class="btn" style="width:auto; padding:4px 8px; font-size:10px; background:var(--danger); color:white; margin:0;" onclick="products.splice(${idx},1); renderInventory();">حذف</button>
+                    </div>
+                `;
+            });
+        }
+
+        function updateOrderStatus(id) {
+            let badge = document.getElementById(`order-status-${id}`);
+            badge.innerText = "جاري التجهيز بواسطة الموظف...";
+            badge.style.background = "rgba(34, 197, 94, 0.1)";
+            badge.style.color = "#22c55e";
+            badge.style.borderColor = "#22c55e";
+            alert("✅ تم إرسال تنبيه للموظف بنجاح، وبدء تجهيز الطلبية!");
+        }
+
+        function askAI() {
+            let input = document.getElementById('ai-input').value.trim();
+            if(!input) return;
+            let box = document.getElementById('ai-messages');
+            box.innerHTML += `<div style="margin-bottom:6px; text-align:right;"><b>أنت:</b> ${input}</div>`;
+            
+            let reply = "بناءً على تحليلي لبيانات متجر Neris، أنصحك بتحديد السعر بناءً على تكلفة التغليف والجودة.";
+            if(input.includes("خصم") || input.includes("خصومات")) {
+                reply = "💡 **توصية الذكاء الاصطناعي:** نعم، أنصحك بشدة بعمل خصم بنسبة 15% هذا الأسبوع لزيادة المبيعات وجذب عملاء جدد.";
+            } else if(input.includes("سعر") || input.includes("أسعار")) {
+                reply = "💰 **تحليل السعر:** السعر المقترح العادل للمنتج يتراوح ما بين 120 إلى 200 ريال حسب التغليف.";
+            }
+
+            setTimeout(() => {
+                box.innerHTML += `<div style="margin-bottom:8px; color:var(--accent-gold); text-align:right;"><b>مساعد AI:</b> ${reply}</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 500);
+
+            document.getElementById('ai-input').value = "";
+        }
+
+        function sendChatMessage() {
+            let input = document.getElementById('chat-input').value.trim();
+            if(!input) return;
+            let box = document.getElementById('chat-messages');
+            chatLogs.push(`${currentUser.role}: ${input}`);
+            box.innerHTML = "";
+            chatLogs.forEach(msg => {
+                box.innerHTML += `<div class="chat-bubble" style="justify-content:flex-start;"><span>${msg}</span></div>`;
+            });
+            document.getElementById('chat-input').value = "";
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function saveProfile() {
+            currentUser.email = document.getElementById('prof-email').value;
+            currentUser.phone = document.getElementById('prof-phone').value;
+            currentUser.dob = document.getElementById('prof-dob').value;
+            let newP = document.getElementById('prof-pass').value;
+            if(newP) currentUser.pass = newP;
+            alert("✅ تم تحديث بيانات الملف الشخصي بنجاح وإشعار الحساب الرئيسي.");
         }
 
         function logout() {
             currentUser = null;
-            document.getElementById('login-email').value = "fahadfhd47@gmail.com";
-            document.getElementById('login-password').value = "Fahad@55003";
-            switchScreen('login-screen');
+            document.getElementById('app-header').style.display = 'none';
+            navToScreen('login-screen');
         }
     </script>
 </body>
