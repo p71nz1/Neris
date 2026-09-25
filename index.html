@@ -1,35 +1,35 @@
 
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NERIS OS - النظام الإداري المتكامل</title>
     <style>
         :root {
-            --bg-dark: #0a0f0e;
-            --bg-card: #121a18;
-            --bg-card-hover: #192522;
+            --bg-dark: #070b0a;
+            --bg-card: #0f1614;
+            --bg-card-hover: #15201d;
             --accent-green: #0d9488;
             --accent-green-hover: #0f766e;
-            --text-main: #e2e8f0;
-            --text-muted: #8b9bb4;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
             --border: #1e293b;
-            --danger: #dc2626;
-            --success: #16a34a;
-            --warning: #d97706;
-            --primary: #2563eb;
+            --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --primary: #3b82f6;
         }
 
         [data-theme="light"] {
-            --bg-dark: #f8fafc;
+            --bg-dark: #f1f5f9;
             --bg-card: #ffffff;
-            --bg-card-hover: #f1f5f9;
+            --bg-card-hover: #f8fafc;
             --accent-green: #0d9488;
             --accent-green-hover: #0f766e;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --border: #e2e8f0;
+            --border: #cbd5e1;
         }
 
         * {
@@ -37,7 +37,6 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.2s, color 0.2s;
         }
 
         body {
@@ -48,6 +47,24 @@
             justify-content: center;
             align-items: center;
             padding: 10px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* خلفية حية متحركة جذابة */
+        .live-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: linear-gradient(125deg, #070b0a, #0f1a18, #071318);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .phone-frame {
@@ -55,8 +72,8 @@
             max-width: 410px;
             background: var(--bg-card);
             border: 2px solid var(--border);
-            border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -67,7 +84,7 @@
         #splash-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #0a0f0e;
+            background: #070b0a;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -80,14 +97,15 @@
             width: 90px; height: 90px;
             border-radius: 50%;
             border: 2px solid var(--accent-green);
-            background: #121a18;
+            background: #0f1614;
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--accent-green);
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
             margin-bottom: 12px;
+            box-shadow: 0 0 20px rgba(13, 148, 136, 0.3);
         }
 
         .header-bar {
@@ -99,23 +117,23 @@
             background: var(--bg-card);
         }
 
-        .header-btns { display: flex; gap: 10px; align-items: center; }
-        .menu-btn, .theme-btn { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
-        .menu-btn:hover, .theme-btn:hover { color: var(--accent-green); }
-        .brand-title { color: var(--text-main); font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+        .header-btns { display: flex; gap: 8px; align-items: center; }
+        .menu-btn, .theme-btn, .lang-btn { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 4px; }
+        .menu-btn:hover, .theme-btn:hover, .lang-btn:hover { color: var(--accent-green); }
+        .brand-title { color: var(--text-main); font-size: 13px; font-weight: bold; letter-spacing: 1px; }
 
         .drawer {
             position: absolute;
-            top: 0; right: -300px;
-            width: 280px; height: 100%;
+            top: 0; right: -320px;
+            width: 290px; height: 100%;
             background: var(--bg-card);
             border-left: 1px solid var(--border);
-            z-index: 500;
+            z-index: 700;
             transition: right 0.3s ease;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            box-shadow: -15px 0 30px rgba(0,0,0,0.5);
             overflow-y: auto;
         }
         .drawer.open { right: 0; }
@@ -124,7 +142,7 @@
             padding: 11px 13px;
             color: var(--text-main);
             background: var(--bg-card-hover);
-            border-radius: 6px;
+            border-radius: 8px;
             margin-bottom: 6px;
             cursor: pointer;
             font-size: 12px;
@@ -144,66 +162,76 @@
         }
         .screen.active { display: flex; }
 
-        h2 { color: var(--text-main); font-size: 17px; margin-bottom: 4px; text-align: right; font-weight: 600; }
-        p.subtitle { color: var(--text-muted); font-size: 11px; margin-bottom: 16px; text-align: right; }
+        h2 { color: var(--text-main); font-size: 16px; margin-bottom: 4px; text-align: right; font-weight: 600; }
+        p.subtitle { color: var(--text-muted); font-size: 11px; margin-bottom: 14px; text-align: right; }
 
         .input-group { margin-bottom: 12px; text-align: right; }
         .input-group label { display: block; margin-bottom: 4px; font-size: 11px; color: var(--text-muted); }
         .input-group input, .input-group select, .input-group textarea {
-            width: 100%; padding: 9px 11px; background: var(--bg-dark);
-            border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); font-size: 12px; outline: none;
+            width: 100%; padding: 10px 12px; background: var(--bg-dark);
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 12px; outline: none;
+            direction: ltr; text-align: right;
         }
+        .input-group input[type="text"], .input-group textarea { direction: rtl; }
         .input-group input:focus, .input-group select:focus { border-color: var(--accent-green); }
 
         .btn {
-            width: 100%; padding: 10px; background: var(--accent-green); color: #fff;
-            border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 4px;
+            width: 100%; padding: 11px; background: var(--accent-green); color: #fff;
+            border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 4px;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.2);
         }
         .btn:hover { background: var(--accent-green-hover); }
 
         .panel-box {
             background: var(--bg-dark); border: 1px solid var(--border);
-            border-radius: 8px; padding: 10px; margin-bottom: 10px;
+            border-radius: 10px; padding: 12px; margin-bottom: 10px;
         }
         .panel-box h4 { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-align: right; font-weight: 500; }
 
         .card-item {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 6px; padding: 9px; margin-bottom: 7px; font-size: 11px;
+            border-radius: 8px; padding: 10px; margin-bottom: 8px; font-size: 11px;
             display: flex; justify-content: space-between; align-items: center;
         }
 
         .badge {
-            background: rgba(13, 148, 136, 0.1); color: var(--accent-green);
-            padding: 2px 7px; border-radius: 10px; font-size: 10px; border: 1px solid rgba(13, 148, 136, 0.2);
+            background: rgba(13, 148, 136, 0.15); color: var(--accent-green);
+            padding: 3px 8px; border-radius: 12px; font-size: 10px; border: 1px solid rgba(13, 148, 136, 0.3);
         }
 
         .modal {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 600; padding: 20px;
+            background: rgba(0,0,0,0.75); display: none; justify-content: center; align-items: center; z-index: 800; padding: 20px;
         }
         .modal-content {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; width: 100%; max-width: 340px;
-            max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; width: 100%; max-width: 350px;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
         }
-        .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 10px;
+        
+        /* المساعد الذكي العائم المنبثق */
+        .ai-fab {
+            position: absolute; bottom: 20px; left: 20px;
+            background: var(--accent-green); color: white; width: 45px; height: 45px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4); z-index: 600; font-size: 20px;
         }
-        .stat-card {
-            background: var(--bg-dark); border: 1px solid var(--border); border-radius: 6px; padding: 9px; text-align: center;
+        .ai-popup-box {
+            position: absolute; bottom: 75px; left: 15px; width: 360px; height: 380px;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 650; display: none; flex-direction: column; padding: 12px;
         }
-        .stat-card span { font-size: 16px; font-weight: bold; color: var(--text-main); }
-        .stat-card p { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
     </style>
 </head>
 <body>
+
+    <div class="live-bg"></div>
 
     <div class="phone-frame">
         <!-- شاشة البداية -->
         <div id="splash-screen">
             <div class="splash-logo">N</div>
-            <div style="color:var(--text-main); font-weight:600; font-size:14px;">NERIS OS</div>
-            <p style="color: var(--text-muted); font-size: 10px; margin-top: 4px;">جاري التحميل...</p>
+            <div style="color:var(--text-main); font-weight:600; font-size:15px;">NERIS OS</div>
+            <p style="color: var(--text-muted); font-size: 10px; margin-top: 6px;">جاري إقلاع النظام...</p>
         </div>
 
         <!-- الشريط العلوي -->
@@ -211,6 +239,7 @@
             <button class="menu-btn" onclick="toggleDrawer()">☰</button>
             <div class="brand-title">NERIS SYSTEM</div>
             <div class="header-btns">
+                <button class="lang-btn" onclick="toggleLanguage()" id="lang-indicator">EN</button>
                 <button class="theme-btn" onclick="toggleTheme()" id="theme-icon">☀️</button>
                 <span class="badge" id="current-role-badge">الدور</span>
             </div>
@@ -218,108 +247,116 @@
 
         <!-- القائمة الجانبية -->
         <div class="drawer" id="main-drawer">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
                 <span style="color:var(--text-main); font-weight:600; font-size:13px;">قائمة التنقل</span>
-                <button onclick="toggleDrawer()" style="background:none; border:none; color:var(--text-muted); font-size:15px; cursor:pointer;">✕</button>
+                <button onclick="toggleDrawer()" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
             </div>
             <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 الواجهة الرئيسية</div>
             <div class="drawer-item" onclick="navTo('orders-screen')">🛒 إدارة الطلبيات وتوزيعها</div>
             <div class="drawer-item" onclick="navTo('inventory-screen')">📦 المخزن والمنتجات</div>
             <div class="drawer-item" onclick="navTo('staff-screen')">👥 إدارة الموظفين والصلاحيات</div>
-            <div class="drawer-item" onclick="navTo('ai-screen')">🤖 مساعد الذكاء الاصطناعي</div>
-            <div class="drawer-item" onclick="navTo('chat-screen')">💬 الرسائل الداخلية</div>
+            <div class="drawer-item" onclick="navTo('chat-screen')">💬 الرسائل والتعاميم الجماعية</div>
             <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ الملف الشخصي والإعدادات</div>
-            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(220,38,38,0.3); margin-top:8px;">🚪 تسجيل الخروج</div>
+            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(239,68,68,0.3); margin-top:10px;">🚪 تسجيل الخروج</div>
         </div>
 
         <!-- 1. شاشة تسجيل الدخول -->
-        <div id="login-screen" class="screen">
-            <h2>تسجيل الدخول</h2>
-            <p class="subtitle">أدخل بيانات حسابك المعتمد</p>
+        <div id="login-screen" class="screen active" style="justify-content: center;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div class="splash-logo" style="margin: 0 auto 10px auto; width: 70px; height: 70px; font-size: 24px;">N</div>
+                <h2>تسجيل الدخول</h2>
+                <p class="subtitle">أدخل بريدك الإلكتروني وكلمة المرور للدخول</p>
+            </div>
             
-            <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:10px; display:none;">البريد أو كلمة المرور غير صحيحة</div>
+            <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:10px; display:none; text-align:center;">البريد أو كلمة المرور غير صحيحة</div>
 
             <div class="input-group">
                 <label>البريد الإلكتروني</label>
-                <input type="email" id="login-email" value="fahadfhd47@gmail.com">
+                <input type="email" id="login-email" placeholder="name@neris.store" style="direction:ltr; text-align:left;">
             </div>
             <div class="input-group">
                 <label>كلمة المرور</label>
-                <input type="password" id="login-password" value="Fahad55003">
+                <input type="password" id="login-password" placeholder="••••••••" style="direction:ltr; text-align:left;">
             </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 11px;">
+                <span style="color: var(--accent-green); cursor: pointer;" onclick="openForgotModal()">نسيت كلمة المرور؟</span>
+            </div>
+
             <button class="btn" onclick="handleLogin()">دخول للنظام</button>
         </div>
 
-        <!-- نافذة إجبارية لإكمال الملف الشخصي للمستخدمين الجدد -->
-        <div class="modal" id="mandatory-profile-modal" style="z-index: 999;">
+        <!-- نافذة نسيت كلمة المرور (ترسل إشعار للمالك عند اسم الموظف) -->
+        <div class="modal" id="forgot-modal">
+            <div class="modal-content">
+                <h3 style="margin-bottom:8px; font-size:14px;">استعادة كلمة المرور</h3>
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">أدخل بريدك المسجل ليظهر تنبيه رسمي للمالك الأول (فهد) بجانب اسمك.</p>
+                <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="forgot-email" placeholder="user@neris.store" style="direction:ltr; text-align:left;"></div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn" style="background:var(--success);" onclick="submitForgotRequest()">إرسال طلب للمالك</button>
+                    <button class="btn" style="background:var(--danger);" onclick="closeModal('forgot-modal')">إلغاء</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- نافذة إجبارية لإكمال الملف الشخصي أول مرة -->
+        <div class="modal" id="mandatory-profile-modal" style="z-index: 900;">
             <div class="modal-content" style="border-color:var(--warning);">
-                <h3 style="color:var(--warning); margin-bottom:8px; font-size:14px;">⚠️ تنبيه: استكمال الملف الشخصي</h3>
-                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">يجب عليك إدخال رقم الجوال وتاريخ الميلاد للمتابعة واستخدام النظام.</p>
+                <h3 style="color:var(--warning); margin-bottom:8px; font-size:14px;">⚠️ استكمال الملف الشخصي</h3>
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">يجب استكمال رقم الجوال وتاريخ الميلاد للمتابعة.</p>
                 <div class="input-group"><label>رقم الجوال</label><input type="text" id="mand-phone" placeholder="05xxxxxxxx"></div>
                 <div class="input-group"><label>تاريخ الميلاد</label><input type="date" id="mand-dob"></div>
-                <button class="btn" style="background:var(--success);" onclick="saveMandatoryProfile()">حفظ ومتابعة العمل</button>
+                <button class="btn" style="background:var(--success);" onclick="saveMandatoryProfile()">حفظ ومتابعة</button>
             </div>
         </div>
 
         <!-- 2. الواجهة الرئيسية -->
         <div id="home-main-screen" class="screen">
             <h2>الواجهة الرئيسية</h2>
-            <p class="subtitle" id="home-welcome-sub">ملخص العمليات والطلبيات الحقيقية</p>
+            <p class="subtitle" id="home-welcome-sub">ملخص العمليات والطلبات الفعلية</p>
 
             <div class="panel-box">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <h4 style="margin:0;">📊 ملخص الطلبات الفعلي</h4>
-                    <select id="stats-filter" onchange="updateRealStats()" style="width:100px; padding:3px; font-size:10px;">
-                        <option value="today">طلبات اليوم</option>
+                    <h4 style="margin:0;">📊 ملخص الطلبات</h4>
+                    <select id="stats-filter" style="width:100px; padding:3px; font-size:10px;">
+                        <option value="today">اليوم</option>
                         <option value="week" selected>هذا الأسبوع</option>
-                        <option value="month">الشهر الماضي</option>
+                        <option value="month">الشهر</option>
                     </select>
                 </div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span id="real-stat-total">0</span>
-                        <p>إجمالي الطلبات</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                    <div style="background:var(--bg-card); padding:10px; border-radius:8px; text-align:center; border:1px solid var(--border);">
+                        <span id="real-stat-total" style="font-size:16px; font-weight:bold;">0</span>
+                        <p style="font-size:10px; color:var(--text-muted);">إجمالي الطلبات</p>
                     </div>
-                    <div class="stat-card">
-                        <span id="real-stat-processing" style="color:var(--warning);">0</span>
-                        <p>قيد التجهيز</p>
-                    </div>
-                    <div class="stat-card">
-                        <span id="real-stat-completed" style="color:var(--success);">0</span>
-                        <p>تمت بنجاح</p>
-                    </div>
-                    <div class="stat-card">
-                        <span id="real-stat-products" style="color:var(--primary);">0</span>
-                        <p>منتجات المخزن</p>
+                    <div style="background:var(--bg-card); padding:10px; border-radius:8px; text-align:center; border:1px solid var(--border);">
+                        <span id="real-stat-completed" style="font-size:16px; font-weight:bold; color:var(--success);">0</span>
+                        <p style="font-size:10px; color:var(--text-muted);">تمت بنجاح</p>
                     </div>
                 </div>
             </div>
 
             <div class="panel-box">
-                <h4>➕ إضافة طلبية جديدة مباشرة</h4>
-                <div class="input-group" style="margin-bottom:7px;"><input type="text" id="quick-order-client" placeholder="اسم العميل"></div>
-                <div class="input-group" style="margin-bottom:7px;"><input type="text" id="quick-order-items" placeholder="تفاصيل المنتجات"></div>
-                <button class="btn" style="padding:7px; font-size:11px;" onclick="addNewRealOrder()">تسجيل وإضافة الطلبية</button>
+                <h4>➕ إضافة طلبية جديدة</h4>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="quick-order-client" placeholder="اسم العميل"></div>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="quick-order-items" placeholder="تفاصيل الطلب"></div>
+                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewRealOrder()">تسجيل الطلبية</button>
             </div>
         </div>
 
-        <!-- 3. إدارة الطلبيات وتوزيعها -->
+        <!-- 3. إدارة الطلبيات -->
         <div id="orders-screen" class="screen">
             <h2>إدارة الطلبيات وتوزيعها</h2>
-            <p class="subtitle">توزيع الطلبات الحقيقية على الموظفين ومتابعة حالتها</p>
-            
+            <p class="subtitle">توزيع الطلبات على الموظفين المتاحين</p>
             <div id="real-orders-list"></div>
         </div>
 
-        <!-- نافذة إسناد الطلب لموظف -->
+        <!-- نافذة إسناد الطلب -->
         <div class="modal" id="assign-order-modal">
             <div class="modal-content">
-                <h3 style="color:var(--text-main); margin-bottom:10px; font-size:14px;">إسناد الطلب إلى موظف</h3>
-                <div class="input-group">
-                    <label>اختر الموظف المختص:</label>
-                    <select id="assign-staff-select"></select>
-                </div>
-                <div style="display:flex; gap:8px; margin-top:12px;">
+                <h3 style="margin-bottom:10px; font-size:14px;">إسناد الطلب لموظف</h3>
+                <div class="input-group"><label>اختر الموظف:</label><select id="assign-staff-select"></select></div>
+                <div style="display:flex; gap:8px;">
                     <button class="btn" style="background:var(--success);" onclick="confirmAssignOrder()">تأكيد وإرسال</button>
                     <button class="btn" style="background:var(--danger);" onclick="closeModal('assign-order-modal')">إلغاء</button>
                 </div>
@@ -329,127 +366,132 @@
         <!-- 4. المخزن والمنتجات -->
         <div id="inventory-screen" class="screen">
             <h2>المخزن والمنتجات</h2>
-            <p class="subtitle">إدارة المنتجات الحقيقية وتكاليفها والأسعار</p>
-
-            <button class="btn" onclick="openModal('add-product-modal')" style="margin-bottom:10px;">+ إضافة منتج حقيقي جديد</button>
-
+            <p class="subtitle">إدارة المنتجات وتسعيرها (الأرقام باللغة الإنجليزية)</p>
+            <button class="btn" onclick="openModal('add-product-modal')" style="margin-bottom:10px;">+ إضافة منتج جديد</button>
             <div class="panel-box">
-                <h4>قائمة المنتجات الحالية</h4>
+                <h4>قائمة المنتجات</h4>
                 <div id="real-inventory-list"></div>
             </div>
         </div>
 
-        <!-- نافذة إضافة منتج -->
+        <!-- نافذة إضافة منتج (هامش الربح والأرقام بالإنجليزية) -->
         <div class="modal" id="add-product-modal">
             <div class="modal-content">
-                <h3 style="color:var(--text-main); margin-bottom:10px; font-size:14px;">إضافة منتج حقيقي</h3>
-                <div class="input-group"><label>اسم المنتج</label><input type="text" id="p-name" placeholder="مثال: عطر نيريس"></div>
-                <div class="input-group"><label>سعر التكلفة (ريال)</label><input type="number" id="p-cost" placeholder="100" oninput="calcPrice()"></div>
-                <div class="input-group"><label>هامش الربح (%)</label><input type="number" id="p-margin" value="25" oninput="calcPrice()"></div>
-                <div class="input-group"><label>السعر النهائي</label><input type="text" id="p-final" readonly style="color:var(--accent-green); font-weight:bold;"></div>
-                <div class="input-group"><label>صورة المنتج</label><input type="file" id="p-img" accept="image/*"></div>
-                
-                <div style="display:flex; gap:8px; margin-top:8px;">
+                <h3 style="margin-bottom:10px; font-size:14px;">إضافة منتج حقيقي</h3>
+                <div class="input-group"><label>اسم المنتج</label><input type="text" id="p-name" placeholder="Neris Perfume"></div>
+                <div class="input-group"><label>سعر التكلفة (SAR)</label><input type="number" id="p-cost" placeholder="100.00" style="direction: ltr; text-align: left;" oninput="calcPriceEnglish()"></div>
+                <div class="input-group"><label>هامش الربح (%)</label><input type="number" id="p-margin" value="25" style="direction: ltr; text-align: left;" oninput="calcPriceEnglish()"></div>
+                <div class="input-group"><label>السعر النهائي (SAR)</label><input type="text" id="p-final" readonly style="color:var(--accent-green); font-weight:bold; direction: ltr; text-align: left;"></div>
+                <div style="display:flex; gap:8px;">
                     <button class="btn" style="background:var(--success);" onclick="saveRealProduct()">حفظ</button>
                     <button class="btn" style="background:var(--danger);" onclick="closeModal('add-product-modal')">إلغاء</button>
                 </div>
             </div>
         </div>
 
-        <!-- 5. إدارة الموظفين والصلاحيات -->
+        <!-- 5. إدارة الموظفين والصلاحيات وتحديد الإجازات وطلبات كلمة المرور -->
         <div id="staff-screen" class="screen">
             <h2>إدارة الموظفين والصلاحيات</h2>
-            <p class="subtitle">التحكم بالمستخدمين والصلاحيات</p>
-
-            <div id="staff-limit-notice" style="font-size:10px; color:var(--warning); margin-bottom:8px; background:rgba(217,119,6,0.1); padding:6px; border-radius:6px; border:1px solid rgba(217,119,6,0.3);"></div>
-
-            <button class="btn" onclick="openModal('add-staff-modal')" style="margin-bottom:10px;">+ إضافة مستخدم جديد</button>
-
+            <p class="subtitle">تعديل الصلاحيات، متابعة الإجازات، وتنبيهات نسيت كلمة المرور</p>
             <div class="panel-box">
-                <h4>قائمة المستخدمين الحاليين</h4>
-                <div id="staff-members-list"></div>
+                <h4>قائمة الموظفين</h4>
+                <div id="staff-management-list"></div>
             </div>
         </div>
 
-        <!-- نافذة إضافة مستخدم -->
-        <div class="modal" id="add-staff-modal">
+        <!-- نافذة تعديل صلاحيات موظف -->
+        <div class="modal" id="staff-perms-modal">
             <div class="modal-content">
-                <h3 style="color:var(--text-main); margin-bottom:10px; font-size:14px;">إضافة حساب مستخدم جديد</h3>
-                <div class="input-group"><label>اسم المستخدم</label><input type="text" id="new-staff-name" placeholder="الاسم الكامل"></div>
-                <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="new-staff-email" placeholder="user@neris.com"></div>
-                <div class="input-group"><label>كلمة المرور</label><input type="password" id="new-staff-pass" placeholder="••••••••"></div>
-                <div class="input-group">
-                    <label>الدور:</label>
-                    <select id="new-staff-role">
-                        <option value="المالك الثاني">المالك الثاني</option>
-                        <option value="المسؤول الأول">المسؤول الأول</option>
-                        <option value="المسؤول الثاني">المسؤول الثاني</option>
-                        <option value="موظف">موظف (ترتيب وتجهيز فقط)</option>
+                <h3 id="modal-staff-title" style="margin-bottom:10px; font-size:14px;">صلاحيات الموظف</h3>
+                <div style="font-size:11px; margin-bottom:10px; display:flex; flex-direction:column; gap:6px;">
+                    <label><input type="checkbox" id="perm-orders"> إدارة وتوزيع الطلبات</label>
+                    <label><input type="checkbox" id="perm-inventory"> إدارة المخزن</label>
+                    <label><input type="checkbox" id="perm-addprod"> إضافة وتعديل المنتجات</label>
+                    <label><input type="checkbox" id="perm-chat"> إرسال تعاميم جماعية</label>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn" style="background:var(--success);" onclick="saveStaffPerms()">حفظ الصلاحيات</button>
+                    <button class="btn" style="background:var(--danger);" onclick="closeModal('staff-perms-modal')">إغلاق</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. الرسائل والتعاميم -->
+        <div id="chat-screen" class="screen">
+            <h2>الرسائل والتعاميم الداخلية</h2>
+            <p class="subtitle">إرسال تنبيه جماعي أو رسالة لموظف أو إنشاء مجموعة</p>
+            
+            <div class="panel-box" style="padding:10px; margin-bottom:10px;">
+                <h4 style="margin-bottom:6px;">إرسال رسالة أو تعميم</h4>
+                <div class="input-group" style="margin-bottom:6px;">
+                    <label>نوع الإرسال:</label>
+                    <select id="msg-type-select" onchange="toggleMsgTargetField()">
+                        <option value="all">تنبيه لجميع الموظفين (النشطين فقط)</option>
+                        <option value="single">موظف معين</option>
+                        <option value="group">مجموعة / قروب الموظفين</option>
                     </select>
                 </div>
-                <div style="display:flex; gap:8px; margin-top:8px;">
-                    <button class="btn" style="background:var(--success);" onclick="confirmAddStaff()">إضافة</button>
-                    <button class="btn" style="background:var(--danger);" onclick="closeModal('add-staff-modal')">إلغاء</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6. مساعد الذكاء الاصطناعي -->
-        <div id="ai-screen" class="screen">
-            <h2>مساعد الذكاء الاصطناعي</h2>
-            <p class="subtitle">استشر المساعد في تحليل المخزون والمبيعات</p>
-            <div style="background:var(--bg-dark); border:1px solid var(--border); border-radius:8px; padding:8px; height:220px; overflow-y:auto; margin-bottom:10px; font-size:11px;" id="ai-box">
-                <div style="color:var(--text-muted);">مرحباً يا فهد! أنا جاهز لمساعدتك.</div>
-            </div>
-            <div class="input-group"><input type="text" id="ai-input" placeholder="اسأل المساعد..."></div>
-            <button class="btn" onclick="askAiBot()">إرسال</button>
-        </div>
-
-        <!-- 7. الرسائل الداخلية (مع خيار إرسال رسالة إلى موظف محدد) -->
-        <div id="chat-screen" class="screen">
-            <h2>الرسائل الداخلية</h2>
-            <p class="subtitle">تواصل بين الإدارة والموظفين</p>
-            
-            <div class="panel-box" style="margin-bottom:8px; padding:8px;">
-                <h4 style="margin-bottom:5px;">إرسال رسالة إلى موظف</h4>
-                <div class="input-group" style="margin-bottom:6px;">
+                <div class="input-group" id="target-staff-group" style="margin-bottom:6px; display:none;">
                     <label>اختر الموظف:</label>
                     <select id="chat-target-staff"></select>
                 </div>
                 <div class="input-group" style="margin-bottom:6px;">
-                    <input type="text" id="chat-msg-text" placeholder="اكتب رسالة إرسال إلى فلان...">
+                    <input type="text" id="chat-msg-text" placeholder="اكتب نص الرسالة أو التعميم هنا...">
                 </div>
-                <button class="btn" style="padding:6px; font-size:11px;" onclick="sendTargetedMsg()">إرسال رسالة</button>
+                <button class="btn" style="padding:7px; font-size:11px;" onclick="sendBroadcastMessage()">إرسال الرسالة</button>
             </div>
 
             <div style="background:var(--bg-dark); border:1px solid var(--border); border-radius:8px; padding:8px; height:150px; overflow-y:auto; font-size:11px;" id="chat-box">
-                <div style="color:var(--text-muted); text-align:center;">لا توجد رسائل سابقة</div>
+                <div style="color:var(--text-muted); text-align:center;">سجل الرسائل فارغ</div>
             </div>
         </div>
 
-        <!-- 8. الملف الشخصي والإعدادات (مع حساب العمر تلقائياً للمالك) -->
+        <!-- 7. الملف الشخصي -->
         <div id="profile-screen" class="screen">
             <h2>الملف الشخصي وإعدادات الحساب</h2>
-            <p class="subtitle">بيانات الحساب الحالي وعمرك المحسوب تلقائياً</p>
+            <p class="subtitle">بيانات الحساب والعمر المحسوب تلقائياً</p>
             <div class="panel-box">
-                <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="prof-email" readonly></div>
-                <div class="input-group"><label>الدور الحالي</label><input type="text" id="prof-role" readonly style="color:var(--accent-green); font-weight:bold;"></div>
+                <div class="input-group"><label>البريد الإلكتروني</label><input type="email" id="prof-email" readonly style="direction: ltr; text-align: left;"></div>
+                <div class="input-group"><label>الدور الحالي</label><input type="text" id="prof-role" readonly></div>
                 <div class="input-group"><label>رقم الجوال</label><input type="text" id="prof-phone"></div>
                 <div class="input-group"><label>تاريخ الميلاد</label><input type="date" id="prof-dob" onchange="calculateUserAge()"></div>
-                <div class="input-group"><label>العمر المحسوب (تلقائياً)</label><input type="text" id="prof-age-calculated" readonly style="color:var(--accent-green); font-weight:bold;"></div>
-                <div class="input-group"><label>كلمة المرور الجديدة</label><input type="password" id="prof-pass" placeholder="اتركها فارغة إن لم ترد التغيير"></div>
+                <div class="input-group"><label>العمر المحسوب</label><input type="text" id="prof-age-calculated" readonly style="color:var(--accent-green); font-weight:bold;"></div>
                 <button class="btn" onclick="saveProfileChanges()">حفظ التعديلات</button>
+            </div>
+        </div>
+
+        <!-- المساعد الذكي المنبثق العائم في الزاوية السفلى -->
+        <div class="ai-fab" onclick="toggleAiPopup()">💬</div>
+        <div class="ai-popup-box" id="ai-popup-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:6px; margin-bottom:8px;">
+                <span style="font-size:12px; font-weight:bold; color:var(--accent-green);">مرحباً، أنا مساعدك الذكي 🤖</span>
+                <button onclick="toggleAiPopup()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
+            </div>
+            <div id="ai-chat-history" style="flex:1; overflow-y:auto; font-size:11px; margin-bottom:8px; display:flex; flex-direction:column; gap:6px;">
+                <div style="color:var(--text-muted); background:var(--bg-dark); padding:6px; border-radius:6px;">كيف يمكنني مساعدتك في إدارة النظام اليوم يا فهد؟</div>
+            </div>
+            <div style="display:flex; gap:6px;">
+                <input type="text" id="ai-quick-input" placeholder="اسأل المساعد..." style="flex:1; padding:6px; font-size:11px; background:var(--bg-dark); border:1px solid var(--border); border-radius:6px; color:var(--text-main);">
+                <button class="btn" style="width:auto; margin:0; padding:6px 10px; font-size:11px;" onclick="sendAiPrompt()">إرسال</button>
             </div>
         </div>
 
     </div>
 
     <script>
+        // إخفاء شاشة البداية
         setTimeout(() => {
             let splash = document.getElementById('splash-screen');
             splash.style.opacity = '0';
             setTimeout(() => { splash.style.display = 'none'; navToScreen('login-screen'); }, 400);
         }, 1000);
+
+        let currentLang = 'ar';
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.getElementById('lang-indicator').innerText = currentLang === 'ar' ? 'EN' : 'AR';
+            document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+        }
 
         function toggleTheme() {
             let html = document.documentElement;
@@ -464,14 +506,16 @@
         }
 
         let currentUser = null;
-        
         let usersDB = [
-            { name: "فهد راشد الحسين", email: "fahadfhd47@gmail.com", pass: "Fahad55003", role: "المالك الأول (كامل الصلاحيات)", phone: "0500000000", dob: "2006-07-31" }
+            { name: "فهد راشد الحسين", email: "fahadfhd47@gmail.com", pass: "Fahad55003", role: "المالك الأول", phone: "0500000000", dob: "2006-07-31", onLeave: false, resetRequested: false, perms: {orders:true, inventory:true, addprod:true, chat:true} },
+            { name: "محمد العتيبي", email: "mohammed@neris.store", pass: "123456", role: "موظف مبيعات", phone: "0511111111", dob: "2000-01-01", onLeave: false, resetRequested: false, perms: {orders:true, inventory:false, addprod:false, chat:false} },
+            { name: "سلطان الدوسري", email: "sultan@neris.store", pass: "123456", role: "موظف مستودع", phone: "0522222222", dob: "1998-05-15", onLeave: true, resetRequested: false, perms: {orders:false, inventory:true, addprod:false, chat:false} }
         ];
 
         let products = [];
         let realOrders = [];
         let activeOrderId = null;
+        let selectedStaffIndex = null;
 
         function toggleDrawer() { document.getElementById('main-drawer').classList.toggle('open'); }
         
@@ -481,8 +525,7 @@
             toggleDrawer();
             if(id === 'inventory-screen') renderInventory();
             if(id === 'orders-screen') renderOrders();
-            if(id === 'staff-screen') renderStaffList();
-            if(id === 'home-main-screen') updateRealStats();
+            if(id === 'staff-screen') renderStaffManagementList();
             if(id === 'chat-screen') populateChatStaffSelect();
         }
 
@@ -497,14 +540,11 @@
         function handleLogin() {
             let email = document.getElementById('login-email').value.trim();
             let pass = document.getElementById('login-password').value.trim();
-            
             let user = usersDB.find(u => u.email.toLowerCase() === email.toLowerCase() && u.pass === pass);
             
             if(user) {
                 currentUser = user;
                 document.getElementById('login-error').style.display = 'none';
-                
-                // فحص ما إذا كان الملف الشخصي مكتملاً، وإلا إجبار المستخدم على تعبئته وعدم التخطي
                 if(!currentUser.phone || !currentUser.dob) {
                     document.getElementById('mand-phone').value = currentUser.phone || '';
                     document.getElementById('mand-dob').value = currentUser.dob || '';
@@ -517,11 +557,24 @@
             }
         }
 
+        function openForgotModal() { openModal('forgot-modal'); }
+        
+        function submitForgotRequest() {
+            let mail = document.getElementById('forgot-email').value.trim();
+            let targetUser = usersDB.find(u => u.email.toLowerCase() === mail.toLowerCase());
+            if(!targetUser) {
+                alert("⚠️ البريد الإلكتروني غير مسجل في النظام!");
+                return;
+            }
+            targetUser.resetRequested = true;
+            alert("✅ تم إرسال طلب استعادة كلمة المرور بنجاح. سيظهر التنبيه الآن عند اسمك في لوحة تحكم المالك.");
+            closeModal('forgot-modal');
+        }
+
         function saveMandatoryProfile() {
             let phone = document.getElementById('mand-phone').value.trim();
             let dob = document.getElementById('mand-dob').value;
-            if(!phone || !dob) { alert("⚠️ يجب إدخال رقم الجوال وتاريخ الميلاد للمتابعة!"); return; }
-            
+            if(!phone || !dob) { alert("⚠️ يجب إدخال رقم الجوال وتاريخ الميلاد!"); return; }
             currentUser.phone = phone;
             currentUser.dob = dob;
             closeModal('mandatory-profile-modal');
@@ -531,7 +584,7 @@
         function initSystemAfterLogin() {
             document.getElementById('app-header').style.display = 'flex';
             document.getElementById('current-role-badge').innerText = currentUser.role;
-            document.getElementById('home-welcome-sub').innerText = `مرحباً بك (${currentUser.name}) - نظرة عامة`;
+            document.getElementById('home-welcome-sub').innerText = `مرحباً بك (${currentUser.name})`;
             
             document.getElementById('prof-email').value = currentUser.email;
             document.getElementById('prof-role').value = currentUser.role;
@@ -539,234 +592,190 @@
             document.getElementById('prof-dob').value = currentUser.dob || '';
             calculateUserAge();
 
-            updateRealStats();
             navToScreen('home-main-screen');
         }
 
-        // حساب العمر تلقائياً بدقة
         function calculateUserAge() {
             let dobVal = document.getElementById('prof-dob').value;
-            if(!dobVal) {
-                document.getElementById('prof-age-calculated').value = "غير متوفر";
-                return;
-            }
-            let birthDate = new Date(dobVal);
+            if(!dobVal) { document.getElementById('prof-age-calculated').value = "غير متوفرة"; return; }
+            let birth = new Date(dobVal);
             let today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            let m = today.getMonth() - birthDate.getMonth();
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            document.getElementById('prof-age-calculated').value = age + " سنة";
-            currentUser.dob = dobVal;
-            currentUser.phone = document.getElementById('prof-phone').value;
-        }
-
-        function updateRealStats() {
-            let total = realOrders.length;
-            let processing = realOrders.filter(o => o.status.includes('تجهيز')).length;
-            let completed = realOrders.filter(o => o.status.includes('نجاح')).length;
-            
-            document.getElementById('real-stat-total').innerText = total;
-            document.getElementById('real-stat-processing').innerText = processing;
-            document.getElementById('real-stat-completed').innerText = completed;
-            document.getElementById('real-stat-products').innerText = products.length;
+            let age = today.getFullYear() - birth.getFullYear();
+            document.getElementById('prof-age-calculated').value = age + " Years";
         }
 
         function addNewRealOrder() {
             let client = document.getElementById('quick-order-client').value.trim();
             let items = document.getElementById('quick-order-items').value.trim();
-            if(!client || !items) { alert("الرجاء إدخال اسم العميل وتفاصيل المنتجات!"); return; }
-
-            realOrders.push({
-                id: Date.now().toString().slice(-4),
-                client: client,
-                items: items,
-                status: "بانتظار التجهيز",
-                assignedTo: "غير مسند"
-            });
-
+            if(!client || !items) { alert("أدخل اسم العميل والطلب!"); return; }
+            realOrders.push({ id: Math.floor(1000 + Math.random()*9000), client, items, status: "Pending", assigned: "Unassigned" });
             document.getElementById('quick-order-client').value = "";
             document.getElementById('quick-order-items').value = "";
-            updateRealStats();
+            document.getElementById('real-stat-total').innerText = realOrders.length;
             alert("✅ تمت إضافة الطلبية بنجاح!");
         }
 
         function renderOrders() {
-            let container = document.getElementById('real-orders-list');
-            container.innerHTML = "";
-            if(realOrders.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:15px;">لا توجد طلبيات مسجلة حالياً.</div>`;
-                return;
-            }
-
+            let list = document.getElementById('real-orders-list');
+            list.innerHTML = realOrders.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:15px;">لا توجد طلبيات</div>' : '';
             realOrders.forEach((o, idx) => {
-                container.innerHTML += `
+                list.innerHTML += `
                     <div class="card-item">
-                        <div>
-                            <b>طلب #${o.id} - ${o.client}</b><br>
-                            <span style="color:var(--text-muted);">${o.items}</span><br>
-                            <span class="badge">${o.status} | المسؤول: ${o.assignedTo}</span>
-                        </div>
-                        <button class="btn" style="width:auto; padding:4px 7px; font-size:10px; margin:0; background:var(--primary);" onclick="openAssignOrderModal(${idx})">إسناد</button>
+                        <div><b>Order #${o.id} - ${o.client}</b><br><span style="color:var(--text-muted);">${o.items}</span><br><span class="badge">Status: ${o.status} | Staff: ${o.assigned}</span></div>
+                        <button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0;" onclick="openAssignModal(${idx})">إسناد</button>
                     </div>
                 `;
             });
         }
 
-        function openAssignOrderModal(idx) {
+        function openAssignModal(idx) {
             activeOrderId = idx;
-            let select = document.getElementById('assign-staff-select');
-            select.innerHTML = "";
-            let staffMembers = usersDB.filter(u => u.role.includes('موظف') || u.role.includes('مسؤول'));
-            if(staffMembers.length === 0) {
-                select.innerHTML = `<option value="لا توجد موظفين">يرجى إضافة موظفين أولاً</option>`;
-            } else {
-                staffMembers.forEach(s => {
-                    select.innerHTML += `<option value="${s.name}">${s.name} (${s.role})</option>`;
-                });
-            }
+            let sel = document.getElementById('assign-staff-select');
+            sel.innerHTML = "";
+            usersDB.filter(u => !u.onLeave).forEach(s => {
+                sel.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+            });
             openModal('assign-order-modal');
         }
 
         function confirmAssignOrder() {
-            let staffName = document.getElementById('assign-staff-select').value;
-            if(activeOrderId !== null && realOrders[activeOrderId]) {
-                realOrders[activeOrderId].assignedTo = staffName;
-                realOrders[activeOrderId].status = `قيد التجهيز (${staffName})`;
-                closeModal('assign-order-modal');
-                renderOrders();
-            }
+            let staff = document.getElementById('assign-staff-select').value;
+            realOrders[activeOrderId].assigned = staff;
+            realOrders[activeOrderId].status = "Processing";
+            closeModal('assign-order-modal');
+            renderOrders();
         }
 
-        function calcPrice() {
+        // حساب الأسعار بالأرقام الإنجليزية
+        function calcPriceEnglish() {
             let cost = parseFloat(document.getElementById('p-cost').value) || 0;
             let margin = parseFloat(document.getElementById('p-margin').value) || 25;
             let final = cost + (cost * (margin / 100));
-            document.getElementById('p-final').value = final.toFixed(2) + " ريال";
+            document.getElementById('p-final').value = final.toFixed(2) + " SAR";
         }
 
         function saveRealProduct() {
-            let name = document.getElementById('p-name').value.trim();
-            let cost = document.getElementById('p-cost').value;
-            let margin = document.getElementById('p-margin').value;
-            let finalPrice = parseFloat(cost) + (parseFloat(cost) * (parseFloat(margin)/100));
-            let imgInput = document.getElementById('p-img');
-            let imgUrl = (imgInput.files && imgInput.files[0]) ? URL.createObjectURL(imgInput.files[0]) : "";
-
-            if(!name || !cost) { alert("الرجاء إدخال اسم المنتج وتكلفته!"); return; }
-
-            if(currentUser.role.includes('موظف')) {
-                alert("⚠️ عذراً، ليس لديك صلاحية لإضافة منتجات.");
-                return;
-            }
-
-            products.push({ name, cost, price: finalPrice.toFixed(2), img: imgUrl });
+            let name = document.getElementById('p-name').value;
+            let final = document.getElementById('p-final').value;
+            if(!name || !final) { alert("أدخل بيانات المنتج"); return; }
+            products.push({ name, final });
             closeModal('add-product-modal');
             renderInventory();
-            alert("✅ تمت إضافة المنتج بنجاح!");
+            alert("✅ تم حفظ المنتج بنجاح!");
         }
 
         function renderInventory() {
             let list = document.getElementById('real-inventory-list');
             list.innerHTML = "";
-            if(products.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:15px;">المخزن فارغ حالياً.</div>`;
-                return;
-            }
-            products.forEach((p, idx) => {
-                list.innerHTML += `
-                    <div class="card-item">
-                        <div><b>${p.name}</b><br><span style="color:var(--accent-green);">السعر: ${p.price} ريال</span></div>
-                        <button class="btn" style="width:auto; padding:3px 6px; font-size:10px; background:var(--danger); margin:0;" onclick="products.splice(${idx},1); renderInventory();">حذف</button>
-                    </div>
-                `;
+            products.forEach(p => {
+                list.innerHTML += `<div class="card-item"><div><b>${p.name}</b></div><span style="color:var(--accent-green); font-weight:bold;">${p.final}</span></div>`;
             });
         }
 
-        function renderStaffList() {
-            let list = document.getElementById('staff-members-list');
-            let notice = document.getElementById('staff-limit-notice');
-            
-            let ownersCount = usersDB.filter(u => u.role.includes('المالك')).length;
-            let adminsCount = usersDB.filter(u => u.role.includes('المسؤول')).length;
-            let staffCount = usersDB.filter(u => u.role.includes('موظف')).length;
-
-            notice.innerHTML = `الحد الأقصى: ملاك (${ownersCount}/2) | مسؤولين (${adminsCount}/2) | موظفين (${staffCount}/5)`;
-
+        function renderStaffManagementList() {
+            let list = document.getElementById('staff-management-list');
             list.innerHTML = "";
             usersDB.forEach((u, idx) => {
+                let alertBadge = u.resetRequested ? `<span style="background:var(--danger); color:white; padding:2px 6px; border-radius:6px; font-size:9px; margin-right:5px;">⚠️ يحتاج تغيير كلمة المرور</span>` : '';
                 list.innerHTML += `
-                    <div class="card-item">
-                        <div><b>${u.name}</b><br><small style="color:var(--text-muted);">${u.email}</small><br><span class="badge">${u.role}</span></div>
-                        ${idx !== 0 ? `<button class="btn" style="width:auto; padding:3px 6px; font-size:10px; background:var(--danger); margin:0;" onclick="usersDB.splice(${idx},1); renderStaffList();">حذف</button>` : '<span style="font-size:10px; color:var(--accent-green);">الرئيسي</span>'}
+                    <div class="card-item" style="${u.resetRequested ? 'border-color:var(--danger);' : ''}">
+                        <div>
+                            <b>${u.name}</b> (${u.role}) ${alertBadge}<br>
+                            <span style="color:var(--text-muted);">${u.email}</span><br>
+                            <div style="display:flex; gap:10px; margin-top:4px;">
+                                <label style="font-size:10px; color:var(--warning); cursor:pointer;"><input type="checkbox" ${u.onLeave ? 'checked' : ''} onclick="toggleLeave(${idx})"> في إجازة</label>
+                                ${u.resetRequested ? `<span style="font-size:10px; color:var(--success); cursor:pointer; text-decoration:underline;" onclick="clearResetRequest(${idx})">تم حل المشكلة (إزالة التنبيه)</span>` : ''}
+                            </div>
+                        </div>
+                        <button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0; background:var(--primary);" onclick="openStaffPerms(${idx})">الصلاحيات</button>
                     </div>
                 `;
             });
         }
 
-        function confirmAddStaff() {
-            let name = document.getElementById('new-staff-name').value.trim();
-            let email = document.getElementById('new-staff-email').value.trim();
-            let pass = document.getElementById('new-staff-pass').value.trim();
-            let role = document.getElementById('new-staff-role').value;
+        function toggleLeave(idx) {
+            usersDB[idx].onLeave = !usersDB[idx].onLeave;
+            alert(usersDB[idx].onLeave ? "✅ تم تسجيل الموظف في إجازة (لن تتلقى أية تعاميم جماعية)." : "✅ الموظف عاد للعمل.");
+            renderStaffManagementList();
+        }
 
-            if(!name || !email || !pass) { alert("الرجاء تعبئة كافة الحقول!"); return; }
+        function clearResetRequest(idx) {
+            usersDB[idx].resetRequested = false;
+            alert("✅ تم إلغاء تنبيه إعادة تعيين كلمة المرور لهذا الموظف.");
+            renderStaffManagementList();
+        }
 
-            let ownersCount = usersDB.filter(u => u.role.includes('المالك')).length;
-            let adminsCount = usersDB.filter(u => u.role.includes('المسؤول')).length;
-            let staffCount = usersDB.filter(u => u.role.includes('موظف')).length;
+        function openStaffPerms(idx) {
+            selectedStaffIndex = idx;
+            let u = usersDB[idx];
+            document.getElementById('modal-staff-title').innerText = `صلاحيات: ${u.name}`;
+            document.getElementById('perm-orders').checked = u.perms.orders;
+            document.getElementById('perm-inventory').checked = u.perms.inventory;
+            document.getElementById('perm-addprod').checked = u.perms.addprod;
+            document.getElementById('perm-chat').checked = u.perms.chat;
+            openModal('staff-perms-modal');
+        }
 
-            if(role.includes('المالك') && ownersCount >= 2) { alert("⚠️ الحد الأقصى للملاك (2)."); return; }
-            if(role.includes('المسؤول') && adminsCount >= 2) { alert("⚠️ الحد الأقصى للمسؤولين (2)."); return; }
-            if(role.includes('موظف') && staffCount >= 5) { alert("⚠️ الحد الأقصى للموظفين (5)."); return; }
+        function saveStaffPerms() {
+            if(selectedStaffIndex !== null) {
+                usersDB[selectedStaffIndex].perms = {
+                    orders: document.getElementById('perm-orders').checked,
+                    inventory: document.getElementById('perm-inventory').checked,
+                    addprod: document.getElementById('perm-addprod').checked,
+                    chat: document.getElementById('perm-chat').checked
+                };
+                closeModal('staff-perms-modal');
+                alert("✅ تم حفظ صلاحيات الموظف بنجاح.");
+            }
+        }
 
-            usersDB.push({ name, email, pass, role, phone: "", dob: "" });
-            closeModal('add-staff-modal');
-            renderStaffList();
-            alert(`✅ تمت إضافة المستخدم (${name}) بنجاح!`);
+        function toggleMsgTargetField() {
+            let type = document.getElementById('msg-type-select').value;
+            document.getElementById('target-staff-group').style.display = type === 'single' ? 'block' : 'none';
         }
 
         function populateChatStaffSelect() {
             let sel = document.getElementById('chat-target-staff');
             sel.innerHTML = "";
             usersDB.forEach(u => {
-                if(u.email !== currentUser.email) {
-                    sel.innerHTML += `<option value="${u.name}">${u.name} (${u.role})</option>`;
-                }
+                sel.innerHTML += `<option value="${u.name}">${u.name}</option>`;
             });
         }
 
-        function sendTargetedMsg() {
-            let target = document.getElementById('chat-target-staff').value;
+        function sendBroadcastMessage() {
+            let type = document.getElementById('msg-type-select').value;
             let text = document.getElementById('chat-msg-text').value.trim();
             if(!text) return;
             let box = document.getElementById('chat-box');
-            box.innerHTML += `<div style="margin-bottom:5px; text-align:right;"><b>إلى (${target}):</b> ${text}</div>`;
+            let targetLabel = type === 'all' ? 'جميع الموظفين النشطين' : (type === 'group' ? 'قروب الموظفين' : document.getElementById('chat-target-staff').value);
+            
+            box.innerHTML += `<div style="margin-bottom:6px; background:var(--bg-card); padding:6px; border-radius:6px;"><b>إلى (${targetLabel}):</b> ${text}</div>`;
             document.getElementById('chat-msg-text').value = "";
             box.scrollTop = box.scrollHeight;
+            alert("✅ تم إرسال الرسالة بنجاح!");
         }
 
-        function askAiBot() {
-            let txt = document.getElementById('ai-input').value.trim();
-            if(!txt) return;
-            let box = document.getElementById('ai-box');
-            box.innerHTML += `<div style="margin-bottom:5px; text-align:right;"><b>أنت:</b> ${txt}</div>`;
-            
-            let reply = `لدينا الآن ${realOrders.length} طلبية مسجلة و${products.length} منتج.`;
+        function toggleAiPopup() {
+            let box = document.getElementById('ai-popup-box');
+            box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function sendAiPrompt() {
+            let inp = document.getElementById('ai-quick-input');
+            let text = inp.value.trim();
+            if(!text) return;
+            let history = document.getElementById('ai-chat-history');
+            history.innerHTML += `<div><b>أنت:</b> ${text}</div>`;
+            inp.value = "";
             setTimeout(() => {
-                box.innerHTML += `<div style="margin-bottom:6px; color:var(--accent-green); text-align:right;"><b>AI:</b> ${reply}</div>`;
-                box.scrollTop = box.scrollHeight;
+                history.innerHTML += `<div style="color:var(--accent-green);"><b>المساعد:</b> النظام يعمل بكفاءة وجاهز لإدارة الطلبيات والموظفين معك بكامل القوة يا فهد!</div>`;
+                history.scrollTop = history.scrollHeight;
             }, 300);
-            document.getElementById('ai-input').value = "";
         }
 
         function saveProfileChanges() {
             currentUser.phone = document.getElementById('prof-phone').value;
-            let p = document.getElementById('prof-pass').value;
-            if(p) currentUser.pass = p;
-            calculateUserAge();
-            alert("✅ تم تحديث الملف الشخصي بنجاح.");
+            alert("✅ تم حفظ التعديلات بنجاح.");
         }
 
         function logout() {
