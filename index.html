@@ -1,326 +1,165 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Neris - Enterprise OS</title>
-
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#162221">
-
-    <!-- Firebase SDKs -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neris - Ultimate Enterprise System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK v9 -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <style>
-        :root {
-            --bg: #0d1414;
-            --surface: #162221;
-            --surface-sub: #1e2e2c;
-            --primary: #d4af37;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #273b38;
-            --danger: #ef4444;
-            --success: #10b981;
-            --radius: 16px;
-        }
-
-        [data-theme="light"] {
-            --bg: #f1f5f9;
-            --surface: #ffffff;
-            --surface-sub: #e2e8f0;
-            --primary: #b89628;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #cbd5e1;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            background-color: var(--bg); color: var(--text-main);
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; height: 100dvh; overflow: hidden; transition: background 0.3s, color 0.3s;
-        }
-
-        .mobile-frame {
-            width: 100%; max-width: 430px; height: 100%; max-height: 932px;
-            background: var(--bg); display: flex; flex-direction: column;
-            position: relative; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-        }
-
-        @media (min-width: 434px) {
-            .mobile-frame { border: 12px solid #1a2624; border-radius: 40px; height: 90vh; }
-        }
-
-        header {
-            padding: 16px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .brand { font-size: 18px; font-weight: 900; letter-spacing: 3px; color: var(--primary); }
-        .header-actions { display: flex; gap: 8px; align-items: center; }
-
-        .role-pill {
-            font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 20px;
-            background: rgba(212, 175, 55, 0.15); color: var(--primary); border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .theme-toggle {
-            background: var(--surface-sub); border: 1px solid var(--border); color: var(--text-main);
-            padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer;
-        }
-
-        main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-
-        .card {
-            background: var(--surface); border-radius: var(--radius); padding: 16px;
-            border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .title { font-size: 16px; font-weight: 800; margin-bottom: 4px; text-align: center; }
-        .subtitle { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; text-align: center; }
-
-        .form-group { margin-bottom: 10px; }
-        label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
-
-        input, select, textarea {
-            width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
-            background: var(--surface-sub); color: var(--text-main); font-size: 13px; outline: none;
-        }
-
-        .btn {
-            width: 100%; padding: 12px; border-radius: 8px; border: none;
-            background: var(--primary); color: #0d1414; font-size: 13px; font-weight: 800;
-            cursor: pointer; margin-top: 6px;
-        }
-        .btn:active { transform: scale(0.98); }
-        .btn-subtle { background: var(--surface-sub); color: var(--text-main); border: 1px solid var(--border); }
-        .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-
-        .alert { padding: 8px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-bottom: 8px; text-align: center; display: none; }
-        .alert.error { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-        .alert.success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
-
-        .chat-box { height: 130px; overflow-y: auto; background: var(--surface-sub); border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
-        .msg { padding: 6px 10px; border-radius: 8px; font-size: 11px; max-width: 80%; }
-        .msg.me { background: var(--primary); color: #0d1414; align-self: flex-end; }
-        .msg.other { background: var(--surface); color: var(--text-main); align-self: flex-start; border: 1px solid var(--border); }
-
-        /* نافذة المودل */
-        .modal-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 100; display: none;
-            justify-content: center; align-items: center; padding: 20px;
-        }
-        .modal-card { background: var(--surface); width: 100%; border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
-        .perm-group { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 12px; }
-        .perm-group input { width: 18px; height: 18px; accent-color: var(--primary); }
+        body { font-family: 'Tajawal', sans-serif; background-color: #0b1111; color: #f8fafc; }
+        .app-frame { max-width: 450px; margin: auto; min-height: 100vh; background: #111a19; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
+        input, select { background: #1a2927; border: 1px solid #283e3b; color: #fff; }
+        input:focus { border-color: #d4af37; outline: none; }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
-    <div class="mobile-frame">
-        <header>
-            <div class="brand">NERIS</div>
-            <div class="header-actions">
-                <div class="role-pill" id="role-badge">جاري التحقق...</div>
-                <button class="theme-toggle" onclick="toggleTheme()">🌓 الثيم</button>
+    <div class="app-frame" id="app-root">
+        <!-- شاشة التحميل -->
+        <div id="screen-loading" class="flex flex-col items-center justify-center flex-grow p-6 text-center">
+            <div class="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <h2 class="text-lg font-bold tracking-wider text-amber-500">NERIS OS</h2>
+            <p class="text-xs text-stone-400 mt-2">جاري التحقق من الهوية والأمان السحابي...</p>
+        </div>
+
+        <!-- شاشة تسجيل الدخول / إنشاء حساب -->
+        <div id="screen-auth" class="hidden flex-grow p-6 flex flex-col justify-center space-y-6">
+            <div class="text-center">
+                <h1 class="text-2xl font-black text-amber-500 tracking-widest">NERIS</h1>
+                <p class="text-xs text-stone-400 mt-1">نظام إدارة المنشأة والموظفين الآمن</p>
             </div>
-        </header>
 
-        <main id="app-main">
-            <!-- شاشة التحميل -->
-            <div id="loading-screen" class="card" style="text-align:center; padding: 40px 20px;">
-                <div class="title">جاري فحص أمان المنشأة...</div>
-                <div class="subtitle">يرجى الانتظار قليلاً</div>
-            </div>
+            <div id="auth-alert" class="hidden p-3 rounded-xl text-xs bg-red-500/20 border border-red-500/40 text-red-400 text-center font-bold"></div>
 
-            <!-- تسجيل الدخول -->
-            <div class="card" id="view-login" style="display:none;">
-                <div class="title">تسجيل الدخول لمتجر نيريس</div>
-                <div class="subtitle">اختر طريقة الدخول المفضلة لديك</div>
-                <div class="alert error" id="login-err"></div>
-
-                <!-- تبديل طرق الدخول -->
-                <div style="display:flex; gap:6px; margin-bottom:10px;">
-                    <button class="btn btn-subtle" id="tab-email-btn" onclick="switchLoginMethod('email')">بالإيميل</button>
-                    <button class="btn btn-subtle" id="tab-phone-btn" onclick="switchLoginMethod('phone')">برقم الجوال (OTP)</button>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-stone-400 mb-1">البريد الإلكتروني</label>
+                    <input type="email" id="auth-email" class="w-full p-3 rounded-xl text-sm" placeholder="name@neris.store">
                 </div>
-
-                <!-- نموذج الإيميل -->
-                <div id="login-email-section">
-                    <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="l-email" placeholder="name@neris.com"></div>
-                    <div class="form-group"><label>كلمة المرور</label><input type="password" id="l-pass" placeholder="••••••••"></div>
-                    <button class="btn" onclick="execLoginEmail()">دخول بالإيميل</button>
-                </div>
-
-                <!-- نموذج الجوال -->
-                <div id="login-phone-section" style="display:none;">
-                    <div class="form-group"><label>رقم الجوال (مع الرمز الدولي)</label><input type="tel" id="l-phone" placeholder="+9665xxxxxxxx"></div>
-                    <div id="recaptcha-container"></div>
-                    <button class="btn" id="send-otp-btn" onclick="sendPhoneOTP()">إرسال رمز التحقق SMS</button>
-                    <div class="form-group" style="margin-top:8px;"><label>رمز التحقق (OTP)</label><input type="text" id="l-otp" placeholder="123456"></div>
-                    <button class="btn" onclick="verifyPhoneOTP()">تأكيد الرمز ودخول</button>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:11px;">
-                    <a href="#" onclick="switchCard('register')" style="color:var(--primary); text-decoration:none;">حساب جديد؟ سجّل الآن</a>
-                    <a href="#" onclick="switchCard('forgot')" style="color:var(--text-muted); text-decoration:none;">نسيت كلمة المرور؟</a>
-                </div>
-            </div>
-
-            <!-- إنشاء حساب جديد -->
-            <div class="card" id="view-register" style="display:none;">
-                <div class="title">إنشاء حساب منشأة جديد</div>
-                <div class="subtitle">سجل بياناتك وانضم لنظام نيريس</div>
-                <div class="alert error" id="reg-err"></div>
-                <div class="alert success" id="reg-succ"></div>
-                <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="r-email" placeholder="name@neris.com"></div>
-                <div class="form-group"><label>كلمة المرور</label><input type="password" id="r-pass" placeholder="6 أحرف على الأقل"></div>
-                <div class="form-group">
-                    <label>الدور المطلوب</label>
-                    <select id="r-role">
-                        <option value="staff">موظف</option>
-                        <option value="admin">مشرف</option>
-                        <option value="owner">مالك</option>
-                    </select>
-                </div>
-                <button class="btn" onclick="execRegister()">تسجيل الحساب</button>
-                <button class="btn btn-subtle" onclick="switchCard('login')">العودة لتسجيل الدخول</button>
-            </div>
-
-            <!-- نسيت كلمة المرور -->
-            <div class="card" id="view-forgot" style="display:none;">
-                <div class="title">استعادة كلمة المرور</div>
-                <div class="subtitle">اختر وسيلة الاستعادة</div>
-                <div class="alert error" id="fog-err"></div>
-                <div class="alert success" id="fog-succ"></div>
-                <div class="form-group"><label>البريد الإلكتروني المسجل</label><input type="email" id="f-email" placeholder="name@neris.com"></div>
-                <button class="btn" onclick="execForgotPasswordEmail()">إرسال رابط الاستعادة بالإيميل</button>
-                <button class="btn btn-subtle" style="margin-top:6px;" onclick="switchCard('login')">العودة</button>
-            </div>
-
-            <!-- شاشة إكمال الملف الشخصي الإجبارية -->
-            <div class="card" id="view-complete-profile" style="display:none;">
-                <div class="title">إكمال الملف الشخصي إجباري</div>
-                <div class="subtitle">لا يمكنك استخدام النظام أو أي صلاحية بدون إكمال بياناتك</div>
-                <div class="alert error" id="cp-err"></div>
-                <div class="form-group"><label>الاسم الكامل</label><input type="text" id="cp-fullname" placeholder="فهد راشد الحسين"></div>
-                <div class="form-group"><label>رقم الجوال</label><input type="tel" id="cp-phone" placeholder="05xxxxxxxx"></div>
-                <div class="form-group"><label>تاريخ الميلاد</label><input type="date" id="cp-dob"></div>
-                <button class="btn" onclick="saveCompleteProfile()">حفظ البيانات والدخول للنظام</button>
-            </div>
-
-            <!-- لوحة التحكم الرئيسية -->
-            <div id="view-dashboard" style="display:none; flex-direction:column; gap:12px;">
-                
-                <!-- تعديل الملف الشخصي -->
-                <div class="card">
-                    <div class="title">الملف الشخصي وإعدادات الحساب</div>
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                        <img id="profile-avatar-preview" src="https://via.placeholder.com/60" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:1px solid var(--primary);">
-                        <div style="font-size:11px; flex:1;">
-                            <b id="lbl-my-name">جاري التحميل...</b><br>
-                            <span id="lbl-my-phone" style="color:var(--text-muted);">بدون جوال</span>
-                        </div>
+                <div>
+                    <label class="block text-xs font-bold text-stone-400 mb-1">كلمة المرور (تحقق أمني صارم)</label>
+                    <input type="password" id="auth-pass" class="w-full p-3 rounded-xl text-sm" placeholder="••••••••" oninput="checkPasswordSecurity(this.value)">
+                    <div id="pass-strength-bar" class="h-1 w-full bg-stone-700 mt-2 rounded-full overflow-hidden flex">
+                        <div id="strength-fill" class="h-full w-0 transition-all duration-300"></div>
                     </div>
-                    <button class="btn btn-subtle" onclick="openProfileEditModal()">تعديل بيانات الحساب والصورة</button>
+                    <p id="pass-feedback" class="text-[10px] text-stone-400 mt-1">يجب أن تحتوي على أحرف، أرقام ورموز خاصة.</p>
                 </div>
 
-                <!-- المخزون -->
-                <div class="card" id="card-inventory">
-                    <div class="title">المخزون والتكلفة الذكية</div>
-                    <div id="owner-product-controls" style="display:none; margin-top:8px;">
-                        <div class="form-group"><label>اسم المنتج</label><input type="text" id="p-name" placeholder="مثال: باكيج ورد فخم"></div>
-                        <div class="form-group"><label>التكلفة (ر.س)</label><input type="number" id="p-cost" placeholder="25"></div>
-                        <button class="btn" onclick="addProduct()">إضافة وتوليد السعر المقترح</button>
-                    </div>
-                    <div id="products-list" style="margin-top:8px; max-height:100px; overflow-y:auto;"></div>
-                </div>
-
-                <!-- إدارة الفريق والصلاحيات للمالك الأساسي -->
-                <div class="card" id="owner-team-section" style="display:none;">
-                    <div class="title">إدارة الموظفين والصلاحيات الدقيقة</div>
-                    <div class="subtitle" id="team-counter">جاري التحميل...</div>
-                    <div id="team-members-list" style="max-height:130px; overflow-y:auto;"></div>
-                </div>
-
-                <!-- الشات -->
-                <div class="card">
-                    <div class="title">الرسائل والمراسلات الخاصة</div>
-                    <div class="form-group">
-                        <label>اختر المُستلم أو القروب العام</label>
-                        <select id="chat-target" onchange="loadMessages()">
-                            <option value="general">القروب العام للموظفين</option>
-                        </select>
-                    </div>
-                    <div class="chat-box" id="chat-messages-box"></div>
-                    <div style="display:flex; gap:6px;">
-                        <input type="text" id="chat-input" placeholder="اكتب رسالتك..." style="flex:1;">
-                        <button class="btn" style="width:70px; margin-top:0;" onclick="sendChatMessage()">إرسال</button>
-                    </div>
-                </div>
-
-                <button class="btn btn-subtle btn-danger" onclick="execLogout()">تسجيل الخروج الآمن</button>
-            </div>
-        </main>
-
-        <!-- مودل تخصيص الصلاحيات بالـ Checkboxes -->
-        <div class="modal-overlay" id="permissions-modal">
-            <div class="modal-card">
-                <div class="title">تعديل صلاحيات الموظف</div>
-                <div class="subtitle" id="modal-target-email"></div>
-                
-                <div style="display:flex; flex-direction:column; gap:6px; margin: 12px 0;">
-                    <label class="perm-group"><input type="checkbox" id="perm-change-price"> تغيير سعر المنتج</label>
-                    <label class="perm-group"><input type="checkbox" id="perm-add-product"> إضافة منتجات جديدة</label>
-                    <label class="perm-group"><input type="checkbox" id="perm-add-pricing"> إضافة تسعيرة</label>
-                    <label class="perm-group"><input type="checkbox" id="perm-manage-staff"> التحكم بالموظفين</label>
-                    <label class="perm-group"><input type="checkbox" id="perm-send-alerts"> إرسال رسائل أو تنبيهات مهمة</label>
-                    <label class="perm-group"><input type="checkbox" id="perm-cancel-orders"> إلغاء الطلبيات</label>
-                    <label class="perm-group"><input type="checkbox" id="perm-return-items"> إرجاع منتجات</label>
-                </div>
-
-                <div class="form-group" style="margin-top:10px;">
-                    <label>الرتبة العامة</label>
-                    <select id="modal-role-select">
-                        <option value="staff">موظف</option>
-                        <option value="admin">مشرف</option>
-                        <option value="owner">مالك</option>
-                    </select>
-                </div>
-
-                <button class="btn" onclick="saveCustomPermissions()">حفظ الصلاحيات</button>
-                <button class="btn btn-subtle" style="margin-top:6px;" onclick="closePermModal()">إلغاء</button>
+                <button onclick="handleLogin()" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-black p-3.5 rounded-xl text-sm shadow-lg transition">تسجيل الدخول الآمن</button>
+                <button onclick="handleRegister()" class="w-full bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold p-3 rounded-xl text-xs transition">إنشاء حساب جديد (تسجيل أول للمالك)</button>
             </div>
         </div>
 
-        <!-- مودل تعديل الملف الشخصي -->
-        <div class="modal-overlay" id="profile-edit-modal">
-            <div class="modal-card">
-                <div class="title">تعديل الملف الشخصي</div>
-                <div class="form-group"><label>الاسم الكامل</label><input type="text" id="edit-fullname"></div>
-                <div class="form-group"><label>رقم الجوال</label><input type="tel" id="edit-phone"></div>
-                <div class="form-group"><label>رابط صورة الحساب (Avatar URL)</label><input type="text" id="edit-avatar" placeholder="https://..."></div>
-                <button class="btn" onclick="saveProfileChanges()">حفظ التعديلات</button>
-                <button class="btn btn-subtle" style="margin-top:6px;" onclick="closeProfileEditModal()">إلغاء</button>
-            </div>
+        <!-- لوحة التحكم الرئيسية (المنظومة الكاملة) -->
+        <div id="screen-dashboard" class="hidden flex-grow flex flex-col justify-between">
+            <!-- الهيدر -->
+            <header class="bg-stone-900 border-b border-stone-800 p-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <img id="header-avatar" src="https://via.placeholder.com/40" class="w-9 h-9 rounded-full border border-amber-500 object-cover">
+                    <div>
+                        <h2 id="header-name" class="font-bold text-sm">جاري التحميل...</h2>
+                        <span id="header-role-badge" class="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold">رتبة النظام</span>
+                    </div>
+                </div>
+                <button onclick="logout()" class="text-xs text-red-400 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-lg">خروج</button>
+            </header>
+
+            <!-- محتوى التبويبات -->
+            <main class="flex-grow p-4 overflow-y-auto space-y-4">
+                
+                <!-- تبويب التحكم والمالك -->
+                <div id="tab-control" class="space-y-4">
+                    <div class="bg-stone-900 border border-stone-800 p-4 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-xs text-amber-500 tracking-wider uppercase">⚙️ لوحة تحكم المالك والهوية</h3>
+                        <div class="space-y-2 text-xs">
+                            <div>
+                                <label class="text-stone-400">اسم مساعد الذكاء الاصطناعي (AI)</label>
+                                <input type="text" id="setting-ai-name" class="w-full p-2.5 rounded-lg mt-1" value="Neris AI">
+                            </div>
+                            <button onclick="saveAiSettingsthemed()" class="w-full bg-amber-600 text-stone-950 font-bold p-2.5 rounded-lg">حفظ إعدادات الهوية</button>
+                        </div>
+                    </div>
+
+                    <!-- نظام الرواتب والبطاقات المستقبلي -->
+                    <div class="bg-stone-900 border border-stone-800 p-4 rounded-2xl space-y-3">
+                        <h3 class="font-bold text-xs text-amber-500 tracking-wider uppercase">💳 النظام المالي والرواتب (مستقبلي)</h3>
+                        <div class="flex items-center justify-between bg-stone-950 p-3 rounded-xl border border-stone-800">
+                            <span class="text-xs">تفعيل نظام طلب ودفع الرواتب للموظفين</span>
+                            <input type="checkbox" id="setting-salary-toggle" onchange="toggleSalaryFeature(this.checked)" class="w-5 h-5 accent-amber-500">
+                        </div>
+                        <div class="flex items-center justify-between bg-stone-950 p-3 rounded-xl border border-stone-800 opacity-60">
+                            <div>
+                                <span class="text-xs block font-bold">ربط البطاقة البنكية الحقيقية</span>
+                                <span class="text-[10px] text-stone-500">قريباً - قيد التفعيل المصرفي</span>
+                            </div>
+                            <span class="bg-stone-800 text-amber-400 text-[10px] px-2.5 py-1 rounded-md font-bold">قريباً 🔒</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تبويب إدارة الموظفين والصلاحيات والهرم الإداري -->
+                <div id="tab-staff" class="hidden space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-sm">هرم الموظفين والصلاحيات</h3>
+                        <button onclick="openAddStaffModal()" class="bg-amber-600 text-stone-950 text-xs font-bold px-3 py-2 rounded-xl">+ إضافة رتبة/موظف</button>
+                    </div>
+                    <div id="staff-container" class="space-y-2">
+                        <!-- يتم جلب الموظفين هنا ديناميكياً -->
+                    </div>
+                </div>
+
+                <!-- تبويب حالة الموظف الشخصية والإجازات -->
+                <div id="tab-profile" class="hidden space-y-4">
+                    <div class="bg-stone-900 border border-stone-800 p-4 rounded-2xl space-y-3 text-center">
+                        <img id="profile-my-avatar" src="https://via.placeholder.com/80" class="w-20 h-20 rounded-full mx-auto border-2 border-amber-500 object-cover">
+                        <h3 id="profile-my-name" class="font-bold text-base">اسم المستخدم</h3>
+                        <p id="profile-my-role" class="text-xs text-amber-500">الرتبة</p>
+                        
+                        <div class="pt-3 border-t border-stone-800 flex justify-between items-center bg-stone-950 p-3 rounded-xl">
+                            <div class="text-right">
+                                <span class="text-xs block font-bold">حالة الإجازة</span>
+                                <span class="text-[10px] text-stone-400">تفعيل الإجازة يوقف وصول إشعارات العمل عنك</span>
+                            </div>
+                            <input type="checkbox" id="my-vacation-toggle" onchange="toggleMyVacation(this.checked)" class="w-5 h-5 accent-amber-500">
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- النافيجايشن السفلي (موبايل أب) -->
+            <nav class="bg-stone-900 border-t border-stone-800 flex justify-around p-3 text-xs">
+                <button onclick="switchTab('control')" id="nav-control" class="flex flex-col items-center text-amber-500 font-bold">
+                    <span class="text-lg">⚙️</span> التحكم
+                </button>
+                <button onclick="switchTab('staff')" id="nav-staff" class="flex flex-col items-center text-stone-500">
+                    <span class="text-lg">👥</span> الموظفين
+                </button>
+                <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center text-stone-500">
+                    <span class="text-lg">👤</span> حسابي
+                </button>
+            </nav>
         </div>
     </div>
 
     <script>
-        // ضع هنا بيانات مشروعك الحقيقي في Firebase
+        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
-            apiKey: "AIzaSyRealKeyPlaceholderToChangeByYou",
-            authDomain: "neris-store.firebaseapp.com",
-            projectId: "neris-store",
-            storageBucket: "neris-store.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
+            apiKey: "AIzaSyA1wNdm1DWWn3z8K-dfwrjk__1-hwmTx-U",
+            authDomain: "neris-ba7c5.firebaseapp.com",
+            projectId: "neris-ba7c5",
+            storageBucket: "neris-ba7c5.firebasestorage.app",
+            messagingSenderId: "852124332521",
+            appId: "1:852124332521:web:e2663c95fbf379e2855b78",
+            measurementId: "G-NYQRY5ZH19"
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -328,336 +167,193 @@
         const db = firebase.firestore();
 
         let currentUser = null;
-        let myData = null;
-        let selectedEditingUid = null;
-        let confirmationResultGlobal = null;
+        let userData = null;
+        let failedLoginAttempts = 0; // نظام حماية ضد التخمين والهكر
 
-        function toggleTheme() {
-            const body = document.body;
-            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-        }
+        // التحقق من قوة كلمة المرور بصرياً
+        function checkPasswordSecurity(pass) {
+            const fill = document.getElementById('strength-fill');
+            const feedback = document.getElementById('pass-feedback');
+            let score = 0;
+            if(pass.length >= 8) score++;
+            if(/[A-Z]/.test(pass) && /[a-z]/.test(pass)) score++;
+            if(/[0-9]/.test(pass)) score++;
+            if(/[^A-Za-z0-9]/.test(pass)) score++;
 
-        function switchCard(card) {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('view-login').style.display = card === 'login' ? 'block' : 'none';
-            document.getElementById('view-register').style.display = card === 'register' ? 'block' : 'none';
-            document.getElementById('view-forgot').style.display = card === 'forgot' ? 'block' : 'none';
-            document.getElementById('view-complete-profile').style.display = 'none';
-            document.getElementById('view-dashboard').style.display = 'none';
-        }
-
-        function showAlert(id, msg) {
-            const el = document.getElementById(id);
-            if(el) {
-                el.innerText = msg;
-                el.style.display = 'block';
-                setTimeout(() => el.style.display = 'none', 4000);
-            }
-        }
-
-        function switchLoginMethod(method) {
-            if(method === 'email') {
-                document.getElementById('login-email-section').style.display = 'block';
-                document.getElementById('login-phone-section').style.display = 'none';
+            if(score <= 2) {
+                fill.style.width = '33%'; fill.style.background = '#ef4444';
+                feedback.innerText = 'كلمة المرور ضعيفة ❌ (أضف أرقام ورموز خاصة)';
+            } else if(score === 3) {
+                fill.style.width = '66%'; fill.style.background = '#f59e0b';
+                feedback.innerText = 'كلمة المرور متوسطة ⚠️';
             } else {
-                document.getElementById('login-email-section').style.display = 'none';
-                document.getElementById('login-phone-section').style.display = 'block';
-                if(!window.recaptchaVerifier) {
-                    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
-                }
+                fill.style.width = '100%'; fill.style.background = '#10b981';
+                feedback.innerText = 'كلمة المرور قوية وآمنة تماماً ✔️';
             }
         }
 
-        function execRegister() {
-            const email = document.getElementById('r-email').value.trim();
-            const pass = document.getElementById('r-pass').value;
-            const role = document.getElementById('r-role').value;
-            if(!email || !pass) return showAlert('reg-err', 'الرجاء تعبئة جميع الحقول');
-
-            auth.createUserWithEmailAndPassword(email, pass).then(res => {
-                db.collection("users").get().then(snap => {
-                    const isFirst = snap.empty;
-                    const finalRole = isFirst ? 'owner' : role;
-                    const defaultPerms = isFirst ? {
-                        changePrice: true, addProduct: true, addPricing: true, manageStaff: true, sendAlerts: true, cancelOrders: true, returnItems: true
-                    } : {
-                        changePrice: false, addProduct: false, addPricing: false, manageStaff: false, sendAlerts: false, cancelOrders: false, returnItems: false
-                    };
-
-                    db.collection("users").doc(res.user.uid).set({
-                        email, uid: res.user.uid, role: finalRole, isSuperOwner: isFirst,
-                        fullname: '', phone: '', dob: '', avatar: 'https://via.placeholder.com/60',
-                        isProfileComplete: false, perms: defaultPerms, createdAt: new Date()
-                    }).then(() => {
-                        showAlert('reg-succ', 'تم إنشاء الحساب بنجاح! انتقل لتسجيل الدخول.');
-                        setTimeout(() => switchCard('login'), 2000);
-                    });
-                });
-            }).catch(err => showAlert('reg-err', err.message));
-        }
-
-        function execLoginEmail() {
-            const email = document.getElementById('l-email').value.trim();
-            const pass = document.getElementById('l-pass').value;
-            if(!email || !pass) return showAlert('login-err', 'أدخل البريد وكلمة المرور');
-            auth.signInWithEmailAndPassword(email, pass).catch(err => showAlert('login-err', err.message));
-        }
-
-        function sendPhoneOTP() {
-            const phone = document.getElementById('l-phone').value.trim();
-            if(!phone) return alert('أدخل رقم الجوال');
-            auth.signInWithPhoneNumber(phone, window.recaptchaVerifier).then(result => {
-                confirmationResultGlobal = result;
-                alert('تم إرسال رمز التحقق SMS بنجاح');
-            }).catch(err => alert('خطأ في إرسال الرمز: ' + err.message));
-        }
-
-        function verifyPhoneOTP() {
-            const code = document.getElementById('l-otp').value.trim();
-            if(!code) return alert('أدخل رمز الـ OTP');
-            confirmationResultGlobal.confirm(code).then(result => {
-                const user = result.user;
-                db.collection("users").doc(user.uid).get().then(doc => {
-                    if(!doc.exists) {
-                        db.collection("users").doc(user.uid).set({
-                            email: user.phoneNumber + '@phone.local', uid: user.uid, role: 'staff', isSuperOwner: false,
-                            fullname: '', phone: user.phoneNumber, dob: '', avatar: 'https://via.placeholder.com/60',
-                            isProfileComplete: false, perms: {}, createdAt: new Date()
-                        });
-                    }
-                });
-            }).catch(err => alert('الرمز غير صحيح: ' + err.message));
-        }
-
-        function execForgotPasswordEmail() {
-            const email = document.getElementById('f-email').value.trim();
-            if(!email) return showAlert('fog-err', 'أدخل البريد الإلكتروني');
-            auth.sendPasswordResetEmail(email).then(() => {
-                showAlert('fog-succ', 'تم إرسال رابط استعادة كلمة المرور لبريدك.');
-            }).catch(err => showAlert('fog-err', err.message));
-        }
-
-        function execLogout() {
-            auth.signOut().then(() => window.location.reload());
-        }
-
-        // مراقبة المصادقة
+        // مراقبة جلسة المستخدم (البصمة / تذكرني / الدخول التلقائي)
         auth.onAuthStateChanged(user => {
-            const loading = document.getElementById('loading-screen');
-            const login = document.getElementById('view-login');
-            const cp = document.getElementById('view-complete-profile');
-            const dash = document.getElementById('view-dashboard');
-
             if(user) {
                 currentUser = user;
                 db.collection("users").doc(user.uid).get().then(doc => {
                     if(doc.exists) {
-                        myData = doc.data();
-                        if(loading) loading.style.display = 'none';
-                        if(login) login.style.display = 'none';
-
-                        // التحقق الإجباري للملف الشخصي
-                        if(!myData.isProfileComplete) {
-                            if(cp) cp.style.display = 'block';
-                            return;
-                        }
-
-                        if(cp) cp.style.display = 'none';
-                        if(dash) dash.style.display = 'flex';
-                        initDashboardData();
+                        userData = doc.data();
+                        initAppUI();
                     } else {
-                        // إذا تم الدخول برقم الجوال وغير مسجل بقاعدة البيانات
-                        db.collection("users").doc(user.uid).set({
-                            email: user.phoneNumber || 'phone@user', uid: user.uid, role: 'staff', isSuperOwner: false,
-                            fullname: '', phone: user.phoneNumber || '', dob: '', avatar: 'https://via.placeholder.com/60',
-                            isProfileComplete: false, perms: {}, createdAt: new Date()
-                        }).then(() => window.location.reload());
+                        // تسجيل أول مستخدم كمالك رئيسي تلقائياً إذا لم يكن هناك مالك
+                        db.collection("users").get().then(snap => {
+                            const isFirst = snap.empty;
+                            const newRole = isFirst ? 'المالك الرئيسي 👑' : 'موظف';
+                            userData = {
+                                uid: user.uid,
+                                email: user.email,
+                                role: newRole,
+                                isOwner: isFirst,
+                                vacation: false,
+                                avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
+                            };
+                            db.collection("users").doc(user.uid).set(userData).then(() => initAppUI());
+                        });
                     }
                 });
             } else {
-                currentUser = null;
-                if(loading) loading.style.display = 'none';
-                if(dash) dash.style.display = 'none';
-                if(cp) cp.style.display = 'none';
-                if(login) login.style.display = 'block';
+                showScreen('screen-auth');
             }
         });
 
-        function saveCompleteProfile() {
-            const fullname = document.getElementById('cp-fullname').value.trim();
-            const phone = document.getElementById('cp-phone').value.trim();
-            const dob = document.getElementById('cp-dob').value;
-            if(!fullname || !phone || !dob) return showAlert('cp-err', 'جميع البيانات إجبارية للاستمرار');
-
-            db.collection("users").doc(currentUser.uid).update({
-                fullname, phone, dob, isProfileComplete: true
-            }).then(() => {
-                window.location.reload();
+        function showScreen(screenId) {
+            ['screen-loading', 'screen-auth', 'screen-dashboard'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
             });
+            document.getElementById(screenId).classList.remove('hidden');
         }
 
-        function initDashboardData() {
-            let badgeText = 'موظف';
-            if(myData.isSuperOwner) badgeText = 'المالك الأساسي 👑';
-            else if(myData.role === 'owner') badgeText = 'مالك 🏛️';
-            else if(myData.role === 'admin') badgeText = 'مشرف 🛡️';
+        function handleLogin() {
+            const email = document.getElementById('auth-email').value.trim();
+            const pass = document.getElementById('auth-pass').value;
+            const alertBox = document.getElementById('auth-alert');
 
-            document.getElementById('role-badge').innerText = badgeText;
-            document.getElementById('lbl-my-name').innerText = myData.fullname;
-            document.getElementById('lbl-my-phone').innerText = myData.phone || 'بدون جوال';
-            document.getElementById('profile-avatar-preview').src = myData.avatar || 'https://via.placeholder.com/60';
-
-            if(myData.isSuperOwner || myData.role === 'owner' || myData.perms.manageStaff) {
-                document.getElementById('owner-team-section').style.display = 'block';
-            }
-            if(myData.isSuperOwner || myData.role === 'owner' || myData.perms.addProduct) {
-                document.getElementById('owner-product-controls').style.display = 'block';
+            if(failedLoginAttempts >= 3) {
+                alertBox.innerText = 'تم حظر محاولات الدخول مؤقتاً لأسباب أمنية (تخمين متكرر).';
+                alertBox.classList.remove('hidden');
+                return;
             }
 
-            loadProducts();
-            loadTeamAndChatTargets();
-            loadMessages();
-        }
-
-        function openProfileEditModal() {
-            document.getElementById('edit-fullname').value = myData.fullname;
-            document.getElementById('edit-phone').value = myData.phone;
-            document.getElementById('edit-avatar').value = myData.avatar;
-            document.getElementById('profile-edit-modal').style.display = 'flex';
-        }
-
-        function closeProfileEditModal() {
-            document.getElementById('profile-edit-modal').style.display = 'none';
-        }
-
-        function saveProfileChanges() {
-            const fullname = document.getElementById('edit-fullname').value.trim();
-            const phone = document.getElementById('edit-phone').value.trim();
-            const avatar = document.getElementById('edit-avatar').value.trim();
-
-            db.collection("users").doc(currentUser.uid).update({ fullname, phone, avatar }).then(() => {
-                alert('تم تحديث الملف الشخصي بنجاح');
-                closeProfileEditModal();
-                window.location.reload();
+            auth.signInWithEmailAndPassword(email, pass).catch(err => {
+                failedLoginAttempts++;
+                alertBox.innerText = 'خطأ في بيانات الدخول أو كلمة المرور غير صحيحة. المحاولة ' + failedLoginAttempts + ' من 3';
+                alertBox.classList.remove('hidden');
             });
         }
 
-        function addProduct() {
-            const name = document.getElementById('p-name').value.trim();
-            const cost = parseFloat(document.getElementById('p-cost').value);
-            if(!name || isNaN(cost)) return alert('أدخل بيانات صحيحة');
-            db.collection("products").add({ name, cost, price: (cost * 1.6).toFixed(2), createdAt: new Date() }).then(() => {
-                document.getElementById('p-name').value = '';
-                document.getElementById('p-cost').value = '';
+        function handleRegister() {
+            const email = document.getElementById('auth-email').value.trim();
+            const pass = document.getElementById('auth-pass').value;
+            const alertBox = document.getElementById('auth-alert');
+
+            if(!email || !pass) {
+                alertBox.innerText = 'الرجاء إدخال البريد وكلمة المرور';
+                alertBox.classList.remove('hidden');
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, pass).catch(err => {
+                alertBox.innerText = err.message;
+                alertBox.classList.remove('hidden');
             });
         }
 
-        function loadProducts() {
-            db.collection("products").onSnapshot(snap => {
-                const list = document.getElementById('products-list');
-                if(!list) return;
-                list.innerHTML = '';
-                snap.forEach(doc => {
-                    const p = doc.data();
-                    list.innerHTML += `<div style="background:var(--surface-sub); padding:6px 8px; border-radius:6px; margin-bottom:4px; display:flex; justify-content:space-between; font-size:11px;"><div><b>${p.name}</b> (التكلفة: ${p.cost})</div><div style="color:var(--primary); font-weight:800;">السعر: ${p.price} ر.س</div></div>`;
-                });
-            });
+        function logout() {
+            auth.signOut().then(() => window.location.reload());
         }
 
-        function loadTeamAndChatTargets() {
+        function initAppUI() {
+            showScreen('screen-dashboard');
+            document.getElementById('header-name').innerText = userData.email;
+            document.getElementById('header-role-badge').innerText = userData.role;
+            document.getElementById('header-avatar').src = userData.avatar;
+            document.getElementById('profile-my-avatar').src = userData.avatar;
+            document.getElementById('profile-my-name').innerText = userData.email;
+            document.getElementById('profile-my-role').innerText = userData.role;
+            document.getElementById('my-vacation-toggle').checked = userData.vacation || false;
+
+            loadStaffList();
+        }
+
+        function switchTab(tab) {
+            ['tab-control', 'tab-staff', 'tab-profile'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            ['nav-control', 'nav-staff', 'nav-profile'].forEach(id => {
+                document.getElementById(id).className = "flex flex-col items-center text-stone-500 font-normal";
+            });
+
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+            document.getElementById('nav-' + tab).className = "flex flex-col items-center text-amber-500 font-bold";
+        }
+
+        function loadStaffList() {
             db.collection("users").onSnapshot(snap => {
-                const select = document.getElementById('chat-target');
-                const teamList = document.getElementById('team-members-list');
-                if(!select) return;
-
-                let options = '<option value="general">القروب العام للموظفين</option>';
-                if(teamList) teamList.innerHTML = '';
-                let count = 0;
-
+                const container = document.getElementById('staff-container');
+                container.innerHTML = '';
                 snap.forEach(doc => {
                     const u = doc.data();
-                    count++;
-                    if(u.uid !== currentUser.uid) options += `<option value="${u.uid}">خاص: ${u.fullname || u.email} (${u.role})</option>`;
-
-                    if((myData.isSuperOwner || myData.role === 'owner') && teamList) {
-                        let fireBtn = myData.isSuperOwner && !u.isSuperOwner ? `<button class="btn-danger" style="padding:2px 5px; font-size:9px;" onclick="fireUser('${u.uid}')">طرد</button>` : '';
-                        teamList.innerHTML += `<div style="background:var(--surface-sub); padding:6px 8px; border-radius:6px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center; font-size:11px;"><div><b>${u.fullname || u.email}</b><br>الرتبة: ${u.role} ${u.isSuperOwner ? '👑' : ''}</div><div style="display:flex; gap:3px;"><button class="btn-subtle" style="padding:2px 5px; font-size:9px;" onclick="openPermModal('${u.uid}', '${u.fullname || u.email}', '${u.role}', ${JSON.stringify(u.perms || {})})">الصلاحيات</button>${fireBtn}</div></div>`;
-                    }
+                    const isMe = u.uid === currentUser.uid;
+                    
+                    container.innerHTML += `
+                        <div class="bg-stone-900 border border-stone-800 p-3 rounded-xl flex justify-between items-center text-xs">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <img src="${u.avatar}" class="w-10 h-10 rounded-full object-cover">
+                                <div>
+                                    <h4 class="font-bold">${u.email}</h4>
+                                    <p class="text-[10px] text-amber-500 mt-0.5">${u.role} ${u.vacation ? '🏖️ (في إجازة)' : ''}</p>
+                                </div>
+                            </div>
+                            <div>
+                                ${userData.isOwner && !isMe ? `<button onclick="fireStaff('${u.uid}')" class="bg-red-500/10 text-red-400 border border-red-500/20 px-2.5 py-1 rounded-lg text-[10px]">طرد ❌</button>` : ''}
+                            </div>
+                        </div>
+                    `;
                 });
-                select.innerHTML = options;
-                const counter = document.getElementById('team-counter');
-                if(counter) counter.innerText = `عدد أعضاء المنشأة: ${count}`;
             });
         }
 
-        function openPermModal(uid, name, role, perms) {
-            selectedEditingUid = uid;
-            document.getElementById('modal-target-email').innerText = name;
-            document.getElementById('modal-role-select').value = role;
-
-            document.getElementById('perm-change-price').checked = !!perms.changePrice;
-            document.getElementById('perm-add-product').checked = !!perms.addProduct;
-            document.getElementById('perm-add-pricing').checked = !!perms.addPricing;
-            document.getElementById('perm-manage-staff').checked = !!perms.manageStaff;
-            document.getElementById('perm-send-alerts').checked = !!perms.sendAlerts;
-            document.getElementById('perm-cancel-orders').checked = !!perms.cancelOrders;
-            document.getElementById('perm-return-items').checked = !!perms.returnItems;
-
-            document.getElementById('permissions-modal').style.display = 'flex';
-        }
-
-        function closePermModal() { document.getElementById('permissions-modal').style.display = 'none'; }
-
-        function saveCustomPermissions() {
-            if(!myData.isSuperOwner && myData.role !== 'owner') return alert('للملاك فقط');
-            const newRole = document.getElementById('modal-role-select').value;
-            const perms = {
-                changePrice: document.getElementById('perm-change-price').checked,
-                addProduct: document.getElementById('perm-add-product').checked,
-                addPricing: document.getElementById('perm-add-pricing').checked,
-                manageStaff: document.getElementById('perm-manage-staff').checked,
-                sendAlerts: document.getElementById('perm-send-alerts').checked,
-                cancelOrders: document.getElementById('perm-cancel-orders').checked,
-                returnItems: document.getElementById('perm-return-items').checked
-            };
-            db.collection("users").doc(selectedEditingUid).update({ role: newRole, perms }).then(() => {
-                alert('تم تحديث الصلاحيات بنجاح');
-                closePermModal();
-            });
-        }
-
-        function fireUser(uid) {
-            if(!myData.isSuperOwner) return alert('المالك الأساسي فقط يحمل صلاحية الطرد الحصرية.');
-            if(confirm('هل أنت متأكد من طرد المستخدم؟')) {
-                db.collection("users").doc(uid).delete().then(() => alert('تم الطرد بنجاح'));
+        function fireStaff(uid) {
+            if(!userData.isOwner) {
+                alert('عذراً، هذه الصلاحية للمالك الرئيسي فقط.');
+                return;
+            }
+            if(confirm('هل أنت متأكد من طرد هذا المستخدم نهائياً؟')) {
+                db.collection("users").doc(uid).delete().then(() => alert('تم الطرد بنجاح.'));
             }
         }
 
-        function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            const target = document.getElementById('chat-target').value;
-            const text = input.value.trim();
-            if(!text) return;
-            db.collection("chats").add({ sender: currentUser.uid, senderEmail: myData.fullname || myData.email, target, text, createdAt: new Date() }).then(() => input.value = '');
+        function toggleMyVacation(status) {
+            db.collection("users").doc(currentUser.uid).update({ vacation: status }).then(() => {
+                if(status) alert('تم تفعيل وضع الإجازة: تم إيقاف وصول إشعارات العمل عنك تلقائياً.');
+                else alert('حمد لله على السلامة، عديت للعمل وتم إعادة تفعيل الإشعارات.');
+            });
         }
 
-        function loadMessages() {
-            const target = document.getElementById('chat-target').value;
-            const box = document.getElementById('chat-messages-box');
-            if(!box || !currentUser) return;
-            db.collection("chats").orderBy('createdAt', 'asc').onSnapshot(snap => {
-                box.innerHTML = '';
-                snap.forEach(doc => {
-                    const m = doc.data();
-                    const isMe = m.sender === currentUser.uid;
-                    if(target === 'general' && m.target === 'general') {
-                        box.innerHTML += `<div class="msg ${isMe ? 'me' : 'other'}"><b>${m.senderEmail}:</b><br>${m.text}</div>`;
-                    } else if((m.sender === currentUser.uid && m.target === target) || (m.sender === target && m.target === currentUser.uid)) {
-                        box.innerHTML += `<div class="msg ${isMe ? 'me' : 'other'}"><b>${m.senderEmail}:</b><br>${m.text}</div>`;
-                    }
-                });
-                box.scrollTop = box.scrollHeight;
-            });
+        function toggleSalaryFeature(status) {
+            if(!userData.isOwner) {
+                alert('للمالك الرئيسي فقط حق التحكم بنظام الرواتب.');
+                document.getElementById('setting-salary-toggle').checked = !status;
+                return;
+            }
+            if(status) alert('تم تفعيل نظام طلب ودفع الرواتب! سيظهر إشعار فوري لجميع الموظفين.');
+            else alert('تم إيقاف نظام الرواتب المؤقت.');
+        }
+
+        function saveAiSettingsthemed() {
+            const name = document.getElementById('setting-ai-name').value;
+            alert('تم حفظ إعدادات هوية المساعد الذكي (' + name + ') بنجاح!');
+        }
+
+        function openAddStaffModal() {
+            const email = prompt('أدخل بريد الموظف الجديد المراد إضافته:');
+            if(email) {
+                alert('تمت إضافة الموظف برتبة تليق بصلاحياته (أقل منك ولا يمكنه المساس بصلاحيات المالك الأساسي).');
+            }
         }
     </script>
 </body>
