@@ -4,11 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Neris Enterprise OS - Security Edition</title>
+    <title>Neris Enterprise OS - Master Edition</title>
 
+    <!-- App Icon & Apple Web App Metas -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Neris">
+    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=180&auto=format&fit=crop&q=80">
+    <link rel="icon" type="image/png" href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=192&auto=format&fit=crop&q=80">
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -17,35 +20,34 @@
 
     <style>
         :root {
-            --bg-body: #f8fafc;
-            --surface: #ffffff;
-            --surface-sub: #f1f5f9;
+            --bg-body: #0b0f19;
+            --surface: #151c2c;
+            --surface-sub: #1e293b;
             --primary: #c5a059;
             --primary-hover: #b08d46;
-            --primary-light: rgba(197, 160, 89, 0.12);
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
+            --primary-light: rgba(197, 160, 89, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #232d42;
             --danger: #ef4444;
-            --danger-bg: #fef2f2;
+            --danger-bg: rgba(239, 68, 68, 0.15);
             --success: #10b981;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.07);
+            --warning: #f59e0b;
+            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
             --radius-xl: 24px;
             --radius-lg: 16px;
             --radius-md: 12px;
         }
 
-        body.dark-mode {
-            --bg-body: #0b0f19;
-            --surface: #151c2c;
-            --surface-sub: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #232d42;
-            --danger-bg: rgba(239, 68, 68, 0.15);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
-            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+        body.light-mode {
+            --bg-body: #f8fafc;
+            --surface: #ffffff;
+            --surface-sub: #f1f5f9;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger-bg: #fef2f2;
+            --shadow-lg: 0 20px 30px -10px rgba(0,0,0,0.07);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -56,11 +58,29 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* SPLASH SCREEN */
+        #splash-screen {
+            position: fixed; inset: 0; background: #0b0f19;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; transition: opacity 0.5s ease;
+        }
+
+        .splash-logo {
+            font-size: 36px; font-weight: 900; letter-spacing: 6px; color: var(--primary);
+            text-shadow: 0 0 20px rgba(197, 160, 89, 0.4); animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
         .app-shell {
             display: flex; flex-direction: column; height: 100%; max-width: 480px;
             margin: 0 auto; position: relative; background: var(--bg-body);
         }
 
+        /* BROADCAST BANNER */
         .broadcast-banner {
             background: linear-gradient(135deg, #c5a059, #8e6d2f);
             color: #ffffff; padding: 12px 16px; font-size: 13px; font-weight: 800;
@@ -98,12 +118,18 @@
         .card-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 6px; text-align: center; }
         .card-subtitle { font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px; }
 
-        .form-group { margin-bottom: 14px; }
+        .form-group { margin-bottom: 14px; position: relative; }
         label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
 
         input, select, textarea {
             width: 100%; padding: 14px 16px; border-radius: var(--radius-md); border: 1px solid var(--border);
             background: var(--surface-sub); color: var(--text-main); font-size: 14px; font-weight: 600; outline: none;
+        }
+
+        .pwd-container { position: relative; }
+        .toggle-pwd-btn {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer;
         }
 
         .btn {
@@ -113,6 +139,7 @@
         }
 
         .btn-danger { background: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); }
+        .btn-warning { background: var(--warning); color: #000; }
         .btn-subtle { background: var(--surface-sub); color: var(--text-main); border: 1px solid var(--border); box-shadow: none; margin-top: 8px; }
         .btn-text { background: none; border: none; color: var(--primary); font-size: 13px; font-weight: 700; width: 100%; padding: 10px; cursor: pointer; margin-top: 4px; }
 
@@ -123,11 +150,9 @@
         .alert-box.error { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
         .alert-box.success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
 
-        .upload-zone {
-            border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 20px;
-            text-align: center; cursor: pointer; background: var(--surface-sub); margin-bottom: 14px;
-        }
-        .preview-box { width: 100%; height: 140px; border-radius: var(--radius-md); object-fit: cover; margin-top: 10px; display: none; }
+        .tab-switcher { display: flex; gap: 8px; margin-bottom: 16px; }
+        .tab-btn { flex: 1; padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--surface-sub); color: var(--text-muted); font-weight: 700; font-size: 12px; cursor: pointer; }
+        .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
         .bottom-nav {
             position: absolute; bottom: 0; left: 0; right: 0;
@@ -139,42 +164,28 @@
         .nav-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; color: var(--text-muted); font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; }
         .nav-btn.active { color: var(--primary); }
 
-        .grid-products { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .product-card {
-            background: var(--surface); border-radius: var(--radius-lg); padding: 12px;
-            border: 1px solid var(--border); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between;
-        }
-        .product-card img { width: 100%; height: 120px; border-radius: var(--radius-md); object-fit: cover; background: var(--surface-sub); }
-        .product-name { font-size: 14px; font-weight: 800; margin-top: 8px; color: var(--text-main); }
-        .product-price { color: var(--primary); font-weight: 900; font-size: 15px; margin-top: 2px; }
-
         .user-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 16px; background: var(--surface); border: 1px solid var(--border);
+            display: flex; flex-direction: column; gap: 8px;
+            padding: 14px 16px; background: var(--surface); border: 1px solid var(--border);
             border-radius: var(--radius-lg); margin-bottom: 10px;
         }
 
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-left: 6px; }
-        .status-dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
-        .status-dot.offline { background: var(--text-muted); }
-
-        .chat-box { display: flex; flex-direction: column; height: 350px; }
-        .messages-container { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
-        .msg-bubble { max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 13px; font-weight: 600; line-height: 1.4; }
-        .msg-bubble.sent { background: var(--primary); color: #fff; align-self: flex-start; border-bottom-right-radius: 4px; }
-        .msg-bubble.received { background: var(--surface-sub); color: var(--text-main); align-self: flex-end; border-bottom-left-radius: 4px; border: 1px solid var(--border); }
-        .msg-time { font-size: 9px; opacity: 0.7; margin-top: 4px; text-align: left; }
-
-        .broadcast-card {
-            background: linear-gradient(145deg, var(--surface), var(--primary-light));
-            border: 1px solid var(--primary); padding: 16px; border-radius: var(--radius-lg); margin-bottom: 16px;
-        }
+        .status-badge { font-size: 10px; padding: 4px 8px; border-radius: 12px; font-weight: 800; display: inline-block; }
+        .status-badge.active { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .status-badge.vacation { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .status-badge.suspended { background: var(--danger-bg); color: var(--danger); }
 
         .view-panel { display: none; }
         .view-panel.active { display: block; }
     </style>
 </head>
 <body>
+
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
+        <div class="splash-logo">NERIS</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px; font-weight: 700;">Enterprise Operating System</div>
+    </div>
 
     <div class="app-shell">
 
@@ -190,7 +201,7 @@
         <header>
             <div class="brand-logo">NERIS</div>
             <div class="header-controls">
-                <button class="icon-btn" onclick="toggleAppTheme()" id="theme-icon">🌙</button>
+                <button class="icon-btn" onclick="toggleAppTheme()" id="theme-icon">☀️</button>
                 <div class="user-badge" id="role-badge">تسجيل الدخول</div>
             </div>
         </header>
@@ -201,35 +212,75 @@
             <div class="alert-box success" id="auth-success"></div>
 
             <div class="card" id="card-login">
-                <div class="card-title">مرحباً بك</div>
-                <div class="card-subtitle">تسجيل الدخول لوحة التحكم الخاصة بـ Neris</div>
-                <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="login-email" placeholder="user@neris.com"></div>
-                <div class="form-group"><label>كلمة المرور</label><input type="password" id="login-pass" placeholder="••••••••"></div>
-                <button class="btn" onclick="execLogin()">تسجيل الدخول</button>
+                <div class="card-title">تسجيل الدخول</div>
+                <div class="card-subtitle">اختر وسيلة الدخول المناسبة لحسابك</div>
+
+                <div class="tab-switcher">
+                    <button class="tab-btn active" id="tab-btn-email" onclick="switchLoginMethod('email')">✉️ البريد الإلكتروني</button>
+                    <button class="tab-btn" id="tab-btn-phone" onclick="switchLoginMethod('phone')">📱 رقم الجوال</button>
+                </div>
+
+                <!-- EMAIL FORM -->
+                <div id="login-email-form">
+                    <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="login-email" placeholder="user@neris.com"></div>
+                    <div class="form-group">
+                        <label>كلمة المرور</label>
+                        <div class="pwd-container">
+                            <input type="password" id="login-pass" placeholder="••••••••">
+                            <button class="toggle-pwd-btn" type="button" onclick="togglePasswordVisibility('login-pass', this)">👁️</button>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="execLoginEmail()">تسجيل الدخول</button>
+                </div>
+
+                <!-- PHONE FORM -->
+                <div id="login-phone-form" style="display: none;">
+                    <div class="form-group">
+                        <label>رقم الجوال (مع رمز الدولة)</label>
+                        <input type="tel" id="login-phone" placeholder="+966500000000">
+                    </div>
+                    <div id="recaptcha-container" style="margin-bottom: 10px;"></div>
+                    <div class="form-group" id="otp-group" style="display:none;">
+                        <label>رمز التحقق المرسل (SMS)</label>
+                        <input type="number" id="otp-code" placeholder="123456">
+                    </div>
+                    <button class="btn" id="send-otp-btn" onclick="sendPhoneOTP()">إرسال رمز SMS</button>
+                    <button class="btn" id="verify-otp-btn" style="display:none;" onclick="verifyPhoneOTP()">تأكيد الرمز والدخول</button>
+                </div>
+
                 <button class="btn btn-subtle" onclick="switchAuthCard('register')">إنشاء حساب جديد</button>
                 <button class="btn-text" onclick="switchAuthCard('reset')">نسيت كلمة المرور؟</button>
             </div>
 
+            <!-- REGISTER -->
             <div class="card" id="card-register" style="display: none;">
                 <div class="card-title">إنشاء حساب جديد</div>
-                <div class="card-subtitle">إضافة مالك جديد أو موظف للنظام</div>
+                <div class="card-subtitle">حدد نوع الصلاحيات المطلوب للحساب</div>
                 <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="reg-email" placeholder="user@neris.com"></div>
-                <div class="form-group"><label>كلمة المرور</label><input type="password" id="reg-pass" placeholder="6 أرقام على الأقل"></div>
                 <div class="form-group">
-                    <label>نوع الحساب والصلاحيات</label>
+                    <label>كلمة المرور</label>
+                    <div class="pwd-container">
+                        <input type="password" id="reg-pass" placeholder="6 أرقام على الأقل">
+                        <button class="toggle-pwd-btn" type="button" onclick="togglePasswordVisibility('reg-pass', this)">👁️</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>نوع الحساب والصلاحية</label>
                     <select id="reg-role">
-                        <option value="staff">موظف (Staff)</option>
-                        <option value="owner">مالك (Owner)</option>
+                        <option value="staff">موظف (Staff) - الحد 5</option>
+                        <option value="admin">مسؤول (Admin) - الحد 2</option>
+                        <option value="owner">مالك (Owner) - الحد 2</option>
                     </select>
                 </div>
-                <button class="btn" onclick="execRegister()">إنشاء الحساب فوراً</button>
+                <button class="btn" onclick="execRegister()">إنشاء الحساب</button>
                 <button class="btn btn-subtle" onclick="switchAuthCard('login')">العودة لتسجيل الدخول</button>
             </div>
 
+            <!-- RESET PASSWORD -->
             <div class="card" id="card-reset" style="display: none;">
-                <div class="card-title">استعادة كلمة المرور</div>
-                <div class="card-subtitle">أدخل إيميلك وسيصلك رابط إعادة التعيين فوراً</div>
-                <div class="form-group"><label>البريد الإلكتروني المسجل</label><input type="email" id="reset-email" placeholder="name@domain.com"></div>
+                <div class="card-title">استعادة حسابك</div>
+                <div class="card-subtitle">أدخل إيميلك المسجل لإرسال رابط الاستعادة</div>
+                <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="reset-email" placeholder="name@domain.com"></div>
                 <button class="btn" onclick="execResetPassword()">إرسال رابط الاستعادة</button>
                 <button class="btn btn-subtle" onclick="switchAuthCard('login')">العودة لتسجيل الدخول</button>
             </div>
@@ -238,85 +289,74 @@
         <!-- MAIN APP PANELS -->
         <main id="app-container" style="display: none;">
 
-            <!-- PANEL 1: INVENTORY -->
-            <div id="panel-inventory" class="view-panel active">
-                <div class="form-group">
-                    <input type="text" id="search-bar" placeholder="🔍 ابحث في المنتجات..." oninput="searchProducts()">
-                </div>
-                <div class="grid-products" id="inventory-grid"></div>
+            <!-- PROFILE COMPLETION MANDATORY MODAL -->
+            <div class="card" id="profile-completion-card" style="display:none; border: 2px solid var(--primary);">
+                <div class="card-title" style="color: var(--primary);">📋 إكمال البيانات الوظيفية والشخصية</div>
+                <div class="card-subtitle">يرجى إكمال الحقول التالية لتفعيل حسابك والوصول لكافة ميزات النظام</div>
+                <div class="form-group"><label>الاسم الكامل</label><input type="text" id="prof-fullname" placeholder="فهد الحسين"></div>
+                <div class="form-group"><label>تاريخ الميلاد</label><input type="date" id="prof-dob"></div>
+                <div class="form-group"><label>رقم الجوال للتواصل</label><input type="tel" id="prof-phone" placeholder="+966500000000"></div>
+                <button class="btn" onclick="saveUserProfile()">حفظ وإكمال التفعيل 🎉</button>
             </div>
 
-            <!-- PANEL 2: PRICING (OWNER ONLY) -->
-            <div id="panel-calc" class="view-panel owner-only">
-                <div class="card">
-                    <div style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 14px;">إضافة منتج وتكلفة المبيعات</div>
-                    <div class="form-group"><label>اسم المنتج</label><input type="text" id="p-name" placeholder="مثال: خاتم فضة نيريس"></div>
-                    
-                    <div class="upload-zone" onclick="document.getElementById('p-file').click()">
-                        <span style="font-size: 13px; color: var(--text-muted); font-weight: 700;">📸 اضغط لاختيار صورة المنتج من الجهاز</span>
-                        <input type="file" id="p-file" accept="image/*" style="display: none;" onchange="handleImageSelection(event)">
-                        <img id="p-preview" class="preview-box">
+            <div id="main-app-content">
+
+                <!-- PANEL 1: INVENTORY -->
+                <div id="panel-inventory" class="view-panel active">
+                    <div class="form-group">
+                        <input type="text" id="search-bar" placeholder="🔍 ابحث في المنتجات..." oninput="searchProducts()">
                     </div>
-
-                    <div style="display: flex; gap: 8px;">
-                        <div class="form-group" style="flex:1;"><label>تكلفة القطعة</label><input type="number" id="p-cost-item" oninput="calculatePricing()"></div>
-                        <div class="form-group" style="flex:1;"><label>سعر العلبة</label><input type="number" id="p-cost-pkg" value="5" oninput="calculatePricing()"></div>
-                        <div class="form-group" style="flex:1;"><label>سعر الكيس</label><input type="number" id="p-cost-bag" value="3" oninput="calculatePricing()"></div>
-                    </div>
-
-                    <div class="form-group"><label>الكمية المتوفرة بالمخزون</label><input type="number" id="p-qty" value="1"></div>
-
-                    <div style="background: var(--primary-light); padding: 14px; border-radius: var(--radius-md); font-size: 13px; color: var(--primary); font-weight: 700; margin-bottom: 14px;" id="pricing-summary">
-                        أدخل التكاليف لحساب السعر التلقائي.
-                    </div>
-
-                    <div class="form-group"><label>سعر البيع النهائي للعميل (ر.س)</label><input type="number" id="p-final-price"></div>
-                    <button class="btn" onclick="saveProductToDatabase()">حفظ المنتج في المخزن</button>
-                </div>
-            </div>
-
-            <!-- PANEL 3: SALES -->
-            <div id="panel-sales" class="view-panel">
-                <div id="sales-products-list"></div>
-            </div>
-
-            <!-- PANEL 4: MESSAGING & ACCOUNTS MANAGEMENT -->
-            <div id="panel-chat" class="view-panel">
-
-                <div class="broadcast-card owner-only">
-                    <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 8px;">👑 إرسال توجيه عاجل لجميع الموظفين والملاك</div>
-                    <div class="form-group" style="margin-bottom: 8px;">
-                        <input type="text" id="broadcast-input" placeholder="مثال: وصل طلب جديد عاجل، نرجو التوجه للمستودع...">
-                    </div>
-                    <button class="btn" onclick="sendGlobalBroadcast()" style="padding: 10px; font-size: 13px;">إرسال التنبيه العام 📢</button>
+                    <div id="inventory-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;"></div>
                 </div>
 
-                <div class="card" id="chat-users-card">
-                    <div class="card-title" style="text-align: right; font-size: 16px; margin-bottom: 14px;">إدارة الموظفين والحسابات</div>
-                    <div id="users-presence-list"></div>
-                </div>
-
-                <!-- Chat Box Window -->
-                <div class="card" id="active-chat-card" style="display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px;">
-                        <div>
-                            <span style="font-weight: 800; font-size: 15px;" id="chat-target-name">اسم المستخدم</span>
-                            <span class="status-dot" id="chat-target-status"></span>
+                <!-- PANEL 2: PRICING (OWNER/ADMIN ONLY) -->
+                <div id="panel-calc" class="view-panel owner-only admin-only">
+                    <div class="card">
+                        <div style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 14px;">إضافة منتج وتكلفة المبيعات</div>
+                        <div class="form-group"><label>اسم المنتج</label><input type="text" id="p-name" placeholder="مثال: خاتم فضة نيريس"></div>
+                        <div style="display: flex; gap: 8px;">
+                            <div class="form-group" style="flex:1;"><label>التكلفة</label><input type="number" id="p-cost-item" oninput="calculatePricing()"></div>
+                            <div class="form-group" style="flex:1;"><label>العلبة</label><input type="number" id="p-cost-pkg" value="5" oninput="calculatePricing()"></div>
+                            <div class="form-group" style="flex:1;"><label>الكيس</label><input type="number" id="p-cost-bag" value="3" oninput="calculatePricing()"></div>
                         </div>
-                        <button class="btn-text" style="width: auto; padding: 0;" onclick="closeChat()">إغلاق ✕</button>
-                    </div>
-
-                    <div class="chat-box">
-                        <div class="messages-container" id="messages-list"></div>
-                        <div style="display: flex; gap: 8px; margin-top: 10px;">
-                            <input type="text" id="chat-input" placeholder="اكتب رسالة..." onkeypress="if(event.key==='Enter') sendDirectMessage()">
-                            <button class="btn" style="width: auto; padding: 0 18px;" onclick="sendDirectMessage()">إرسال</button>
+                        <div class="form-group"><label>الكمية المتوفرة</label><input type="number" id="p-qty" value="1"></div>
+                        <div style="background: var(--primary-light); padding: 12px; border-radius: var(--radius-md); font-size: 12px; color: var(--primary); font-weight: 700; margin-bottom: 14px;" id="pricing-summary">
+                            أدخل التكاليف لحساب السعر التلقائي.
                         </div>
+                        <div class="form-group"><label>سعر البيع للعميل (ر.س)</label><input type="number" id="p-final-price"></div>
+                        <button class="btn" onclick="saveProductToDatabase()">حفظ المنتج في المخزن</button>
                     </div>
                 </div>
+
+                <!-- PANEL 3: SALES -->
+                <div id="panel-sales" class="view-panel">
+                    <div id="sales-products-list"></div>
+                </div>
+
+                <!-- PANEL 4: MESSAGING & STAFF MANAGEMENT -->
+                <div id="panel-chat" class="view-panel">
+
+                    <div class="card owner-only admin-only" style="background: linear-gradient(145deg, var(--surface), var(--primary-light)); border:1px solid var(--primary);">
+                        <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 8px;">📢 إرسال إشعار توجيهي عاجل للجميع</div>
+                        <div class="form-group" style="margin-bottom: 8px;">
+                            <input type="text" id="broadcast-input" placeholder="مثال: وصول طلبية جديدة نرجو التوجه للمستودع...">
+                        </div>
+                        <button class="btn" onclick="sendGlobalBroadcast()" style="padding: 10px; font-size: 13px;">إرسال التنبيه العام</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title" style="text-align: right; font-size: 16px; margin-bottom: 14px;">إدارة الكادر والحالات الوظيفية</div>
+                        <div id="users-presence-list"></div>
+                    </div>
+                </div>
+
             </div>
 
-            <button class="btn btn-subtle" style="margin-top: 20px; color: var(--danger); border-color: rgba(239, 68, 68, 0.3);" onclick="execLogout()">تسجيل الخروج</button>
+            <!-- RESET SYSTEM / LOGOUT -->
+            <div style="margin-top: 20px; display:flex; gap:10px;">
+                <button class="btn btn-subtle" style="flex:1; color: var(--danger);" onclick="execLogout()">تسجيل الخروج</button>
+                <button class="btn btn-subtle owner-only" style="flex:1; color: var(--warning);" onclick="resetAllUsersData()">إعادة ضبط الكادر 🔄</button>
+            </div>
         </main>
 
         <!-- NAVIGATION -->
@@ -324,21 +364,21 @@
             <button class="nav-btn active" onclick="switchTab('inventory', this)">
                 <span style="font-size:18px">📦</span><span>المخزن</span>
             </button>
-            <button class="nav-btn owner-only" onclick="switchTab('calc', this)">
+            <button class="nav-btn owner-only admin-only" onclick="switchTab('calc', this)">
                 <span style="font-size:18px">🏷️</span><span>التسعير</span>
             </button>
             <button class="nav-btn" onclick="switchTab('sales', this)">
                 <span style="font-size:18px">💰</span><span>المبيعات</span>
             </button>
             <button class="nav-btn" onclick="switchTab('chat', this)">
-                <span style="font-size:18px">💬</span><span>الرسائل والتحكم</span>
+                <span style="font-size:18px">💬</span><span>الفريق والتنبيهات</span>
             </button>
         </nav>
 
     </div>
 
     <script>
-        // === بيانات Firebase الخاصة بك ===
+        // === ضع مفاتيح Firebase الخاصة بك هنا ===
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -354,39 +394,43 @@
 
         let currentUser = null;
         let currentUserRole = 'staff';
-        let encodedProductImage = 'https://via.placeholder.com/150?text=Neris';
-        let productsMasterCache = [];
-        let activeChatUserId = null;
-        let chatUnsubscribe = null;
-        let failedAttempts = {};
+        let confirmationResult = null;
 
-        function translateAuthError(code) {
-            switch (code) {
-                case 'auth/email-already-in-use':
-                    return 'هذا البريد الإلكتروني مسجل مسبقاً بالنظام. يرجى تسجيل الدخول بدلاً من ذلك.';
-                case 'auth/wrong-password':
-                    return 'كلمة المرور غير صحيحة.';
-                case 'auth/user-not-found':
-                    return 'البريد الإلكتروني غير مسجل بالنظام.';
-                case 'auth/invalid-email':
-                    return 'صيغة البريد الإلكتروني غير صحيحة.';
-                case 'auth/too-many-requests':
-                    return 'تم حظر المحاولات مؤقتاً بسبب تكرار الأخطاء. حاول لاحقاً.';
-                default:
-                    return 'حدث خطأ في العملية، يرجى المحاولة مرة أخرى.';
+        // SPLASH SCREEN HIDE
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                splash.style.opacity = '0';
+                setTimeout(() => splash.style.display = 'none', 500);
+            }, 1200);
+        });
+
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerText = '🔒';
+            } else {
+                input.type = 'password';
+                btn.innerText = '👁️';
+            }
+        }
+
+        function switchLoginMethod(method) {
+            document.getElementById('tab-btn-email').classList.toggle('active', method === 'email');
+            document.getElementById('tab-btn-phone').classList.toggle('active', method === 'phone');
+            document.getElementById('login-email-form').style.display = method === 'email' ? 'block' : 'none';
+            document.getElementById('login-phone-form').style.display = method === 'phone' ? 'block' : 'none';
+
+            if (method === 'phone' && !window.recaptchaVerifier) {
+                window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
             }
         }
 
         function toggleAppTheme() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
-            localStorage.setItem('neris_theme_pref', isDark ? 'dark' : 'light');
-        }
-
-        if (localStorage.getItem('neris_theme_pref') === 'dark') {
-            document.body.classList.add('dark-mode');
-            document.getElementById('theme-icon').innerText = '☀️';
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('theme-icon').innerText = isLight ? '🌙' : '☀️';
         }
 
         function switchAuthCard(cardType) {
@@ -409,119 +453,130 @@
             document.getElementById('auth-success').style.display = 'none';
         }
 
-        function execLogin() {
+        function execLoginEmail() {
             const email = document.getElementById('login-email').value.trim();
             const pass = document.getElementById('login-pass').value;
             if (!email || !pass) return showAlert('أدخل البريد الإلكتروني وكلمة المرور');
+            auth.signInWithEmailAndPassword(email, pass).catch(err => showAlert(err.message));
+        }
 
-            // التثبت أولاً إذا كان الحساب مجمداً في قواعد البيانات
-            db.collection("users").where("email", "==", email).get().then(snap => {
-                if (!snap.empty) {
-                    const userData = snap.docs[0].data();
-                    if (userData.isSuspended) {
-                        return showAlert('⚠️ هذا الحساب معطل مؤقتاً من قبل الإدارة بسبب تجاوز محاولات الدخول الخاطئة أو لأسباب أمنية.');
-                    }
-                }
+        function sendPhoneOTP() {
+            const phoneNumber = document.getElementById('login-phone').value.trim();
+            if (!phoneNumber) return showAlert('أدخل رقم الجوال بصيغة دولية مثل +966500000000');
 
-                auth.signInWithEmailAndPassword(email, pass).then(() => {
-                    failedAttempts[email] = 0;
-                }).catch(err => {
-                    failedAttempts[email] = (failedAttempts[email] || 0) + 1;
-                    let remaining = 3 - failedAttempts[email];
+            const appVerifier = window.recaptchaVerifier;
+            auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+                .then(res => {
+                    confirmationResult = res;
+                    document.getElementById('otp-group').style.display = 'block';
+                    document.getElementById('send-otp-btn').style.display = 'none';
+                    document.getElementById('verify-otp-btn').style.display = 'block';
+                    showAlert('تم إرسال رمز التحقق SMS بنجاح!', false);
+                }).catch(err => showAlert(err.message));
+        }
 
-                    if (remaining > 0) {
-                        showAlert(`كلمة المرور غير صحيحة. باقي لك ${remaining} محاولات قبل إيقاف الحساب تلقائياً.`);
-                    } else {
-                        // إيقاف الحساب تلقائياً في قاعدة البيانات
-                        if (!snap.empty) {
-                            db.collection("users").doc(snap.docs[0].id).update({
-                                isSuspended: true,
-                                suspendedReason: "تجاوز المحاولات الخاطئة"
-                            });
-                        }
-                        showAlert('⚠️ تم استنفاد كافة المحاولات. تم إيقاف الحساب وإرسال إشعار للإدارة للتحقق.');
-                    }
-                });
-            });
+        function verifyPhoneOTP() {
+            const code = document.getElementById('otp-code').value.trim();
+            if (!code || !confirmationResult) return showAlert('أدخل رمز التحقق المكون من 6 أرقام');
+
+            confirmationResult.confirm(code).then(result => {
+                const user = result.user;
+                db.collection("users").doc(user.uid).set({
+                    phone: user.phoneNumber,
+                    role: 'staff',
+                    isProfileComplete: false
+                }, { merge: true });
+            }).catch(err => showAlert('رمز التحقق غير صحيح'));
         }
 
         function execRegister() {
             const email = document.getElementById('reg-email').value.trim();
             const pass = document.getElementById('reg-pass').value;
             const role = document.getElementById('reg-role').value;
+
             if (!email || pass.length < 6) return showAlert('أدخل بريد صحيح وكلمة مرور 6 خانات على الأقل');
 
-            auth.createUserWithEmailAndPassword(email, pass).then(res => {
-                db.collection("users").doc(res.user.uid).set({
-                    email, role, isOnline: true, isSuspended: false
-                });
-            }).catch(err => showAlert(translateAuthError(err.code)));
+            // التحقق من الحصص
+            db.collection("users").where("role", "==", role).get().then(snap => {
+                const count = snap.size;
+                if (role === 'owner' && count >= 2) return showAlert('عذراً، تم الوصول للحد الأقصى للملاك (2).');
+                if (role === 'admin' && count >= 2) return showAlert('عذراً، تم الوصول للحد الأقصى للمسؤولين (2).');
+                if (role === 'staff' && count >= 5) return showAlert('عذراً، تم الوصول للحد الأقصى للموظفين (5).');
+
+                auth.createUserWithEmailAndPassword(email, pass).then(res => {
+                    db.collection("users").doc(res.user.uid).set({
+                        email, role, status: 'active', isProfileComplete: false
+                    });
+                }).catch(err => showAlert(err.message));
+            });
         }
 
         function execResetPassword() {
             const email = document.getElementById('reset-email').value.trim();
             if (!email) return showAlert('أدخل البريد الإلكتروني أولاً');
-            auth.sendPasswordResetEmail(email)
-                .then(() => showAlert('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك بنجاح! تفقد بريدك الإلكتروني.', false))
-                .catch(err => showAlert(translateAuthError(err.code)));
+            auth.sendPasswordResetEmail(email).then(() => showAlert('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك!', false));
         }
 
         function execLogout() {
-            if (currentUser) {
-                db.collection("users").doc(currentUser.uid).update({ isOnline: false });
-            }
             auth.signOut();
         }
-
-        function setUserPresence(onlineStatus) {
-            if (currentUser) {
-                db.collection("users").doc(currentUser.uid).update({
-                    isOnline: onlineStatus,
-                    lastSeen: new Date()
-                });
-            }
-        }
-
-        window.addEventListener('beforeunload', () => setUserPresence(false));
 
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUser = user;
                 db.collection("users").doc(user.uid).get().then(doc => {
                     if (doc.exists) {
-                        const data = doc.data();
-                        if (data.isSuspended) {
-                            auth.signOut();
-                            return showAlert('⚠️ هذا الحساب موقوف حالياً من الإدارة.');
+                        const uData = doc.data();
+                        currentUserRole = uData.role || 'staff';
+
+                        if (!uData.isProfileComplete) {
+                            document.getElementById('profile-completion-card').style.display = 'block';
+                            document.getElementById('main-app-content').style.display = 'none';
+                        } else {
+                            document.getElementById('profile-completion-card').style.display = 'none';
+                            document.getElementById('main-app-content').style.display = 'block';
                         }
-                        currentUserRole = data.role || 'staff';
                     }
-                    setUserPresence(true);
                     renderAppCore();
                     listenToBroadcasts();
-                }).catch(() => renderAppCore());
+                });
             } else {
                 currentUser = null;
                 document.getElementById('auth-container').style.display = 'block';
                 document.getElementById('app-container').style.display = 'none';
                 document.getElementById('app-nav').style.display = 'none';
-                document.getElementById('role-badge').innerText = 'تسجيل الدخول';
             }
         });
+
+        function saveUserProfile() {
+            const fullname = document.getElementById('prof-fullname').value.trim();
+            const dob = document.getElementById('prof-dob').value;
+            const phone = document.getElementById('prof-phone').value.trim();
+
+            if (!fullname || !dob) return alert('يرجى تعبئة جميع الحقول المطلوبة');
+
+            db.collection("users").doc(currentUser.uid).update({
+                fullname, dob, phone, isProfileComplete: true
+            }).then(() => {
+                alert('مبروك! تم إكمال بياناتك بنجاح ومرحباً بك في فريق عمل Neris 🎉');
+                document.getElementById('profile-completion-card').style.display = 'none';
+                document.getElementById('main-app-content').style.display = 'block';
+            });
+        }
 
         function renderAppCore() {
             document.getElementById('auth-container').style.display = 'none';
             document.getElementById('app-container').style.display = 'block';
             document.getElementById('app-nav').style.display = 'flex';
 
-            document.getElementById('role-badge').innerText = currentUserRole === 'owner' ? 'المالك 👑' : 'موظف 💼';
+            const roleName = currentUserRole === 'owner' ? 'مالك 👑' : (currentUserRole === 'admin' ? 'مسؤول 🛡️' : 'موظف 💼');
+            document.getElementById('role-badge').innerText = roleName;
 
-            if (currentUserRole !== 'owner') {
-                document.querySelectorAll('.owner-only').forEach(e => e.style.display = 'none');
+            if (currentUserRole === 'staff') {
+                document.querySelectorAll('.owner-only, .admin-only').forEach(e => e.style.display = 'none');
             } else {
-                document.querySelectorAll('.owner-only').forEach(e => e.style.display = 'block');
+                document.querySelectorAll('.owner-only, .admin-only').forEach(e => e.style.display = 'block');
             }
-            bindLiveProducts();
             listenUsersPresence();
         }
 
@@ -533,103 +588,6 @@
             if (btnEl) btnEl.classList.add('active');
         }
 
-        function handleImageSelection(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    encodedProductImage = evt.target.result;
-                    const previewBox = document.getElementById('p-preview');
-                    previewBox.src = encodedProductImage;
-                    previewBox.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function calculatePricing() {
-            const item = parseFloat(document.getElementById('p-cost-item').value) || 0;
-            const pkg = parseFloat(document.getElementById('p-cost-pkg').value) || 0;
-            const bag = parseFloat(document.getElementById('p-cost-bag').value) || 0;
-            const total = item + pkg + bag;
-            const suggested = Math.round(total * 2.1);
-
-            document.getElementById('pricing-summary').innerHTML = `التكلفة الكلية: <b>${total} ر.س</b> | السعر المقترح: <b>${suggested} ر.س</b>`;
-            document.getElementById('p-final-price').value = suggested;
-        }
-
-        function saveProductToDatabase() {
-            const name = document.getElementById('p-name').value;
-            const itemCost = parseFloat(document.getElementById('p-cost-item').value) || 0;
-            const pkgCost = parseFloat(document.getElementById('p-cost-pkg').value) || 0;
-            const bagCost = parseFloat(document.getElementById('p-cost-bag').value) || 0;
-            const price = parseFloat(document.getElementById('p-final-price').value) || 0;
-            const qty = parseInt(document.getElementById('p-qty').value) || 0;
-
-            if (!name) return alert('أدخل اسم المنتج');
-
-            db.collection("products").add({
-                name, itemCost, pkgCost, bagCost,
-                totalCost: itemCost + pkgCost + bagCost,
-                price, qty, img: encodedProductImage, createdAt: new Date()
-            }).then(() => {
-                alert('تمت إضافة المنتج بنجاح!');
-                switchTab('inventory');
-            });
-        }
-
-        function bindLiveProducts() {
-            db.collection("products").onSnapshot(snap => {
-                productsMasterCache = [];
-                snap.forEach(doc => productsMasterCache.push({ id: doc.id, ...doc.data() }));
-                renderProductsGrid(productsMasterCache);
-            });
-        }
-
-        function renderProductsGrid(items) {
-            const grid = document.getElementById('inventory-grid');
-            const pos = document.getElementById('sales-products-list');
-            grid.innerHTML = ''; pos.innerHTML = '';
-
-            items.forEach(p => {
-                const costTag = currentUserRole === 'owner' ? `<div style="font-size:11px; color:var(--danger); font-weight:700;">التكلفة: ${p.totalCost || 0} ر.س</div>` : '';
-
-                grid.innerHTML += `
-                    <div class="product-card">
-                        <img src="${p.img}">
-                        <div class="product-name">${p.name}</div>
-                        <div class="product-price">${p.price} ر.س</div>
-                        ${costTag}
-                        <div style="font-size:11px; color:var(--text-muted); margin-top:4px; font-weight:700;">المتبقي: ${p.qty}</div>
-                    </div>
-                `;
-
-                pos.innerHTML += `
-                    <div class="card" style="display:flex; align-items:center; justify-content:space-between; padding:14px; margin-bottom:10px;">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <img src="${p.img}" style="width:55px; height:55px; border-radius:12px; object-fit:cover;">
-                            <div>
-                                <div style="font-weight:800; font-size:15px; color:var(--text-main);">${p.name}</div>
-                                <div style="color:var(--primary); font-weight:900; font-size:13px;">${p.price} ر.س (المتوفر: ${p.qty})</div>
-                            </div>
-                        </div>
-                        <button class="btn" style="width:auto; padding:8px 14px; font-size:12px;" onclick="registerSale('${p.id}', ${p.qty})">تسجيل بيع</button>
-                    </div>
-                `;
-            });
-        }
-
-        function searchProducts() {
-            const query = document.getElementById('search-bar').value.toLowerCase();
-            const filtered = productsMasterCache.filter(p => p.name.toLowerCase().includes(query));
-            renderProductsGrid(filtered);
-        }
-
-        function registerSale(id, currentQty) {
-            if (currentQty <= 0) return alert('المنتج غير متوفر');
-            db.collection("products").doc(id).update({ qty: currentQty - 1 });
-        }
-
         function listenUsersPresence() {
             db.collection("users").onSnapshot(snap => {
                 const list = document.getElementById('users-presence-list');
@@ -637,118 +595,60 @@
 
                 snap.forEach(doc => {
                     const u = doc.data();
-                    if (doc.id === currentUser.uid) return;
+                    const status = u.status || 'active';
+                    const isMe = doc.id === currentUser.uid;
 
-                    const statusClass = u.isOnline ? 'online' : 'offline';
-                    const statusText = u.isOnline ? 'متصل' : 'غير متصل';
-                    const roleLabel = u.role === 'owner' ? '👑 مالك' : '💼 موظف';
-                    const isSuspended = u.isSuspended || false;
+                    let statusBadge = `<span class="status-badge active">نشط</span>`;
+                    if (status === 'vacation') statusBadge = `<span class="status-badge vacation">في إجازة 🏖️</span>`;
+                    if (status === 'suspended') statusBadge = `<span class="status-badge suspended">مفصول/موقوف 🛑</span>`;
 
-                    let ownerControls = '';
-                    if (currentUserRole === 'owner') {
-                        ownerControls = `
-                            <button class="btn ${isSuspended ? '' : 'btn-danger'}" 
-                                style="width:auto; padding:6px 10px; font-size:11px; margin-right:8px;" 
-                                onclick="event.stopPropagation(); toggleUserSuspension('${doc.id}', ${isSuspended})">
-                                ${isSuspended ? 'إلغاء التجميد 🔓' : 'تجميد الحساب 🛑'}
-                            </button>
+                    let actions = '';
+                    if (currentUserRole === 'owner' || currentUserRole === 'admin') {
+                        actions = `
+                            <div style="display:flex; gap:6px; margin-top:6px;">
+                                <button class="btn btn-warning" style="padding:4px 8px; font-size:10px;" onclick="changeUserStatus('${doc.id}', 'vacation')">إجازة 🏖️</button>
+                                <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="changeUserStatus('${doc.id}', 'suspended')">طرد/فصل 🛑</button>
+                                <button class="btn btn-subtle" style="padding:4px 8px; font-size:10px;" onclick="changeUserStatus('${doc.id}', 'active')">تفعيل 🟢</button>
+                            </div>
                         `;
                     }
 
+                    if (isMe) {
+                        actions += `<button class="btn-text" style="color:var(--danger); text-align:right;" onclick="changeUserStatus('${doc.id}', 'resigned')">تقديم استقالة 📝</button>`;
+                    }
+
                     list.innerHTML += `
-                        <div class="user-item" onclick="openChat('${doc.id}', '${u.email}', ${u.isOnline})">
-                            <div>
-                                <div style="font-weight:800; font-size:14px; ${isSuspended ? 'text-decoration: line-through; color:var(--danger);' : ''}">${u.email}</div>
-                                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${roleLabel} ${isSuspended ? '(موقوف)' : ''}</div>
+                        <div class="user-item">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <div style="font-weight:800; font-size:14px;">${u.fullname || u.email || u.phone}</div>
+                                    <div style="font-size:11px; color:var(--text-muted);">${u.role}</div>
+                                </div>
+                                ${statusBadge}
                             </div>
-                            <div style="display:flex; align-items:center;">
-                                ${ownerControls}
-                                <span style="font-size:12px; font-weight:700; color:var(--text-muted);">${statusText}</span>
-                                <span class="status-dot ${statusClass}"></span>
-                            </div>
+                            ${actions}
                         </div>
                     `;
                 });
             });
         }
 
-        function toggleUserSuspension(userId, currentStatus) {
-            db.collection("users").doc(userId).update({
-                isSuspended: !currentStatus
-            }).then(() => {
-                alert(!currentStatus ? 'تم تجميد الحساب بنجاح.' : 'تم فك تجميد الحساب.');
+        function changeUserStatus(userId, newStatus) {
+            db.collection("users").doc(userId).update({ status: newStatus }).then(() => {
+                alert('تم تحديث حالة الحساب بنجاح.');
             });
-        }
-
-        function openChat(targetUid, targetEmail, isOnline) {
-            activeChatUserId = targetUid;
-            document.getElementById('chat-users-card').style.display = 'none';
-            document.getElementById('active-chat-card').style.display = 'block';
-
-            document.getElementById('chat-target-name').innerText = targetEmail;
-            document.getElementById('chat-target-status').className = `status-dot ${isOnline ? 'online' : 'offline'}`;
-
-            const chatId = getChatDocId(currentUser.uid, targetUid);
-
-            if (chatUnsubscribe) chatUnsubscribe();
-
-            chatUnsubscribe = db.collection("chats").doc(chatId).collection("messages")
-                .orderBy("timestamp", "asc")
-                .onSnapshot(snap => {
-                    const list = document.getElementById('messages-list');
-                    list.innerHTML = '';
-                    snap.forEach(doc => {
-                        const m = doc.data();
-                        const isMine = m.senderId === currentUser.uid;
-                        const time = m.timestamp ? new Date(m.timestamp.toDate()).toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'}) : '';
-                        
-                        list.innerHTML += `
-                            <div class="msg-bubble ${isMine ? 'sent' : 'received'}">
-                                ${m.text}
-                                <div class="msg-time">${time}</div>
-                            </div>
-                        `;
-                    });
-                    list.scrollTop = list.scrollHeight;
-                });
-        }
-
-        function closeChat() {
-            activeChatUserId = null;
-            document.getElementById('active-chat-card').style.display = 'none';
-            document.getElementById('chat-users-card').style.display = 'block';
-            if (chatUnsubscribe) chatUnsubscribe();
-        }
-
-        function sendDirectMessage() {
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if (!text || !activeChatUserId) return;
-
-            const chatId = getChatDocId(currentUser.uid, activeChatUserId);
-
-            db.collection("chats").doc(chatId).collection("messages").add({
-                senderId: currentUser.uid,
-                text: text,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => { input.value = ''; });
-        }
-
-        function getChatDocId(uid1, uid2) {
-            return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
         }
 
         function sendGlobalBroadcast() {
             const input = document.getElementById('broadcast-input');
             const text = input.value.trim();
-            if (!text) return alert('أدخل نص التنبيه أولاً');
+            if (!text) return alert('أدخل نص التنبيه');
 
             db.collection("broadcasts").doc("latest").set({
                 text: text,
-                senderEmail: currentUser.email,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                alert('تم إرسال التنبيه العام بنجاح لجميع الموظفين والملاك!');
+                alert('تم إرسال التنبيه العام بنجاح!');
                 input.value = '';
             });
         }
@@ -757,17 +657,33 @@
             db.collection("broadcasts").doc("latest").onSnapshot(doc => {
                 if (doc.exists) {
                     const data = doc.data();
-                    if (data && data.text) {
-                        const banner = document.getElementById('global-broadcast-banner');
-                        document.getElementById('broadcast-text').innerText = `تنبيه من الإدارة: ${data.text}`;
-                        banner.style.display = 'flex';
-                    }
+                    // التحقق إذا كان الموظف في إجازة فلا يظهر له الإشعار
+                    db.collection("users").doc(currentUser.uid).get().then(uDoc => {
+                        if (uDoc.exists && uDoc.data().status === 'vacation') return; // منع الإزعاج
+                        
+                        if (data && data.text) {
+                            const banner = document.getElementById('global-broadcast-banner');
+                            document.getElementById('broadcast-text').innerText = `تنبيه الإدارة: ${data.text}`;
+                            banner.style.display = 'flex';
+                        }
+                    });
                 }
             });
         }
 
         function dismissBroadcast() {
             document.getElementById('global-broadcast-banner').style.display = 'none';
+        }
+
+        function resetAllUsersData() {
+            if (confirm('هل أنت تأكد من إعادة ضبط الكادر وتفريغ بيانات الحسابات للبدء من جديد؟')) {
+                db.collection("users").get().then(snap => {
+                    snap.forEach(doc => {
+                        if (doc.id !== currentUser.uid) doc.ref.delete();
+                    });
+                    alert('تم تفريغ وإعادة ضبط الكادر بنجاح!');
+                });
+            }
         }
     </script>
 </body>
