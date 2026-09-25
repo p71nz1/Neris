@@ -61,7 +61,6 @@
             position: relative;
         }
 
-        /* شاشة الترحيب */
         #splash-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -120,7 +119,6 @@
             letter-spacing: 2px;
         }
 
-        /* القائمة الجانبية */
         .drawer {
             position: absolute;
             top: 0; right: -280px;
@@ -196,7 +194,6 @@
             padding: 3px 8px; border-radius: 12px; font-size: 10px; border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        /* نافذة الإضافة المنبثقة Modal */
         .modal {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 600; padding: 20px;
@@ -246,28 +243,28 @@
             <h2>تسجيل الدخول - نيريس</h2>
             <p class="subtitle">أدخل بيانات الحساب الخاصة بك للإدارة</p>
             
-            <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:10px; display:none;">البريد أو كلمة المرور غير صحيحة</div>
+            <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:10px; display:none;">الرجاء إدخال البريد الإلكتروني وكلمة المرور بشكل صحيح</div>
 
             <div class="input-group">
                 <label>البريد الإلكتروني</label>
-                <input type="email" id="login-email" placeholder="أدخل إيميلك هنا">
+                <input type="email" id="login-email" placeholder="fahadfhd47@gmail.com" value="fahadfhd47@gmail.com">
             </div>
             <div class="input-group">
                 <label>كلمة المرور</label>
-                <input type="password" id="login-password" placeholder="••••••••">
+                <input type="password" id="login-password" placeholder="••••••••" value="Fahad55003">
             </div>
             <button class="btn" onclick="handleLogin()">دخول للنظام</button>
             <div style="margin-top:20px; text-align:center;">
-                <a href="#" onclick="forgotPassword()" style="color:var(--accent-gold); font-size:11px; text-decoration:none;">نسيت كلمة المرور؟ (إرسال إشعار للمالك)</a>
+                <a href="#" onclick="forgotPassword()" style="color:var(--accent-gold); font-size:11px; text-decoration:none;">نسيت كلمة المرور؟</a>
             </div>
         </div>
 
-        <!-- 2. إكمال بيانات الموظف الجديد (إلزامي أول دخول) -->
+        <!-- 2. إكمال بيانات الموظف الجديد -->
         <div id="complete-profile-screen" class="screen">
             <h2>استكمال بيانات الحساب</h2>
             <p class="subtitle">يرجى إدخال رقم الجوال وتاريخ الميلاد للمتابعة</p>
             <div class="input-group"><label>رقم الجوال</label><input type="text" id="new-phone" placeholder="05xxxxxxxx"></div>
-            <div class="input-group"><label>تاريخ الميلاد</label><input type="date" id="new-dob"></div>
+            <div class="input-group"><label>تاريخ الميلاد</label><input type="date" id="new-dob" value="2006-07-31"></div>
             <button class="btn" onclick="saveCompleteProfile()">حفظ ومتابعة</button>
         </div>
 
@@ -304,7 +301,7 @@
             </div>
         </div>
 
-        <!-- نافذة إضافة منتج (Modal) -->
+        <!-- نافذة إضافة منتج -->
         <div class="modal" id="add-product-modal">
             <div class="modal-content">
                 <h3 style="color:var(--accent-gold); margin-bottom:10px; font-size:16px;">إضافة منتج جديد وتسعير ذكي</h3>
@@ -314,7 +311,7 @@
                     <input type="number" id="modal-p-cost" placeholder="100" oninput="calculateAiPrice()">
                 </div>
                 <div class="input-group">
-                    <label>هامش ربح مقترح بواسطة AI (% رقمي أو تعديل يدوي)</label>
+                    <label>هامش ربح مقترح بواسطة AI (%)</label>
                     <input type="number" id="modal-p-margin" value="20" oninput="calculateAiPrice()">
                 </div>
                 <div class="input-group">
@@ -347,12 +344,12 @@
             </div>
         </div>
 
-        <!-- نافذة اختيار الموظف للطلبية -->
+        <!-- نافذة اختيار الموظف -->
         <div class="modal" id="assign-modal">
             <div class="modal-content">
                 <h3 style="color:var(--accent-gold); margin-bottom:10px; font-size:16px;">اختر الموظف لتجهيز الطلب</h3>
                 <div class="input-group">
-                    <label>اختر من الموظفين المتاحين (مع عدد الطلبات النشطة لديهم):</label>
+                    <label>اختر من الموظفين المتاحين:</label>
                     <select id="select-staff-target">
                         <option value="موظف 1 (لديه 2 طلبيات نشطة)">موظف 1 (لديه 2 طلبيات نشطة)</option>
                         <option value="موظف 2 (لديه 4 طلبيات نشطة)">موظف 2 (لديه 4 طلبيات نشطة)</option>
@@ -403,7 +400,6 @@
     </div>
 
     <script>
-        // إخفاء شاشة الترحيب
         setTimeout(() => {
             let splash = document.getElementById('splash-screen');
             splash.style.opacity = '0';
@@ -422,15 +418,16 @@
             }
         }
 
-        // قاعدة بيانات الحسابات (إيميلك الحقيقي كمالك للنظام)
         let currentUser = null;
+        
+        // قاعدة بيانات مرنة تقبل إيميلك مباشرة وتعتبره المالك الأول (فهد راشد الحسين)
         let usersDB = [
-            { email: "fahad@neris.com", pass: "12345", role: "المالك الأول (فهد راشد الحسين)", phone: "0500000000", dob: "2006-07-31", firstLogin: false },
+            { email: "fahadfhd47@gmail.com", pass: "Fahad55003", role: "المالك الأول (فهد راشد الحسين)", phone: "0500000000", dob: "2006-07-31", firstLogin: false },
             { email: "staff1@neris.com", pass: "12345", role: "موظف", phone: "", dob: "", firstLogin: true }
         ];
 
         let products = [
-            { name: "عطر نيريس الملكي", cost: 120, price: 150, img: "" }
+            { name: "عطر نيريس الملكي", cost: 120, price: "150.00", img: "" }
         ];
 
         let activeOrderId = null;
@@ -451,23 +448,34 @@
             let email = document.getElementById('login-email').value.trim();
             let pass = document.getElementById('login-password').value.trim();
             
-            // إذا كتبت إيميلك ولم يكن موجوداً مسبقاً، نقوم بتسجيله تلقائياً كمالك للنظام بالبيانات التي أرسلتها!
-            let user = usersDB.find(u => u.email === email && u.pass === pass);
-            
-            if (!user && email) {
-                user = { email: email, pass: pass, role: "المالك الأول (فهد راشد الحسين)", phone: "0500000000", dob: "2006-07-31", firstLogin: false };
-                usersDB.push(user);
+            if(!email || !pass) {
+                document.getElementById('login-error').style.display = 'block';
+                return;
             }
 
-            if(user) {
-                currentUser = user;
-                if(user.firstLogin && !user.phone) {
-                    navToScreen('complete-profile-screen');
+            // البحث عن المستخدم أو إضافته تلقائياً إذا كان إيميلك الشخصي
+            let user = usersDB.find(u => u.email.toLowerCase() === email.toLowerCase());
+            
+            if (user) {
+                if (user.pass === pass) {
+                    currentUser = user;
                 } else {
-                    initSystemAfterLogin();
+                    document.getElementById('login-error').innerText = "كلمة المرور غير صحيحة";
+                    document.getElementById('login-error').style.display = 'block';
+                    return;
                 }
             } else {
-                document.getElementById('login-error').style.display = 'block';
+                // تسجيل الإيميل الجديد تلقائياً كمالك للنظام
+                user = { email: email, pass: pass, role: "المالك الأول (فهد راشد الحسين)", phone: "0500000000", dob: "2006-07-31", firstLogin: false };
+                usersDB.push(user);
+                currentUser = user;
+            }
+
+            document.getElementById('login-error').style.display = 'none';
+            if(currentUser.firstLogin && !currentUser.phone) {
+                navToScreen('complete-profile-screen');
+            } else {
+                initSystemAfterLogin();
             }
         }
 
@@ -483,7 +491,7 @@
         }
 
         function forgotPassword() {
-            alert("⚠️ تم إرسال إشعار فوري إلى الحساب الرئيسي (المالك الأول) بأن المستخدم نسيت كلمة المرور الخاصة به لتغييرها.");
+            alert("⚠️ تم إرسال إشعار فوري إلى الحساب الرئيسي (المالك الأول) لتغيير كلمة المرور.");
         }
 
         function initSystemAfterLogin() {
@@ -507,7 +515,6 @@
             `;
         }
 
-        // تفاصيل إضافة المنتج والتسعير الذكي
         function openAddModal() { document.getElementById('add-product-modal').style.display = 'flex'; }
         function closeAddModal() { document.getElementById('add-product-modal').style.display = 'none'; }
 
@@ -548,7 +555,6 @@
             });
         }
 
-        // إدارة الطلبيات وتوزيعها
         function openAssignModal(id) {
             activeOrderId = id;
             document.getElementById('assign-modal').style.display = 'flex';
@@ -564,7 +570,6 @@
             alert(`✅ تم إرسال الطلب وإشعار الموظف (${staff}) بنجاح ليبدأ العمل!`);
         }
 
-        // مساعد الـ AI
         function askAiBot() {
             let txt = document.getElementById('ai-input').value.trim();
             if(!txt) return;
