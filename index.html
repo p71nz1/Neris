@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -19,11 +18,22 @@
             --primary: #3b82f6;
         }
 
+        [data-theme="light"] {
+            --bg-dark: #f1f5f9;
+            --bg-card: #ffffff;
+            --accent-gold: #b89728;
+            --accent-gold-hover: #96781d;
+            --text-main: #0f1d1a;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         body {
@@ -42,7 +52,7 @@
             background: var(--bg-card);
             border: 4px solid var(--accent-gold);
             border-radius: 35px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -64,11 +74,17 @@
         }
 
         .splash-logo {
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             border: 2px solid var(--accent-gold);
-            object-fit: cover;
+            background: #152622;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--accent-gold);
+            font-size: 28px;
+            font-weight: bold;
             margin-bottom: 20px;
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
@@ -86,14 +102,20 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
-            background: rgba(15, 29, 26, 0.9);
+            background: var(--bg-card);
         }
 
-        .menu-btn {
+        .header-btns {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .menu-btn, .theme-btn {
             background: none;
             border: none;
             color: var(--accent-gold);
-            font-size: 22px;
+            font-size: 20px;
             cursor: pointer;
         }
 
@@ -109,13 +131,14 @@
             position: absolute;
             top: 0; right: -280px;
             width: 280px; height: 100%;
-            background: #11221e;
+            background: var(--bg-card);
             border-left: 1px solid var(--border);
             z-index: 500;
             transition: right 0.3s ease;
             padding: 20px;
             display: flex;
             flex-direction: column;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.3);
         }
 
         .drawer.open {
@@ -125,7 +148,7 @@
         .drawer-item {
             padding: 12px 15px;
             color: var(--text-main);
-            background: rgba(255,255,255,0.03);
+            background: rgba(212, 175, 55, 0.05);
             border-radius: 8px;
             margin-bottom: 10px;
             cursor: pointer;
@@ -135,7 +158,7 @@
         }
 
         .drawer-item:hover {
-            background: rgba(212, 175, 55, 0.1);
+            background: rgba(212, 175, 55, 0.15);
             color: var(--accent-gold);
         }
 
@@ -181,10 +204,10 @@
         .input-group input, .input-group select {
             width: 100%;
             padding: 10px 12px;
-            background: #0f1d1a;
+            background: var(--bg-dark);
             border: 1px solid var(--border);
             border-radius: 8px;
-            color: white;
+            color: var(--text-main);
             font-size: 14px;
             outline: none;
         }
@@ -212,7 +235,7 @@
         }
 
         .panel-box {
-            background: #0f1d1a;
+            background: var(--bg-dark);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 12px;
@@ -229,7 +252,7 @@
         }
 
         .product-card, .order-card, .chat-bubble {
-            background: #152622;
+            background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 10px;
@@ -262,7 +285,7 @@
         }
 
         .ai-chat-box {
-            background: #0f1d1a;
+            background: var(--bg-dark);
             border: 1px solid var(--accent-gold);
             border-radius: 10px;
             padding: 10px;
@@ -276,29 +299,32 @@
 <body>
 
     <div class="phone-frame">
-        <!-- شاشة البداية بالشعار المطلوب -->
+        <!-- شاشة البداية الآمنة -->
         <div id="splash-screen">
-            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23152622' stroke='%23d4af37' stroke-width='2'/><path d='M50 25 C55 40 70 45 75 50 C70 55 55 60 50 75 C45 60 30 55 25 50 C30 45 45 40 50 25 Z' fill='%23d4af37'/></svg>" class="splash-logo" alt="NERIS Logo">
+            <div class="splash-logo">N</div>
             <div class="splash-title">NERIS OS</div>
-            <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">جاري التحميل...</p>
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 5px;">جاري تشغيل النظام...</p>
         </div>
 
-        <!-- الشريط العُلوي والقائمة الجانبية -->
+        <!-- الشريط العلوي مع زر الوضع الليلي/الفاتح والقائمة -->
         <div class="header-bar" id="app-header" style="display:none;">
             <button class="menu-btn" onclick="toggleDrawer()">☰</button>
             <div class="brand-title">NERIS OS</div>
-            <span class="badge" id="current-role-badge">صلاحية النظام</span>
+            <div class="header-btns">
+                <button class="theme-btn" onclick="toggleTheme()" id="theme-icon" title="تغيير المظهر">☀️</button>
+                <span class="badge" id="current-role-badge">الدور</span>
+            </div>
         </div>
 
-        <!-- القائمة الجانبية الثلاث شرطات -->
+        <!-- القائمة الجانبية -->
         <div class="drawer" id="main-drawer">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <span style="color:var(--accent-gold); font-weight:bold;">قائمة التنقل</span>
-                <button onclick="toggleDrawer()" style="background:none; border:none; color:white; font-size:16px; cursor:pointer;">✕</button>
+                <button onclick="toggleDrawer()" style="background:none; border:none; color:var(--text-main); font-size:16px; cursor:pointer;">✕</button>
             </div>
             <div class="drawer-item" onclick="navTo('dashboard-screen')">📊 لوحة التحكم الرئيسية</div>
             <div class="drawer-item" onclick="navTo('inventory-screen')">📦 إدارة المخزن والمنتجات</div>
-            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 إدارة الطلبيات</div>
+            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 إدارة الطلبيات والتجهيز</div>
             <div class="drawer-item" onclick="navTo('ai-screen')">🤖 مساعد الذكاء الاصطناعي AI</div>
             <div class="drawer-item" onclick="navTo('chat-screen')">💬 الرسائل والمحادثات</div>
             <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ الملف الشخصي وتعديل البيانات</div>
@@ -332,7 +358,7 @@
             </div>
         </div>
 
-        <!-- 2. شاشة تغيير كلمة المرور الإجبارية (أول دخول) -->
+        <!-- 2. شاشة تغيير كلمة المرور الإجبارية -->
         <div id="force-pass-screen" class="screen">
             <h2>تحديث إلزامي لكلمة المرور</h2>
             <p class="subtitle">هذه المرة الأولى لدخولك، يجب عليك تعيين كلمة مرور جديدة خاصة بك</p>
@@ -356,7 +382,7 @@
             <div class="panel-box">
                 <h4>نظرة عامة</h4>
                 <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted);">
-                    <span>إجمالي المنتجات: <b id="stat-products" style="color:var(--accent-gold);">0</b></span>
+                    <span>إجمالي المنتجات: <b id="stat-products" style="color:var(--accent-gold);">1</b></span>
                     <span>الطلبيات النشطة: <b id="stat-orders" style="color:var(--accent-gold);">1</b></span>
                     <span>التنبيهات: <b style="color:var(--success);">مفعلة</b></span>
                 </div>
@@ -451,13 +477,29 @@
     </div>
 
     <script>
-        // إخفاء شاشة البداية بعد ثانيتين
+        // إخفاء شاشة البداية بسلاسة بعد ثانية ونصف والانتقال لشاشة الدخول
         setTimeout(() => {
-            document.getElementById('splash-screen').style.opacity = '0';
-            setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 500);
-        }, 2000);
+            let splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+                navToScreen('login-screen');
+            }, 500);
+        }, 1500);
 
-        // قاعدة بيانات المستخدمين
+        // وظيفة التبديل بين الوضع الداكن والفاتح
+        function toggleTheme() {
+            let html = document.documentElement;
+            let themeIcon = document.getElementById('theme-icon');
+            if(html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                themeIcon.innerText = '☀️';
+            } else {
+                html.setAttribute('data-theme', 'light');
+                themeIcon.innerText = '🌙';
+            }
+        }
+
         let users = [
             { email: "owner1@neris.com", pass: "12345", role: "المالك الأول", phone: "0500000001", dob: "2006-07-31", firstLogin: true },
             { email: "owner2@neris.com", pass: "12345", role: "المالك الثاني", phone: "0500000002", dob: "2006-01-01", firstLogin: true },
@@ -508,12 +550,12 @@
             let p1 = document.getElementById('new-forced-pass').value;
             let p2 = document.getElementById('confirm-forced-pass').value;
             if(!p1 || p1 !== p2) {
-                alert("كلمتا المرور غير متطابتين أو فارغتين!");
+                alert("كلمتا المرور غير متطابقتين أو فارغتين!");
                 return;
             }
             currentUser.pass = p1;
             currentUser.firstLogin = false;
-            alert("تم تغيير كلمة المرور المؤقتة بنجاح وتحديث الحساب!");
+            alert("تم تغيير كلمة المرور المؤقتة بنجاح!");
             completeLoginProcess();
         }
 
@@ -529,13 +571,11 @@
                 renderUsersList();
             }
 
-            // تحميل بيانات الملف الشخصي
             document.getElementById('prof-email').value = currentUser.email;
             document.getElementById('prof-phone').value = currentUser.phone || '';
             document.getElementById('prof-dob').value = currentUser.dob || '';
 
             navToScreen('dashboard-screen');
-            alert(`⚠️ تنبيه إداري: تم تسجيل دخول ${currentUser.role} بنجاح وإرسال إشعار للحساب الرئيسي.`);
         }
 
         function updateStats() {
@@ -545,7 +585,7 @@
         function renderUsersList() {
             let container = document.getElementById('users-list-container');
             container.innerHTML = "";
-            users.forEach((u, idx) => {
+            users.forEach((u) => {
                 container.innerHTML += `
                     <div class="product-card">
                         <span><b>${u.role}</b><br><small style="color:var(--text-muted);">${u.email}</small></span>
@@ -563,7 +603,7 @@
             let role = prompt("اختر الصلاحية (المالك الثاني أو موظف):", "موظف");
             users.push({ email, pass, role, phone: "", dob: "", firstLogin: true });
             renderUsersList();
-            alert("تم إضافة المستخدم بنجاح وسيُطلب منه تغيير كلمة المرور عند أول دخول.");
+            alert("تم إضافة المستخدم بنجاح.");
         }
 
         function addProduct() {
@@ -615,7 +655,7 @@
             badge.style.background = "rgba(34, 197, 94, 0.1)";
             badge.style.color = "#22c55e";
             badge.style.borderColor = "#22c55e";
-            alert("✅ تم إرسال تنبيه للموظف بنجاح، وبدء تجهيز الطلبية!");
+            alert("✅ تم إرسال تنبيه للموظف بنجاح وبدء التجهيز!");
         }
 
         function askAI() {
@@ -624,11 +664,11 @@
             let box = document.getElementById('ai-messages');
             box.innerHTML += `<div style="margin-bottom:6px; text-align:right;"><b>أنت:</b> ${input}</div>`;
             
-            let reply = "بناءً على تحليلي لبيانات متجر Neris، أنصحك بتحديد السعر بناءً على تكلفة التغليف والجودة.";
+            let reply = "بناءً على تحليلي لبيانات متجر Neris، أنصحك بمتابعة حركة المخزون وتحديث الأسعار بانتظام.";
             if(input.includes("خصم") || input.includes("خصومات")) {
-                reply = "💡 **توصية الذكاء الاصطناعي:** نعم، أنصحك بشدة بعمل خصم بنسبة 15% هذا الأسبوع لزيادة المبيعات وجذب عملاء جدد.";
+                reply = "💡 **توصية الذكاء الاصطناعي:** نعم، أنصحك بشدة بعمل خصم بنسبة 15% هذا الأسبوع لزيادة المبيعات.";
             } else if(input.includes("سعر") || input.includes("أسعار")) {
-                reply = "💰 **تحليل السعر:** السعر المقترح العادل للمنتج يتراوح ما بين 120 إلى 200 ريال حسب التغليف.";
+                reply = "💰 **تحليل السعر:** السعر المقترح العادل للمنتج يتراوح ما بين 120 إلى 200 ريال.";
             }
 
             setTimeout(() => {
@@ -658,7 +698,7 @@
             currentUser.dob = document.getElementById('prof-dob').value;
             let newP = document.getElementById('prof-pass').value;
             if(newP) currentUser.pass = newP;
-            alert("✅ تم تحديث بيانات الملف الشخصي بنجاح وإشعار الحساب الرئيسي.");
+            alert("✅ تم تحديث بيانات الملف الشخصي بنجاح.");
         }
 
         function logout() {
