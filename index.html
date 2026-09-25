@@ -51,7 +51,6 @@
             width: 100%; max-width: 430px; height: 100%; max-height: 932px;
             background: var(--bg); display: flex; flex-direction: column;
             position: relative; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            transition: background 0.3s;
         }
 
         @media (min-width: 434px) {
@@ -63,7 +62,7 @@
             display: flex; justify-content: space-between; align-items: center;
         }
 
-        .brand { font-size: 18px; font-weight: 900; letter-spacing: 3px; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+        .brand { font-size: 18px; font-weight: 900; letter-spacing: 3px; color: var(--primary); }
         .header-actions { display: flex; gap: 8px; align-items: center; }
 
         .role-pill {
@@ -71,7 +70,7 @@
             background: rgba(212, 175, 55, 0.15); color: var(--primary); border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        .theme-toggle, .btn-icon {
+        .theme-toggle {
             background: var(--surface-sub); border: 1px solid var(--border); color: var(--text-main);
             padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer;
         }
@@ -107,17 +106,20 @@
         .alert.error { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
         .alert.success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
 
-        .nav-tabs {
-            display: flex; background: var(--surface); border-top: 1px solid var(--border);
-            padding: 8px; justify-content: space-around;
-        }
-        .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-        .tab-btn.active { color: var(--primary); }
-
-        .chat-box { height: 180px; overflow-y: auto; background: var(--surface-sub); border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
+        .chat-box { height: 140px; overflow-y: auto; background: var(--surface-sub); border: 1px solid var(--border); border-radius: 8px; padding: 8px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
         .msg { padding: 6px 10px; border-radius: 8px; font-size: 11px; max-width: 80%; }
         .msg.me { background: var(--primary); color: #0d1414; align-self: flex-end; }
         .msg.other { background: var(--surface); color: var(--text-main); align-self: flex-start; border: 1px solid var(--border); }
+
+        /* نافذة تعديل الصلاحيات المخصصة */
+        #permissions-modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 100; display: none;
+            justify-content: center; align-items: center; padding: 20px;
+        }
+        .modal-card { background: var(--surface); width: 100%; border-radius: var(--radius); padding: 16px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+        .perm-checkbox-group { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; }
+        .perm-checkbox-group input { width: 18px; height: 18px; accent-color: var(--primary); }
     </style>
 </head>
 <body data-theme="dark">
@@ -126,65 +128,63 @@
         <header>
             <div class="brand">NERIS</div>
             <div class="header-actions">
-                <div class="role-pill" id="role-badge">زائر</div>
+                <div class="role-pill" id="role-badge">جاري التحقق...</div>
                 <button class="theme-toggle" onclick="toggleTheme()">🌓 الثيم</button>
             </div>
         </header>
 
         <main id="app-main">
-            <!-- شاشة الدخول -->
-            <div class="card" id="view-login">
-                <div class="title">تسجيل الدخول</div>
-                <div class="subtitle">نظام إدارة متجر نيريس المطور</div>
+            <!-- شاشة التحميل الآمنة لمنع ظهور أي بيانات -->
+            <div id="loading-screen" class="card" style="text-align:center; padding: 40px 20px;">
+                <div class="title">جاري التحقق من أمان النظام...</div>
+                <div class="subtitle">يرجى الانتظار</div>
+            </div>
+
+            <!-- تسجيل الدخول -->
+            <div class="card" id="view-login" style="display:none;">
+                <div class="title">تسجيل الدخول الآمن (SMS & Email)</div>
+                <div class="subtitle">نظام إدارة متجر نيريس</div>
                 <div class="alert error" id="login-err"></div>
                 <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="l-email" placeholder="name@neris.com"></div>
                 <div class="form-group"><label>كلمة المرور</label><input type="password" id="l-pass" placeholder="••••••••"></div>
                 <button class="btn" onclick="execLogin()">دخول النظام</button>
-                <button class="btn btn-subtle" onclick="switchCard('register')">إنشاء حساب جديد</button>
+                <button class="btn btn-subtle" onclick="switchCard('register')">إنشاء حساب جديد وتفعيل الإيميل</button>
             </div>
 
-            <!-- شاشة التسجيل -->
+            <!-- التسجيل -->
             <div class="card" id="view-register" style="display:none;">
-                <div class="title">حساب جديد</div>
-                <div class="subtitle">أنشئ حسابك وتأكيد البريد الإلكتروني</div>
+                <div class="title">حساب منشأة جديد</div>
+                <div class="subtitle">سيتم إرسال رابط تحقق لبريدك الإلكتروني</div>
                 <div class="alert error" id="reg-err"></div>
                 <div class="alert success" id="reg-succ"></div>
                 <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="r-email" placeholder="name@neris.com"></div>
                 <div class="form-group"><label>كلمة المرور</label><input type="password" id="r-pass" placeholder="6 أحرف على الأقل"></div>
-                <div class="form-group">
-                    <label>الدور الأولي</label>
-                    <select id="r-role">
-                        <option value="staff">موظف</option>
-                        <option value="admin">مشرف</option>
-                        <option value="owner">مالك</option>
-                    </select>
-                </div>
-                <button class="btn" onclick="execRegister()">تسجيل وإرسال رمز التوثيق</button>
+                <button class="btn" onclick="execRegister()">تسجيل وإرسال رابط التحقق</button>
                 <button class="btn btn-subtle" onclick="switchCard('login')">العودة لدخول النظام</button>
             </div>
 
             <!-- لوحة التحكم الرئيسية -->
-            <div id="view-dashboard" style="display:none; display:flex; flex-direction:column; gap:12px;">
+            <div id="view-dashboard" style="display:none; flex-direction:column; gap:12px;">
                 
-                <!-- قسم المخزون والأسعار -->
-                <div class="card">
-                    <div class="title">إدارة المخزون والتكلفة الذكية</div>
-                    <div id="owner-product-controls" style="display:none; margin-top:10px;">
-                        <div class="form-group"><label>اسم المنتج (كيس، باكيج، ورد...)</label><input type="text" id="p-name" placeholder="مثال: باكيج ورد فخم"></div>
-                        <div class="form-group"><label>تكلفة المكونات (ر.س)</label><input type="number" id="p-cost" placeholder="25"></div>
+                <!-- المخزون -->
+                <div class="card" id="card-inventory">
+                    <div class="title">المخزون والتكلفة الذكية</div>
+                    <div id="owner-product-controls" style="display:none; margin-top:8px;">
+                        <div class="form-group"><label>اسم المنتج</label><input type="text" id="p-name" placeholder="مثال: باكيج ورد فخم"></div>
+                        <div class="form-group"><label>التكلفة (ر.س)</label><input type="number" id="p-cost" placeholder="25"></div>
                         <button class="btn" onclick="addProduct()">إضافة وتوليد السعر المقترح</button>
                     </div>
-                    <div id="products-list" style="margin-top:10px; max-height:150px; overflow-y:auto;"></div>
+                    <div id="products-list" style="margin-top:8px; max-height:110px; overflow-y:auto;"></div>
                 </div>
 
-                <!-- إدارة الموظفين والطرد والتنزيل (للملاك فقط) -->
+                <!-- إدارة الفريق والصلاحيات (للمالك الأساسي فقط أو من لديه صلاحية) -->
                 <div class="card" id="owner-team-section" style="display:none;">
-                    <div class="title">إدارة الفريق والمقاعد الشاغرة</div>
-                    <div class="subtitle" id="team-counter">المقاعد المتاحة والموظفين: 0</div>
-                    <div id="team-members-list" style="max-height:160px; overflow-y:auto;"></div>
+                    <div class="title">إدارة الموظفين والصلاحيات الدقيقة</div>
+                    <div class="subtitle" id="team-counter">جاري تحميل الفريق...</div>
+                    <div id="team-members-list" style="max-height:140px; overflow-y:auto;"></div>
                 </div>
 
-                <!-- قسم المراسلات والدردشة الخاصة -->
+                <!-- الشات والرسائل -->
                 <div class="card">
                     <div class="title">الرسائل والمراسلات الخاصة</div>
                     <div class="form-group">
@@ -195,26 +195,57 @@
                     </div>
                     <div class="chat-box" id="chat-messages-box"></div>
                     <div style="display:flex; gap:6px;">
-                        <input type="text" id="chat-input" placeholder="اكتب رسالتك هنا..." style="flex:1;">
+                        <input type="text" id="chat-input" placeholder="اكتب رسالتك..." style="flex:1;">
                         <button class="btn" style="width:70px; margin-top:0;" onclick="sendChatMessage()">إرسال</button>
                     </div>
                 </div>
 
-                <!-- طلبات الإجازات والاستقالة للموظفين -->
-                <div class="card" id="staff-requests-section">
-                    <div class="title">خدمات الموظف</div>
+                <!-- خدمات الموظف -->
+                <div class="card">
+                    <div class="title">الخدمات والطلبات</div>
                     <button class="btn btn-subtle" onclick="submitRequest('إجازة')">طلب إجازة رسمية</button>
                     <button class="btn btn-danger" style="margin-top:6px;" onclick="submitRequest('استقالة')">تقديم استقالة</button>
                 </div>
 
-                <button class="btn btn-subtle btn-danger" onclick="execLogout()">تسجيل الخروج</button>
+                <button class="btn btn-subtle btn-danger" onclick="execLogout()">تسجيل الخروج الآمن</button>
             </div>
         </main>
+
+        <!-- مودل تخصيص الصلاحيات بالـ Checkboxes -->
+        <div id="permissions-modal">
+            <div class="modal-card">
+                <div class="title">تعديل صلاحيات الموظف</div>
+                <div class="subtitle" id="modal-target-email"></div>
+                
+                <div style="display:flex; flex-direction:column; gap:6px; margin: 12px 0;">
+                    <label class="perm-checkbox-group"><input type="checkbox" id="perm-change-price"> تغيير سعر المنتج</label>
+                    <label class="perm-checkbox-group"><input type="checkbox" id="perm-add-product"> إضافة منتجات جديدة</label>
+                    <label class="perm-checkbox-group"><input type="checkbox" id="perm-add-pricing"> إضافة تسعيرة</label>
+                    <label class="perm-checkbox-group"><input type="checkbox" id="perm-manage-staff"> التحكم بالموظفين</label>
+                    <label class="perm-checkbox-group"><input type="checkbox" id="perm-send-alerts"> إرسال رسائل أو تنبيهات مهمة</label>
+                    <label class="perm-checkbox-group"><input type="checkbox" id="perm-cancel-orders"> إلغاء الطلبيات</label>
+                    <label class="perm-checkbox-group"><input type="checkbox" id="perm-return-items"> إرجاع منتجات</label>
+                </div>
+
+                <div class="form-group" style="margin-top:10px;">
+                    <label>الرتبة العامة</label>
+                    <select id="modal-role-select">
+                        <option value="staff">موظف عادي</option>
+                        <option value="admin">مسؤول (مشرف)</option>
+                        <option value="owner">مالك ثانوي</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="saveCustomPermissions()">حفظ الصلاحيات</button>
+                <button class="btn btn-subtle" style="margin-top:6px;" onclick="closePermModal()">إلغاء</button>
+            </div>
+        </div>
     </div>
 
     <script>
+        // ضع هنا بيانات مشروعك الحقيقي في Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyDummyKeyForGithubDeployReady",
+            apiKey: "AIzaSyRealKeyPlaceholderToChangeByYou",
             authDomain: "neris-store.firebaseapp.com",
             projectId: "neris-store",
             storageBucket: "neris-store.appspot.com",
@@ -227,84 +258,145 @@
         const db = firebase.firestore();
 
         let currentUser = null;
-        let myRole = 'staff';
+        let myData = null;
+        let selectedEditingUid = null;
+        let failedLoginAttempts = 0;
 
         function toggleTheme() {
             const body = document.body;
-            const current = body.getAttribute('data-theme');
-            body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         }
 
         function switchCard(card) {
+            document.getElementById('loading-screen').style.display = 'none';
             document.getElementById('view-login').style.display = card === 'login' ? 'block' : 'none';
             document.getElementById('view-register').style.display = card === 'register' ? 'block' : 'none';
+            document.getElementById('view-dashboard').style.display = 'none';
         }
 
-        function showAlert(id, msg, isErr=true) {
+        function showAlert(id, msg) {
             const el = document.getElementById(id);
-            el.innerText = msg;
-            el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 4000);
+            if(el) {
+                el.innerText = msg;
+                el.style.display = 'block';
+                setTimeout(() => el.style.display = 'none', 4000);
+            }
         }
 
         function execRegister() {
             const email = document.getElementById('r-email').value.trim();
             const pass = document.getElementById('r-pass').value;
-            const role = document.getElementById('r-role').value;
             if(!email || !pass) return showAlert('reg-err', 'الرجاء تعبئة جميع الحقول');
 
             auth.createUserWithEmailAndPassword(email, pass).then(res => {
-                res.user.sendEmailVerification();
-                db.collection("users").doc(res.user.uid).set({ email, role, uid: res.user.uid }).then(() => {
-                    showAlert('reg-succ', 'تم إنشاء الحساب وإرسال رابط التوثيق بالإيميل.', false);
-                    setTimeout(() => switchCard('login'), 3000);
+                // إرسال رابط التوثيق بالإيميل تلقائياً
+                res.user.sendEmailVerification().catch(() => {});
+                
+                // فحص هل يوجد أي مستخدم في النظام لتحديد إذا كان هو المالك الأساسي الأول
+                db.collection("users").get().then(snap => {
+                    const isFirst = snap.empty;
+                    const initialRole = isFirst ? 'owner' : 'staff';
+                    const defaultPerms = isFirst ? {
+                        changePrice: true, addProduct: true, addPricing: true, manageStaff: true, sendAlerts: true, cancelOrders: true, returnItems: true
+                    } : {
+                        changePrice: false, addProduct: false, addPricing: false, manageStaff: false, sendAlerts: false, cancelOrders: false, returnItems: false
+                    };
+
+                    db.collection("users").doc(res.user.uid).set({
+                        email, uid: res.user.uid, role: initialRole, isSuperOwner: isFirst, perms: defaultPerms, createdAt: new Date()
+                    }).then(() => {
+                        showAlert('reg-succ', 'تم إنشاء الحساب وإرسال رابط التوثيق لإيميلك! انتقل لتسجيل الدخول.');
+                        setTimeout(() => switchCard('login'), 3000);
+                    });
                 });
             }).catch(err => showAlert('reg-err', err.message));
         }
 
         function execLogin() {
+            if(failedLoginAttempts >= 6) return showAlert('login-err', 'تم حظر المحاولات مؤقتاً لأسباب أمنية.');
+
             const email = document.getElementById('l-email').value.trim();
             const pass = document.getElementById('l-pass').value;
             if(!email || !pass) return showAlert('login-err', 'أدخل البريد وكلمة المرور');
-            auth.signInWithEmailAndPassword(email, pass).catch(err => showAlert('login-err', err.message));
+
+            auth.signInWithEmailAndPassword(email, pass).then(() => {
+                failedLoginAttempts = 0;
+            }).catch(() => {
+                failedLoginAttempts++;
+                let rem = 6 - failedLoginAttempts;
+                if(failedLoginAttempts === 3) alert('تنبيه: أخطأت 3 مرات! تم منحك 3 محاولات إضافية.');
+                showAlert('login-err', `خطأ في البيانات. المحاولات المتبقية: ${rem}`);
+            });
         }
 
-        function execLogout() { auth.signOut(); }
+        function execLogout() {
+            auth.signOut().then(() => window.location.reload());
+        }
 
+        // مراقبة حالة المصادقة لمنع أي تسريب بصري قبل التحقق
         auth.onAuthStateChanged(user => {
+            const loading = document.getElementById('loading-screen');
+            const login = document.getElementById('view-login');
+            const reg = document.getElementById('view-register');
+            const dash = document.getElementById('view-dashboard');
+
             if(user) {
                 currentUser = user;
                 db.collection("users").doc(user.uid).get().then(doc => {
-                    if(doc.exists) myRole = doc.data().role || 'staff';
-                    document.getElementById('view-login').style.display = 'none';
-                    document.getElementById('view-register').style.display = 'none';
-                    document.getElementById('view-dashboard').style.display = 'flex';
+                    if(doc.exists) {
+                        myData = doc.data();
+                    } else {
+                        myData = { role: 'staff', isSuperOwner: false, perms: {} };
+                    }
 
-                    let rName = 'موظف';
-                    if(myRole === 'owner') { rName = 'مالك 👑'; document.getElementById('owner-product-controls').style.display = 'block'; document.getElementById('owner-team-section').style.display = 'block'; }
-                    if(myRole === 'admin') rName = 'مشرف 🛡️';
-                    document.getElementById('role-badge').innerText = rName;
+                    if(loading) loading.style.display = 'none';
+                    if(login) login.style.display = 'none';
+                    if(reg) reg.style.display = 'none';
+                    if(dash) dash.style.display = 'flex';
+
+                    let badgeText = 'موظف';
+                    if(myData.isSuperOwner) {
+                        badgeText = 'المالك الأساسي 👑';
+                    } else if(myData.role === 'owner') {
+                        badgeText = 'مالك ثانوي 🏛️';
+                    } else if(myData.role === 'admin') {
+                        badgeText = 'مسؤول 🛡️';
+                    }
+                    document.getElementById('role-badge').innerText = badgeText;
+
+                    // إظهار لوحة التحكم للمالك أو من يملك صلاحية الإدارة
+                    if(myData.isSuperOwner || myData.role === 'owner' || myData.perms.manageStaff) {
+                        document.getElementById('owner-team-section').style.display = 'block';
+                    }
+                    if(myData.isSuperOwner || myData.role === 'owner' || myData.perms.addProduct) {
+                        document.getElementById('owner-product-controls').style.display = 'block';
+                    }
 
                     loadProducts();
-                    loadTeamMembersForChatAndMgmt();
+                    loadTeamAndChatTargets();
                     loadMessages();
-                });
+                }).catch(() => auth.signOut());
             } else {
                 currentUser = null;
-                document.getElementById('view-dashboard').style.display = 'none';
-                switchCard('login');
-                document.getElementById('role-badge').innerText = 'زائر';
+                if(loading) loading.style.display = 'none';
+                if(dash) dash.style.display = 'none';
+                if(reg) reg.style.display = 'none';
+                if(login) login.style.display = 'block';
+                document.getElementById('role-badge').innerText = 'غير مصرح';
             }
         });
 
         function addProduct() {
-            if(myRole !== 'owner') return alert('عذراً، إضافة المنتجات وتغيير الأسعار مخصص للملاك فقط.');
+            if(!myData.isSuperOwner && myData.role !== 'owner' && !myData.perms.addProduct) {
+                return alert('عذراً، لا تملك صلاحية إضافة منتجات');
+            }
             const name = document.getElementById('p-name').value.trim();
             const cost = parseFloat(document.getElementById('p-cost').value);
-            if(!name || isNaN(cost)) return alert('أدخل اسم المنتج وتكلفته بشكل صحيح');
-            const suggestedPrice = (cost * 1.6).toFixed(2);
+            if(!name || isNaN(cost)) return alert('أدخل بيانات صحيحة');
 
-            db.collection("products").add({ name, cost, price: suggestedPrice, createdAt: new Date() }).then(() => {
+            db.collection("products").add({
+                name, cost, price: (cost * 1.6).toFixed(2), createdAt: new Date()
+            }).then(() => {
                 document.getElementById('p-name').value = '';
                 document.getElementById('p-cost').value = '';
             });
@@ -313,11 +405,12 @@
         function loadProducts() {
             db.collection("products").onSnapshot(snap => {
                 const list = document.getElementById('products-list');
+                if(!list) return;
                 list.innerHTML = '';
                 snap.forEach(doc => {
                     const p = doc.data();
                     list.innerHTML += `
-                        <div style="background:var(--surface-sub); padding:8px; border-radius:6px; margin-bottom:4px; display:flex; justify-content:space-between; font-size:12px;">
+                        <div style="background:var(--surface-sub); padding:6px 8px; border-radius:6px; margin-bottom:4px; display:flex; justify-content:space-between; font-size:11px;">
                             <div><b>${p.name}</b> (التكلفة: ${p.cost})</div>
                             <div style="color:var(--primary); font-weight:800;">السعر: ${p.price} ر.س</div>
                         </div>
@@ -326,54 +419,89 @@
             });
         }
 
-        function loadTeamMembersForChatAndMgmt() {
+        function loadTeamAndChatTargets() {
             db.collection("users").onSnapshot(snap => {
                 const select = document.getElementById('chat-target');
                 const teamList = document.getElementById('team-members-list');
-                
-                // الحفاظ على القروب العام
-                let optionsHtml = '<option value="general">القروب العام للموظفين</option>';
+                if(!select) return;
+
+                let options = '<option value="general">القروب العام للموظفين</option>';
                 if(teamList) teamList.innerHTML = '';
-                
-                let totalStaff = 0;
+                let count = 0;
 
                 snap.forEach(doc => {
                     const u = doc.data();
-                    totalStaff++;
+                    count++;
                     if(u.uid !== currentUser.uid) {
-                        optionsHtml += `<option value="${u.uid}">مراسلة خاصة: ${u.email} (${u.role})</option>`;
+                        options += `<option value="${u.uid}">خاص: ${u.email} (${u.role})</option>`;
                     }
 
-                    if(myRole === 'owner' && teamList) {
+                    if((myData.isSuperOwner || myData.role === 'owner') && teamList) {
+                        // المالك الأساسي فقط يملك صلاحية طرد الموظفين والملاك الثانويين
+                        let fireBtn = myData.isSuperOwner && !u.isSuperOwner ? 
+                            `<button class="btn-danger" style="padding:2px 5px; font-size:9px;" onclick="fireUser('${u.uid}')">طرد</button>` : '';
+
                         teamList.innerHTML += `
-                            <div style="background:var(--surface-sub); padding:8px; border-radius:6px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center; font-size:11px;">
-                                <div><b>${u.email}</b><br>الدور الحالي: ${u.role}</div>
-                                <div style="display:flex; gap:4px;">
-                                    <button class="btn-subtle" style="padding:2px 6px; font-size:10px;" onclick="changeRole('${u.uid}', 'staff')">موظف</button>
-                                    <button class="btn-subtle" style="padding:2px 6px; font-size:10px;" onclick="changeRole('${u.uid}', 'admin')">مسؤول</button>
-                                    <button class="btn-danger" style="padding:2px 6px; font-size:10px;" onclick="fireUser('${u.uid}')">طرد</button>
+                            <div style="background:var(--surface-sub); padding:6px 8px; border-radius:6px; margin-bottom:4px; display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                                <div><b>${u.email}</b><br>الرتبة: ${u.role} ${u.isSuperOwner ? '👑' : ''}</div>
+                                <div style="display:flex; gap:3px;">
+                                    <button class="btn-subtle" style="padding:2px 5px; font-size:9px;" onclick="openPermModal('${u.uid}', '${u.email}', '${u.role}', ${JSON.stringify(u.perms || {})})">الصلاحيات</button>
+                                    ${fireBtn}
                                 </div>
                             </div>
                         `;
                     }
                 });
-
-                select.innerHTML = optionsHtml;
-                if(document.getElementById('team-counter')) {
-                    document.getElementById('team-counter').innerText = `إجمالي الموظفين المسجلين: ${totalStaff} ( المقاعد الشاغرة متاحة )`;
-                }
+                select.innerHTML = options;
+                const counter = document.getElementById('team-counter');
+                if(counter) counter.innerText = `عدد أعضاء المنشأة المسجلين: ${count}`;
             });
         }
 
-        function changeRole(uid, newRole) {
-            if(myRole !== 'owner') return alert('للملاك فقط');
-            db.collection("users").doc(uid).update({ role: newRole }).then(() => alert('تم تعديل الصلاحية بنجاح'));
+        function openPermModal(uid, email, role, perms) {
+            selectedEditingUid = uid;
+            document.getElementById('modal-target-email').innerText = email;
+            document.getElementById('modal-role-select').value = role;
+
+            document.getElementById('perm-change-price').checked = !!perms.changePrice;
+            document.getElementById('perm-add-product').checked = !!perms.addProduct;
+            document.getElementById('perm-add-pricing').checked = !!perms.addPricing;
+            document.getElementById('perm-manage-staff').checked = !!perms.manageStaff;
+            document.getElementById('perm-send-alerts').checked = !!perms.sendAlerts;
+            document.getElementById('perm-cancel-orders').checked = !!perms.cancelOrders;
+            document.getElementById('perm-return-items').checked = !!perms.returnItems;
+
+            document.getElementById('permissions-modal').style.display = 'flex';
+        }
+
+        function closePermModal() {
+            document.getElementById('permissions-modal').style.display = 'none';
+        }
+
+        function saveCustomPermissions() {
+            if(!myData.isSuperOwner && myData.role !== 'owner') return alert('للملاك فقط');
+            
+            const newRole = document.getElementById('modal-role-select').value;
+            const perms = {
+                changePrice: document.getElementById('perm-change-price').checked,
+                addProduct: document.getElementById('perm-add-product').checked,
+                addPricing: document.getElementById('perm-add-pricing').checked,
+                manageStaff: document.getElementById('perm-manage-staff').checked,
+                sendAlerts: document.getElementById('perm-send-alerts').checked,
+                cancelOrders: document.getElementById('perm-cancel-orders').checked,
+                returnItems: document.getElementById('perm-return-items').checked
+            };
+
+            db.collection("users").doc(selectedEditingUid).update({ role: newRole, perms }).then(() => {
+                alert('تم تحديث الصلاحيات المخصصة بنجاح');
+                closePermModal();
+            });
         }
 
         function fireUser(uid) {
-            if(myRole !== 'owner') return alert('للملاك فقط');
-            if(confirm('هل أنت متأكد من طرد هذا الموظف وإفراغ مقعده؟')) {
-                db.collection("users").doc(uid).delete().then(() => alert('تم طرد الموظف وتحديث المقاعد بنجاح'));
+            if(!myData.isSuperOwner) return alert('المالك الأساسي فقط يحمل صلاحية الطرد الحصرية.');
+            if(confirm('هل أنت متأكد من طرد هذا المستخدم نهائياً وإخلاء مقعده؟')) {
+                db.collection("users").doc(uid).delete().then(() => alert('تم طرد المستخدم بنجاح'));
             }
         }
 
@@ -382,30 +510,30 @@
             if(!note) return;
             db.collection("requests").add({
                 uid: currentUser.uid, email: currentUser.email, type, note, status: 'معلق', createdAt: new Date()
-            }).then(() => alert('تم إرسال طلبك بنجاح للإدارة'));
+            }).then(() => alert('تم إرسال الطلب للإدارة بنجاح'));
         }
 
         function sendChatMessage() {
-            const text = document.getElementById('chat-input').value.trim();
+            const input = document.getElementById('chat-input');
             const target = document.getElementById('chat-target').value;
+            const text = input.value.trim();
             if(!text) return;
 
             db.collection("chats").add({
                 sender: currentUser.uid, senderEmail: currentUser.email, target, text, createdAt: new Date()
-            }).then(() => {
-                document.getElementById('chat-input').value = '';
-            });
+            }).then(() => input.value = '');
         }
 
         function loadMessages() {
             const target = document.getElementById('chat-target').value;
+            const box = document.getElementById('chat-messages-box');
+            if(!box || !currentUser) return;
+
             db.collection("chats").orderBy('createdAt', 'asc').onSnapshot(snap => {
-                const box = document.getElementById('chat-messages-box');
                 box.innerHTML = '';
                 snap.forEach(doc => {
                     const m = doc.data();
                     const isMe = m.sender === currentUser.uid;
-                    // تصفية الرسائل الخاصة أو العامة
                     if(target === 'general' && m.target === 'general') {
                         box.innerHTML += `<div class="msg ${isMe ? 'me' : 'other'}"><b>${m.senderEmail}:</b><br>${m.text}</div>`;
                     } else if((m.sender === currentUser.uid && m.target === target) || (m.sender === target && m.target === currentUser.uid)) {
