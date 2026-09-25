@@ -3,547 +3,489 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Neris - Ultimate Secure Enterprise OS</title>
-
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#162221">
-
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>النظام الإداري المتكامل</title>
     <style>
         :root {
-            --bg: #0b1111;
-            --surface: #131f1e;
-            --surface-sub: #1b2c2a;
-            --primary: #d4af37;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #233835;
-            --danger: #ef4444;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --radius: 16px;
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+            --success-color: #16a34a;
+            --danger-color: #dc2626;
         }
 
-        [data-theme="light"] {
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --surface-sub: #f1f5f9;
-            --primary: #b89628;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #cbd5e1;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg); color: var(--text-main);
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; height: 100dvh; overflow: hidden; transition: background 0.3s, color 0.3s;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        .mobile-frame {
-            width: 100%; max-width: 430px; height: 100%; max-height: 932px;
-            background: var(--bg); display: flex; flex-direction: column;
-            position: relative; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        @media (min-width: 434px) {
-            .mobile-frame { border: 12px solid #152220; border-radius: 40px; height: 90vh; }
+        /* نافذة الرسائل المهمة المنبثقة (المصرح بها فقط) */
+        #important-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
 
-        header {
-            padding: 16px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center; z-index: 100;
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        .brand { font-size: 16px; font-weight: 900; letter-spacing: 2px; color: var(--primary); }
-        .header-actions { display: flex; gap: 8px; align-items: center; }
-
-        .menu-btn { background: none; border: none; color: var(--text-main); font-size: 20px; cursor: pointer; }
-
-        /* القائمة الجانبية على اليمين */
-        .sidebar {
-            position: absolute; top: 0; right: -100%; width: 280px; height: 100%;
-            background: var(--surface); border-left: 1px solid var(--border);
-            z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 20px;
-        }
-        .sidebar.open { right: 0; }
-        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-weight: 800; color: var(--primary); }
-        .sidebar-item { padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; background: var(--surface-sub); color: var(--text-main); font-size: 13px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); text-align: right; }
-        .sidebar-item:active { background: var(--primary); color: #0b1111; }
-
-        .overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 150; display: none;
-        }
-        .overlay.show { display: block; }
-
-        main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
-
-        .card {
-            background: var(--surface); border-radius: var(--radius); padding: 18px;
-            border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        .modal-content h3 {
+            color: var(--danger-color);
+            margin-bottom: 15px;
         }
 
-        .title { font-size: 15px; font-weight: 800; margin-bottom: 6px; text-align: right; color: var(--primary); }
-        .subtitle { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; text-align: right; line-height: 1.5; }
-
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-align: right; }
-
-        input, select, textarea {
-            width: 100%; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--border);
-            background: var(--surface-sub); color: var(--text-main); font-size: 13px; outline: none; transition: border 0.2s; text-align: right;
+        .modal-content p {
+            margin-bottom: 20px;
+            font-size: 16px;
         }
-        input:focus, select:focus { border-color: var(--primary); }
+
+        /* شاشات النظام */
+        .screen {
+            display: none;
+            padding: 30px;
+            flex: 1;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* نموذج الدخول وتسجيل الحساب */
+        .auth-box {
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .auth-box h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .captcha-box {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px dashed var(--border-color);
+            text-align: center;
+        }
 
         .btn {
-            width: 100%; padding: 13px; border-radius: 10px; border: none;
-            background: var(--primary); color: #0b1111; font-size: 13px; font-weight: 800;
-            cursor: pointer; margin-top: 8px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+            width: 100%;
+            padding: 11px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
         }
-        .btn:active { transform: scale(0.98); }
-        .btn-subtle { background: var(--surface-sub); color: var(--text-main); border: 1px solid var(--border); box-shadow: none; }
-        .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: none; }
 
-        .alert { padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 10px; text-align: center; display: none; }
-        .alert.error { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-        .alert.success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .btn:hover {
+            background: var(--secondary-color);
+        }
 
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
-        .status-online { background: var(--success); }
-        .status-offline { background: var(--text-muted); }
+        .switch-auth {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
 
-        .view-section { display: none; flex-direction: column; gap: 14px; }
-        .view-section.active { display: flex; }
+        .switch-auth a {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* لوحة التحكم الرئيسية */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h4 {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .stat-card span {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .section-box {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-box h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: var(--secondary-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        table th {
+            background: #f1f5f9;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .action-btn.add {
+            background: var(--success-color);
+            margin-bottom: 10px;
+        }
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
-    <div class="mobile-frame">
-        <header>
-            <button class="menu-btn" onclick="toggleSidebar()" id="menu-icon" style="display:none;">☰</button>
-            <div class="brand">NERIS OS</div>
-            <div class="header-actions">
-                <button class="menu-btn" onclick="toggleTheme()" style="font-size:14px;">🌓</button>
-            </div>
-        </header>
+    <!-- نافذة الرسائل المهمة المنبثقة الوحيدة -->
+    <div id="important-modal">
+        <div class="modal-content">
+            <h3>⚠️ تنبيه إداري مهم</h3>
+            <p id="modal-message-text">هذه رسالة إدارية هامة موجهة لك من النظام.</p>
+            <button class="btn" onclick="closeImportantModal()">إغلاق وفهمت</button>
+        </div>
+    </div>
 
-        <!-- القائمة الجانبية -->
-        <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <span>قائمة التنقل</span>
-                <button onclick="toggleSidebar()" style="background:none; border:none; color:var(--text-main); font-size:16px;">✕</button>
+    <div class="container">
+        
+        <!-- 1. شاشة تسجيل الدخول -->
+        <div id="login-screen" class="screen active">
+            <div class="auth-box">
+                <h2>تسجيل الدخول للنظام</h2>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="login-email" placeholder="example@domain.com">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="login-password" placeholder="********">
+                </div>
+                
+                <!-- نظام التحقق (أنا لست روبوت) بدلاً من الإيميل والـ SMS -->
+                <div class="captcha-box">
+                    <label id="captcha-label" style="margin-bottom: 8px; font-size: 13px;">الرجاء حل التحقق: كم الناتج؟ 4 + 3 = ?</label>
+                    <input type="text" id="login-captcha-input" placeholder="اكتب الناتج هنا">
+                </div>
+
+                <button class="btn" onclick="handleLogin()">دخول</button>
+                <div class="switch-auth">
+                    ليس لديك حساب؟ <a onclick="switchScreen('register-screen')">إنشاء حساب جديد</a>
+                </div>
             </div>
-            <div class="sidebar-item" onclick="switchView('dash'); toggleSidebar()">🏠 لوحة التحكم الرئيسية</div>
-            <div class="sidebar-item" onclick="switchView('inventory'); toggleSidebar()">📦 إدارة المخزون والمنتجات</div>
-            <div class="sidebar-item" onclick="switchView('calculator'); toggleSidebar()">🧮 الحاسبة الذكية والتسعير</div>
-            <div class="sidebar-item" onclick="switchView('ai'); toggleSidebar()">🤖 مساعد نيريس الذكي (AI)</div>
-            <div class="sidebar-item" onclick="switchView('employees'); toggleSidebar()" id="menu-emp-link" style="display:none;">👥 إدارة الموظفين والصلاحيات</div>
-            <div class="sidebar-item" onclick="execLogout()" style="color:var(--danger); margin-top:auto;">🚪 تسجيل الخروج</div>
         </div>
 
-        <main id="app-main">
-            <!-- شاشة التحميل -->
-            <div id="view-loading" class="card" style="text-align:center; padding: 40px 20px;">
-                <div class="title" style="text-align:center;">جاري التحقق من النظام الأمني...</div>
-            </div>
-
-            <!-- شاشة تسجيل الدخول -->
-            <div class="card view-section" id="view-login">
-                <div class="title">تسجيل الدخول - نيريس</div>
-                <div class="subtitle">أدخل بريدك وكلمة المرور المسجلة</div>
-                <div class="alert error" id="l-err"></div>
-                <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="l-email" placeholder="name@neris.com"></div>
-                <div class="form-group"><label>كلمة المرور</label><input type="password" id="l-pass" placeholder="••••••••"></div>
-                <button class="btn" onclick="execLogin()">دخول للنظام</button>
-                <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:11px;">
-                    <a href="#" onclick="switchAuthView('register')" style="color:var(--primary); text-decoration:none;">حساب جديد؟ سجّل الآن</a>
-                </div>
-            </div>
-
-            <!-- شاشة إنشاء حساب جديد -->
-            <div class="card view-section" id="view-register">
-                <div class="title">إنشاء حساب جديد</div>
-                <div class="subtitle">يشترط تأكيد البريد الإلكتروني وكلمة مرور قوية جداً</div>
-                <div class="alert error" id="r-err"></div>
-                <div class="alert success" id="r-succ"></div>
-
-                <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="r-email" placeholder="name@neris.com"></div>
-                
+        <!-- 2. شاشة إنشاء الحساب -->
+        <div id="register-screen" class="screen">
+            <div class="auth-box">
+                <h2>إنشاء حساب جديد</h2>
                 <div class="form-group">
-                    <label>الدور المطلوب (Role)</label>
-                    <select id="r-role">
-                        <option value="owner">مالك (Owner)</option>
-                        <option value="supervisor">مشرف (Supervisor)</option>
-                        <option value="employee">موظف (Employee)</option>
-                    </select>
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="reg-email" placeholder="example@domain.com">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="reg-password" placeholder="********">
+                </div>
+                <div class="form-group">
+                    <label>تأكيد كلمة المرور</label>
+                    <input type="password" id="reg-confirm-password" placeholder="********">
                 </div>
 
-                <div class="form-group"><label>كلمة المرور (يجب أن تكون قوية: أحرف وأرقام ورموز)</label><input type="password" id="r-pass" placeholder="••••••••"></div>
-                <button class="btn" onclick="execRegister()">تسجيل وإرسال رمز التحقق للإيميل</button>
-                <button class="btn btn-subtle" onclick="switchAuthView('login')">العودة لتسجيل الدخول</button>
-            </div>
-
-            <!-- لوحة التحكم الرئيسية -->
-            <div class="view-section" id="view-dash">
-                <div class="card">
-                    <div class="title">مرحباً بك في لوحة تحكم نيريس</div>
-                    <div class="subtitle" id="user-status-info">جاري تحميل بيانات المستخدم...</div>
+                <!-- نظام التحقق (أنا لست روبوت) -->
+                <div class="captcha-box">
+                    <label id="reg-captcha-label" style="margin-bottom: 8px; font-size: 13px;">أكد أنك لست روبوت: اكتب الكلمة التالية (ROBOT)</label>
+                    <input type="text" id="reg-captcha-input" placeholder="اكتب الكلمة هنا">
                 </div>
 
-                <!-- عرض حالة الموظفين والمستخدمين المتصلين -->
-                <div class="card">
-                    <div class="title">👥 الموظفين والمستخدمين الحاليين</div>
-                    <div id="dashboard-employees-list" style="margin-top:8px; display:flex; flex-direction:column; gap:6px;"></div>
+                <button class="btn" onclick="handleRegister()">إنشاء حساب</button>
+                <div class="switch-auth">
+                    لديك حساب بالفعل؟ <a onclick="switchScreen('login-screen')">تسجيل الدخول</a>
                 </div>
             </div>
+        </div>
 
-            <!-- إدارة المخزون والمنتجات مع الصور -->
-            <div class="view-section" id="view-inventory">
-                <div class="card">
-                    <div class="title">📦 إدارة المخزون وإضافة منتج مع صورة</div>
-                    <div class="subtitle">أضف المنتجات، التكلفة، ورابط الصورة مباشرة</div>
-                    <div class="form-group"><label>اسم المنتج</label><input type="text" id="p-name" placeholder="عقد لؤلؤ ذهبي"></div>
-                    <div class="form-group"><label>التكلفة الأساسية (ر.س)</label><input type="number" id="p-cost" placeholder="120"></div>
-                    <div class="form-group"><label>رابط صورة المنتج (Image URL)</label><input type="text" id="p-img" placeholder="https://example.com/item.jpg"></div>
-                    <button class="btn" onclick="addProduct()">حفظ المنتج في المخزون</button>
-                    <div id="products-list-view" style="margin-top:12px; max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+        <!-- 3. لوحة التحكم الرئيسية -->
+        <div id="dashboard-screen" class="screen">
+            <div class="dashboard-header">
+                <h2>لوحة التحكم الإدارية</h2>
+                <div>
+                    <span id="user-role-badge" style="background: #e2e8f0; padding: 5px 10px; border-radius: 4px; font-weight: bold; margin-left: 10px;">المستخدم</span>
+                    <button class="action-btn" onclick="handleLogout()">تسجيل الخروج</button>
                 </div>
             </div>
 
-            <!-- الحاسبة الذكية -->
-            <div class="view-section" id="view-calculator">
-                <div class="card" style="border: 2px solid var(--primary);">
-                    <div class="title">🧮 الحاسبة الذكية للتسعير</div>
-                    <div class="subtitle">اختر المنتج وحدد الإضافات (ورد، كيس، إلخ) لحساب السعر بدقة</div>
-                    <div class="form-group"><label>اختر المنتج الأساسي</label><select id="calc-product" onchange="runCalculator()"></select></div>
-                    <div class="form-group"><label>الإضافات المتاحة:</label><div id="calc-addons" style="display:flex; flex-direction:column; gap:6px; background:var(--surface-sub); padding:10px; border-radius:10px;"></div></div>
-                    <button class="btn" onclick="runCalculator()">احسب أسعار البيع والتكلفة</button>
-                    <div id="calc-result" style="background:var(--surface-sub); padding:12px; border-radius:10px; margin-top:10px; font-size:12px; display:none;"></div>
+            <!-- إحصائيات سريعة منظمة بدون نوافذ مزعجة -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>المالكون الأساسيون</h4>
+                    <span>2 ملاك</span>
+                </div>
+                <div class="stat-card">
+                    <h4>المسؤولون الحاليون</h4>
+                    <span id="admin-count">2 مسؤولين</span>
+                </div>
+                <div class="stat-card">
+                    <h4>الموظفون</h4>
+                    <span>5 موظفين</span>
                 </div>
             </div>
 
-            <!-- الذكاء الاصطناعي -->
-            <div class="view-section" id="view-ai">
-                <div class="card">
-                    <div class="title">🤖 مساعد نيريس الذكي (AI)</div>
-                    <div class="subtitle">اسأل الذكاء الاصطناعي عن السوق واتجاهات التسعير</div>
-                    <div style="height:180px; overflow-y:auto; background:var(--surface-sub); border:1px solid var(--border); border-radius:10px; padding:10px; margin-bottom:8px; display:flex; flex-direction:column; gap:6px;" id="ai-chat">
-                        <div style="background:var(--surface); padding:8px; border-radius:8px; font-size:11px;"><b>Neris AI:</b> مرحباً بك يا فهد! أنا جاهز لمساعدتك في تسعير الهدايا وإدارة المتجر.</div>
-                    </div>
-                    <div style="display:flex; gap:6px;"><input type="text" id="ai-prompt" placeholder="اسأل الذكاء الاصطناعي..." style="flex:1;"><button class="btn" style="width:70px; margin-top:0;" onclick="askAI()">إرسال</button></div>
-                </div>
+            <!-- قسم إدارة المسؤولين (مع إمكانية إضافة عدد غير محدود كما طلبت) -->
+            <div class="section-box">
+                <h3>إدارة المسؤولين (إضافة وتعديل بلا حدود)</h3>
+                <button class="action-btn add" onclick="addNewAdminModal()">+ إضافة مسؤول جديد</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>م</th>
+                            <th>الاسم / البريد الإلكتروني</th>
+                            <th>الصلاحية</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admins-table-body">
+                        <tr>
+                            <td>1</td>
+                            <td>admin1@system.com</td>
+                            <td>مسؤول رئيسي</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>admin2@system.com</td>
+                            <td>مسؤول رئيسي</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <!-- إدارة الموظفين والصلاحيات (للملاك فقط) -->
-            <div class="view-section" id="view-employees">
-                <div class="card">
-                    <div class="title">👥 لوحة إدارة الموظفين والصلاحيات (للملاك فقط)</div>
-                    <div class="subtitle">صلاحيات كاملة للمالك الأساسي والملاك المشتركين</div>
-                    <div id="employees-admin-list" style="display:flex; flex-direction:column; gap:8px; margin-top:10px;"></div>
+            <!-- قسم مركز الرسائل (الرسائل المهمة تظهر من هنا من خلال الشعار المنبثق المخصص) -->
+            <div class="section-box">
+                <h3>إرسال رسالة إدارية مهمة (تطلق الشعار المنبثق)</h3>
+                <div class="form-group">
+                    <input type="text" id="important-msg-input" placeholder="اكتب نص الرسالة المهمة هنا لتنبيه الفريق...">
                 </div>
+                <button class="btn" onclick="sendImportantMessage()">إرسال التنبيه المهم</button>
             </div>
-        </main>
+        </div>
+
     </div>
 
     <script>
-        // ⚠️ ضع هنا بيانات Firebase الخاصة بك
-        const firebaseConfig = {
-            apiKey: "ضع_مفتاح_API_هنا",
-            authDomain: "neris-store.firebaseapp.com",
-            projectId: "neris-store",
-            storageBucket: "neris-store.appspot.com",
-            messagingSenderId: "123",
-            appId: "1:123"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        let currentUserData = null;
-
-        function toggleTheme() {
-            const body = document.body;
-            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-        }
-
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('overlay').classList.toggle('show');
-        }
-
-        function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('view-' + viewId).classList.add('active');
-        }
-
-        function switchAuthView(viewName) {
-            document.getElementById('view-login').style.display = viewName === 'login' ? 'flex' : 'none';
-            document.getElementById('view-register').style.display = viewName === 'register' ? 'flex' : 'none';
-        }
-
-        function checkPasswordStrong(password) {
-            // شروط كلمة المرور القوية: 8 أحرف على الأقل، تحتوي على أحرف كبيرة وصغيرة وأرقام ورموز
-            const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
-            return strongRegex.test(password);
-        }
-
-        function execRegister() {
-            const email = document.getElementById('r-email').value.trim();
-            const pass = document.getElementById('r-pass').value;
-            const role = document.getElementById('r-role').value;
-
-            if(!email || !pass) return showAlert('r-err', 'الرجاء تعبئة جميع الحقول');
-            if(!checkPasswordStrong(pass)) return showAlert('r-err', 'كلمة المرور ضعيفة جداً! يجب أن تحتوي على 8 أحرف على الأقل، حروف كبيرة وصغيرة، أرقام ورموز خاصة.');
-
-            // فحص عدد الملاك إذا كان الدور مالك
-            if(role === 'owner') {
-                db.collection("users").where("role", "==", "owner").get().then(snap => {
-                    if(snap.size >= 2) {
-                        alert('عذراً، الحد الأقصى للملاك هو مالكان فقط (أنت والشخص الثاني) ولا يمكن إضافة مالك ثالث.');
-                        return;
-                    }
-                    createAuthUser(email, pass, role);
-                });
-            } else {
-                createAuthUser(email, pass, role);
-            }
-        }
-
-        function createAuthUser(email, pass, role) {
-            auth.createUserWithEmailAndPassword(email, pass).then(res => {
-                res.user.sendEmailVerification().then(() => {
-                    // حفظ المستند في Firestore
-                    db.collection("users").doc(res.user.uid).set({
-                        email: email,
-                        role: role,
-                        isOnline: true,
-                        createdAt: new Date()
-                    }).then(() => {
-                        showAlert('r-succ', 'تم إنشاء الحساب بنجاح! أرسلنا رسالة تحقق (Verification) إلى بريدك الإلكتروني. يرجى تأكيدها قبل الدخول.');
-                        setTimeout(() => switchAuthView('login'), 4000);
-                    });
-                });
-            }).catch(err => showAlert('r-err', err.message));
-        }
-
-        function execLogin() {
-            const email = document.getElementById('l-email').value.trim();
-            const pass = document.getElementById('l-pass').value;
-            if(!email || !pass) return showAlert('l-err', 'أدخل البريد وكلمة المرور');
-
-            auth.signInWithEmailAndPassword(email, pass).then(res => {
-                if(!res.user.emailVerified) {
-                    alert('⚠️ تنبيه أمني: لم تقم بتأكيد بريدك الإلكتروني بعد! يرجى فتح بريدك والضغط على رابط التحقق المرسل.');
-                    auth.signOut();
-                    return;
-                }
-                // تحديث حالة الاتصال
-                db.collection("users").doc(res.user.uid).update({ isOnline: true });
-            }).catch(err => showAlert('l-err', err.message));
-        }
-
-        function execLogout() {
-            if(auth.currentUser) {
-                db.collection("users").doc(auth.currentUser.uid).update({ isOnline: false }).then(() => {
-                    auth.signOut().then(() => window.location.reload());
-                });
-            }
-        }
-
-        function showAlert(id, msg) {
-            const el = document.getElementById(id);
-            el.innerText = msg;
-            el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 5000);
-        }
-
-        // مراقبة حالة المصادقة
-        auth.onAuthStateChanged(user => {
-            const loading = document.getElementById('view-loading');
-            const login = document.getElementById('view-login');
-            const menuBtn = document.getElementById('menu-icon');
-
-            if(user && user.emailVerified) {
-                db.collection("users").doc(user.uid).get().then(doc => {
-                    if(doc.exists) {
-                        currentUserData = { uid: user.uid, ...doc.data() };
-                        loading.style.display = 'none';
-                        login.style.display = 'none';
-                        menuBtn.style.display = 'block';
-                        switchView('dash');
-
-                        document.getElementById('user-status-info').innerHTML = `
-                            <b>البريد:</b> ${currentUserData.email}<br>
-                            <b>الدور:</b> <span style="color:var(--primary); font-weight:800;">${currentUserData.role.toUpperCase()}</span>
-                        `;
-
-                        if(currentUserData.role === 'owner') {
-                            document.getElementById('menu-emp-link').style.display = 'block';
-                            loadEmployeesAdmin();
-                        }
-                        loadDashboardEmployees();
-                        loadProducts();
-                        loadCalculator();
-                    }
-                });
-            } else {
-                loading.style.display = 'none';
-                login.style.display = 'flex';
-                menuBtn.style.display = 'none';
-            }
-        });
-
-        // إدارة المنتجات والمخزون
-        let localProducts = JSON.parse(localStorage.getItem('neris_products')) || [
-            { id: 1, name: 'عقد ذهب فاخر', cost: 200, img: 'https://via.placeholder.com/80' }
+        // بيانات تجريبية لإدارة المسؤولين (تبدأ بـ 2 مسؤولين أساسيين)
+        let adminsList = [
+            { id: 1, email: "admin1@system.com", role: "مسؤول رئيسي" },
+            { id: 2, email: "admin2@system.com", role: "مسؤول رئيسي" }
         ];
 
-        function addProduct() {
-            const name = document.getElementById('p-name').value.trim();
-            const cost = parseFloat(document.getElementById('p-cost').value);
-            const img = document.getElementById('p-img').value.trim() || 'https://via.placeholder.com/80';
-            if(!name || isNaN(cost)) return alert('أدخل اسم المنتج والتكلفة بشكل صحيح');
-
-            localProducts.push({ id: Date.now(), name, cost, img });
-            localStorage.setItem('neris_products', JSON.stringify(localProducts));
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-cost').value = '';
-            document.getElementById('p-img').value = '';
-            loadProducts();
-            loadCalculator();
-            alert('تمت إضافة المنتج بنجاح مع الصورة للمخزون!');
+        // التنقل بين الشاشات
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
         }
 
-        function loadProducts() {
-            const list = document.getElementById('products-list-view');
-            list.innerHTML = '';
-            localProducts.forEach((p, i) => {
-                list.innerHTML += `
-                    <div style="background:var(--surface-sub); padding:8px; border-radius:8px; display:flex; align-items:center; gap:10px; font-size:11px;">
-                        <img src="${p.img}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
-                        <div style="flex:1;"><b>${p.name}</b><br><span style="color:var(--text-muted);">التكلفة: ${p.cost} ر.س</span></div>
-                        <button onclick="deleteProduct(${i})" style="background:none; border:none; color:var(--danger); cursor:pointer;">حذف</button>
-                    </div>`;
-            });
+        // محاكاة تسجيل الدخول مع نظام التحقق (أنا لست روبوت)
+        function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            const captcha = document.getElementById('login-captcha-input').value;
+
+            if(!email || !pass) {
+                alert("الرجاء إدخال البريد الإلكتروني وكلمة المرور.");
+                return;
+            }
+
+            if(captcha.trim() !== "7") {
+                alert("خطأ في التحقق (أنا لست روبوت). الناتج الصحيح لـ 4 + 3 هو 7.");
+                return;
+            }
+
+            // الانتقال للوحة التحكم
+            document.getElementById('user-role-badge').innerText = "مالك النظام / مسؤول";
+            switchScreen('dashboard-screen');
         }
 
-        function deleteProduct(i) {
-            localProducts.splice(i, 1);
-            localStorage.setItem('neris_products', JSON.stringify(localProducts));
-            loadProducts();
-            loadCalculator();
+        // محاكاة إنشاء حساب جديد مع تأكيد الباسورد ونظام التحقق
+        function handleRegister() {
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-password').value;
+            const confirmPass = document.getElementById('reg-confirm-password').value;
+            const captcha = document.getElementById('reg-captcha-input').value;
+
+            if(!email || !pass || !confirmPass) {
+                alert("الرجاء تعبئة كافة الحقول المطلوبة.");
+                return;
+            }
+
+            if(pass !== confirmPass) {
+                alert("كلمتا المرور غير متطابقتين، يرجى التأكيد.");
+                return;
+            }
+
+            if(captcha.trim().toUpperCase() !== "ROBOT") {
+                alert("خطأ في التحقق، يرجى كتابة الكلمة الصحيحة (ROBOT).");
+                return;
+            }
+
+            alert("تم إنشاء الحساب بنجاح! يمكنك تسجيل الدخول الآن.");
+            switchScreen('login-screen');
         }
 
-        // الحاسبة الذكية
-        function loadCalculator() {
-            const select = document.getElementById('calc-product');
-            select.innerHTML = '';
-            localProducts.forEach(p => {
-                select.innerHTML += `<option value="${p.id}">${p.name} (التكلفة: ${p.cost} ر.س)</option>`;
-            });
-
-            const addonsContainer = document.getElementById('calc-addons');
-            addonsContainer.innerHTML = `
-                <label><input type="checkbox" class="calc-addon" value="10" data-name="كيس هدية فاخر"> كيس هدية فاخر (+10 ر.س)</label>
-                <label><input type="checkbox" class="calc-addon" value="25" data-name="وردة طبيعية"> وردة طبيعية (+25 ر.س)</label>
-                <label><input type="checkbox" class="calc-addon" value="15" data-name="رسالة صوتية QR"> رسالة صوتية QR (+15 ر.س)</label>
-            `;
+        // تسجيل الخروج
+        function handleLogout() {
+            switchScreen('login-screen');
         }
 
-        function runCalculator() {
-            const prodId = document.getElementById('calc-product').value;
-            const product = localProducts.find(p => p.id == prodId);
-            if(!product) return;
-
-            let totalCost = product.cost;
-            let selectedAddons = [];
-            document.querySelectorAll('.calc-addon:checked').forEach(cb => {
-                totalCost += parseFloat(cb.value);
-                selectedAddons.push(cb.getAttribute('data-name'));
-            });
-
-            const minPrice = (totalCost * 1.35).toFixed(2);
-            const suggested = (totalCost * 1.60).toFixed(2);
-            const maxPrice = (totalCost * 2.10).toFixed(2);
-
-            const res = document.getElementById('calc-result');
-            res.style.display = 'block';
-            res.innerHTML = `
-                <b>📊 نتيجة الحاسبة الذكية:</b><br>
-                • المنتج: ${product.name} (${product.cost} ر.س)<br>
-                • الإضافات: ${selectedAddons.length > 0 ? selectedAddons.join(' + ') : 'بدون'}<br>
-                • <b>إجمالي التكلفة: ${totalCost} ر.س</b><br>
-                <hr style="border:0; border-top:1px solid var(--border); margin:6px 0;">
-                🔹 أقل سعر للبيع: ${minPrice} ر.س<br>
-                ⭐ <b>السعر المقترح المثالي: <span style="color:var(--primary);">${suggested} ر.س</span></b><br>
-                💎 أقصى سعر (VIP): ${maxPrice} ر.س
-            `;
-        }
-
-        // عرض الموظفين في لوحة التحكم (متصل / غير متصل)
-        function loadDashboardEmployees() {
-            db.collection("users").onSnapshot(snap => {
-                const box = document.getElementById('dashboard-employees-list');
-                box.innerHTML = '';
-                snap.forEach(doc => {
-                    const u = doc.data();
-                    box.innerHTML += `
-                        <div style="background:var(--surface-sub); padding:8px 12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; font-size:11px;">
-                            <span>${u.email} (${u.role.toUpperCase()})</span>
-                            <span><span class="status-dot ${u.isOnline ? 'status-online' : 'status-offline'}"></span>${u.isOnline ? 'متصل' : 'غير متصل'}</span>
-                        </div>`;
-                });
-            });
-        }
-
-        // إدارة الموظفين للملاك فقط
-        function loadEmployeesAdmin() {
-            db.collection("users").onSnapshot(snap => {
-                const box = document.getElementById('employees-admin-list');
-                box.innerHTML = '';
-                snap.forEach(doc => {
-                    const u = doc.data();
-                    box.innerHTML += `
-                        <div style="background:var(--surface-sub); padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; font-size:11px;">
-                            <div><b>${u.email}</b><br>الدور: ${u.role}</div>
-                            ${u.role !== 'owner' ? `<button class="btn btn-danger" style="width:auto; padding:6px 10px; margin:0;" onclick="deleteUserDoc('${doc.id}')">حذف</button>` : '<span style="color:var(--primary); font-weight:700;">محمي 👑</span>'}
-                        </div>`;
-                });
-            });
-        }
-
-        function deleteUserDoc(uid) {
-            if(confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
-                db.collection("users").doc(uid).delete().then(() => alert('تم الحذف بنجاح'));
+        // إضافة مسؤول جديد (مفتوح لأي عدد 10, 20, 30 كما طلبت)
+        function addNewAdminModal() {
+            const newEmail = prompt("أدخل البريد الإلكتروني للمسؤول الجديد:");
+            if(newEmail) {
+                adminsList.push({ id: adminsList.length + 1, email: newEmail, role: "مسؤول إضافي" });
+                updateAdminsTable();
             }
         }
 
-        // الذكاء الاصطناعي
-        function askAI() {
-            const input = document.getElementById('ai-prompt');
-            const chat = document.getElementById('ai-chat');
-            const val = input.value.trim();
-            if(!val) return;
+        // تحديث جدول المسؤولين في الواجهة
+        function updateAdminsTable() {
+            const tbody = document.getElementById('admins-table-body');
+            tbody.innerHTML = "";
+            adminsList.forEach((admin, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${admin.email}</td>
+                        <td>${admin.role}</td>
+                        <td>${index >= 2 ? `<button class="action-btn" onclick="removeAdmin(${admin.id})">حذف</button>` : '-'}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('admin-count').innerText = `${adminsList.length} مسؤولين`;
+        }
 
-            chat.innerHTML += `<div style="background:var(--primary); color:#0b1111; padding:8px; border-radius:8px; font-size:11px; align-self:flex-end;"><b>أنت:</b> ${val}</div>`;
-            input.value = '';
+        function removeAdmin(id) {
+            adminsList = adminsList.filter(a => a.id !== id);
+            updateAdminsTable();
+        }
 
-            setTimeout(() => {
-                let reply = "بصفتي مساعد نيريس الذكي، أنصحك دائماً بمراجعة تكاليف الورد والتغليف لضمان هامش ربح ممتاز ومناسب للسوق.";
-                chat.innerHTML += `<div style="background:var(--surface); padding:8px; border-radius:8px; font-size:11px; border:1px solid var(--border);"><b>Neris AI:</b> ${reply}</div>`;
-                chat.scrollTop = chat.scrollHeight;
-            }, 1000);
+        // نظام الرسائل المهمة (الشعار المنبثق الوحيد في النظام عند إرسال رسالة مهمة)
+        function sendImportantMessage() {
+            const msg = document.getElementById('important-msg-input').value;
+            if(!msg) {
+                alert("الرجاء كتابة نص الرسالة المهمة أولاً.");
+                return;
+            }
+            document.getElementById('modal-message-text').innerText = msg;
+            document.getElementById('important-modal').style.display = 'flex';
+            document.getElementById('important-msg-input').value = "";
+        }
+
+        function closeImportantModal() {
+            document.getElementById('important-modal').style.display = 'none';
         }
     </script>
 </body>
