@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Neris - Ultimate Jewelry & Gift OS</title>
+    <title>Neris - Ultimate Secure Enterprise OS</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -60,21 +60,30 @@
 
         header {
             padding: 16px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; justify-content: space-between; align-items: center; z-index: 100;
         }
 
-        .brand { font-size: 18px; font-weight: 900; letter-spacing: 3px; color: var(--primary); }
+        .brand { font-size: 16px; font-weight: 900; letter-spacing: 2px; color: var(--primary); }
         .header-actions { display: flex; gap: 8px; align-items: center; }
 
-        .role-pill {
-            font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
-            background: rgba(212, 175, 55, 0.15); color: var(--primary); border: 1px solid rgba(212, 175, 55, 0.3);
-        }
+        .menu-btn { background: none; border: none; color: var(--text-main); font-size: 20px; cursor: pointer; }
 
-        .theme-toggle {
-            background: var(--surface-sub); border: 1px solid var(--border); color: var(--text-main);
-            padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer;
+        /* القائمة الجانبية على اليمين */
+        .sidebar {
+            position: absolute; top: 0; right: -100%; width: 280px; height: 100%;
+            background: var(--surface); border-left: 1px solid var(--border);
+            z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 20px;
         }
+        .sidebar.open { right: 0; }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-weight: 800; color: var(--primary); }
+        .sidebar-item { padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; background: var(--surface-sub); color: var(--text-main); font-size: 13px; font-weight: 700; cursor: pointer; border: 1px solid var(--border); text-align: right; }
+        .sidebar-item:active { background: var(--primary); color: #0b1111; }
+
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 150; display: none;
+        }
+        .overlay.show { display: block; }
 
         main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
 
@@ -83,7 +92,7 @@
             border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.2);
         }
 
-        .title { font-size: 16px; font-weight: 800; margin-bottom: 6px; text-align: right; color: var(--primary); }
+        .title { font-size: 15px; font-weight: 800; margin-bottom: 6px; text-align: right; color: var(--primary); }
         .subtitle { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; text-align: right; line-height: 1.5; }
 
         .form-group { margin-bottom: 12px; }
@@ -108,252 +117,432 @@
         .alert.error { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
         .alert.success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
 
-        .checkbox-group { display: flex; flex-direction: column; gap: 6px; max-height: 120px; overflow-y: auto; background: var(--surface-sub); padding: 10px; border-radius: 10px; border: 1px solid var(--border); }
-        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
+        .status-online { background: var(--success); }
+        .status-offline { background: var(--text-muted); }
 
-        .calculator-result { background: var(--surface-sub); border: 1px solid var(--primary); padding: 12px; border-radius: 10px; margin-top: 10px; font-size: 12px; line-height: 1.6; }
-        .chat-box { height: 150px; overflow-y: auto; background: var(--surface-sub); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
-        .msg { padding: 8px 12px; border-radius: 10px; font-size: 11px; max-width: 80%; }
-        .msg.me { background: var(--primary); color: #0b1111; align-self: flex-end; }
-        .msg.other { background: var(--surface); color: var(--text-main); align-self: flex-start; border: 1px solid var(--border); }
+        .view-section { display: none; flex-direction: column; gap: 14px; }
+        .view-section.active { display: flex; }
     </style>
 </head>
 <body data-theme="dark">
 
     <div class="mobile-frame">
         <header>
+            <button class="menu-btn" onclick="toggleSidebar()" id="menu-icon" style="display:none;">☰</button>
             <div class="brand">NERIS OS</div>
             <div class="header-actions">
-                <div class="role-pill" id="role-badge">المالك 👑</div>
-                <button class="theme-toggle" onclick="toggleTheme()">🌓 الثيم</button>
+                <button class="menu-btn" onclick="toggleTheme()" style="font-size:14px;">🌓</button>
             </div>
         </header>
 
+        <!-- القائمة الجانبية -->
+        <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <span>قائمة التنقل</span>
+                <button onclick="toggleSidebar()" style="background:none; border:none; color:var(--text-main); font-size:16px;">✕</button>
+            </div>
+            <div class="sidebar-item" onclick="switchView('dash'); toggleSidebar()">🏠 لوحة التحكم الرئيسية</div>
+            <div class="sidebar-item" onclick="switchView('inventory'); toggleSidebar()">📦 إدارة المخزون والمنتجات</div>
+            <div class="sidebar-item" onclick="switchView('calculator'); toggleSidebar()">🧮 الحاسبة الذكية والتسعير</div>
+            <div class="sidebar-item" onclick="switchView('ai'); toggleSidebar()">🤖 مساعد نيريس الذكي (AI)</div>
+            <div class="sidebar-item" onclick="switchView('employees'); toggleSidebar()" id="menu-emp-link" style="display:none;">👥 إدارة الموظفين والصلاحيات</div>
+            <div class="sidebar-item" onclick="execLogout()" style="color:var(--danger); margin-top:auto;">🚪 تسجيل الخروج</div>
+        </div>
+
         <main id="app-main">
-            <!-- شاشة التحميل / الدخول البسيطة -->
-            <div id="loading-screen" class="card" style="text-align:center; padding: 40px 20px;">
-                <div class="title" style="text-align:center;">جاري تحميل لوحة تحكم نيريس...</div>
-                <div class="subtitle" style="text-align:center;">النظام جاهز الآن للاستخدام</div>
+            <!-- شاشة التحميل -->
+            <div id="view-loading" class="card" style="text-align:center; padding: 40px 20px;">
+                <div class="title" style="text-align:center;">جاري التحقق من النظام الأمني...</div>
             </div>
 
-            <!-- لوحة التحكم الرئيسية المحدثة -->
-            <div id="view-dashboard" style="display:flex; flex-direction:column; gap:14px;">
+            <!-- شاشة تسجيل الدخول -->
+            <div class="card view-section" id="view-login">
+                <div class="title">تسجيل الدخول - نيريس</div>
+                <div class="subtitle">أدخل بريدك وكلمة المرور المسجلة</div>
+                <div class="alert error" id="l-err"></div>
+                <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="l-email" placeholder="name@neris.com"></div>
+                <div class="form-group"><label>كلمة المرور</label><input type="password" id="l-pass" placeholder="••••••••"></div>
+                <button class="btn" onclick="execLogin()">دخول للنظام</button>
+                <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:11px;">
+                    <a href="#" onclick="switchAuthView('register')" style="color:var(--primary); text-decoration:none;">حساب جديد؟ سجّل الآن</a>
+                </div>
+            </div>
+
+            <!-- شاشة إنشاء حساب جديد -->
+            <div class="card view-section" id="view-register">
+                <div class="title">إنشاء حساب جديد</div>
+                <div class="subtitle">يشترط تأكيد البريد الإلكتروني وكلمة مرور قوية جداً</div>
+                <div class="alert error" id="r-err"></div>
+                <div class="alert success" id="r-succ"></div>
+
+                <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="r-email" placeholder="name@neris.com"></div>
                 
-                <!-- 1. قسم إدارة المخزون وإضافة المنتجات والصور -->
+                <div class="form-group">
+                    <label>الدور المطلوب (Role)</label>
+                    <select id="r-role">
+                        <option value="owner">مالك (Owner)</option>
+                        <option value="supervisor">مشرف (Supervisor)</option>
+                        <option value="employee">موظف (Employee)</option>
+                    </select>
+                </div>
+
+                <div class="form-group"><label>كلمة المرور (يجب أن تكون قوية: أحرف وأرقام ورموز)</label><input type="password" id="r-pass" placeholder="••••••••"></div>
+                <button class="btn" onclick="execRegister()">تسجيل وإرسال رمز التحقق للإيميل</button>
+                <button class="btn btn-subtle" onclick="switchAuthView('login')">العودة لتسجيل الدخول</button>
+            </div>
+
+            <!-- لوحة التحكم الرئيسية -->
+            <div class="view-section" id="view-dash">
                 <div class="card">
-                    <div class="title">📦 إدارة المخزون وإضافة منتج جديد</div>
-                    <div class="subtitle">أضف المنتج الأساسي، التكلفة، ورابط الصورة</div>
-                    <div class="form-group"><label>اسم المنتج (مثال: عقد لؤلؤ فاخر)</label><input type="text" id="p-name" placeholder="أدخل اسم المنتج"></div>
-                    <div class="form-group"><label>التكلفة الأساسية (ر.س)</label><input type="number" id="p-cost" placeholder="100"></div>
+                    <div class="title">مرحباً بك في لوحة تحكم نيريس</div>
+                    <div class="subtitle" id="user-status-info">جاري تحميل بيانات المستخدم...</div>
+                </div>
+
+                <!-- عرض حالة الموظفين والمستخدمين المتصلين -->
+                <div class="card">
+                    <div class="title">👥 الموظفين والمستخدمين الحاليين</div>
+                    <div id="dashboard-employees-list" style="margin-top:8px; display:flex; flex-direction:column; gap:6px;"></div>
+                </div>
+            </div>
+
+            <!-- إدارة المخزون والمنتجات مع الصور -->
+            <div class="view-section" id="view-inventory">
+                <div class="card">
+                    <div class="title">📦 إدارة المخزون وإضافة منتج مع صورة</div>
+                    <div class="subtitle">أضف المنتجات، التكلفة، ورابط الصورة مباشرة</div>
+                    <div class="form-group"><label>اسم المنتج</label><input type="text" id="p-name" placeholder="عقد لؤلؤ ذهبي"></div>
+                    <div class="form-group"><label>التكلفة الأساسية (ر.س)</label><input type="number" id="p-cost" placeholder="120"></div>
                     <div class="form-group"><label>رابط صورة المنتج (Image URL)</label><input type="text" id="p-img" placeholder="https://example.com/item.jpg"></div>
                     <button class="btn" onclick="addProduct()">حفظ المنتج في المخزون</button>
-                    <div id="products-inventory-list" style="margin-top:12px; max-height:140px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+                    <div id="products-list-view" style="margin-top:12px; max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
                 </div>
+            </div>
 
-                <!-- 2. قسم إدارة الإضافات المستقبلية (ورد، كيس، رسالة صوتية، إلخ...) -->
-                <div class="card">
-                    <div class="title">🎀 إدارة الإضافات المخصصة (ورد، كيس، رسالة...)</div>
-                    <div class="subtitle">أضف أي إضافات مستقبلية لتظهر تلقائياً في الحاسبة</div>
-                    <div class="form-group"><label>اسم الإضافة (مثال: ورد طبيعي، كيس مخمل، رسالة صوتية)</label><input id="add-name" type="text" placeholder="اسم الإضافة"></div>
-                    <div class="form-group"><label>تكلفة الإضافة (ر.س)</label><input id="add-cost" type="number" placeholder="15"></div>
-                    <button class="btn btn-subtle" onclick="addCustomAddon()">إضافة جديدة لقائمة الخيارات</button>
-                    <div id="addons-list-display" style="margin-top:8px; font-size:11px; color:var(--text-muted);"></div>
-                </div>
-
-                <!-- 3. الحاسبة الذكية لتسعير المنتج مع الإضافات -->
+            <!-- الحاسبة الذكية -->
+            <div class="view-section" id="view-calculator">
                 <div class="card" style="border: 2px solid var(--primary);">
-                    <div class="title">🧮 حاسبة التكلفة والأسعار الذكية</div>
-                    <div class="subtitle">اختر المنتج وحدد الإضافات (كيس، ورد، إلخ) لحساب التكلفة وهامش الربح بدقة</div>
-                    
-                    <div class="form-group">
-                        <label>اختر المنتج الأساسي</label>
-                        <select id="calc-product-select" onchange="runSmartCalculator()"></select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>اختر الإضافات المطلوبة (ورد، كيس، إلخ):</label>
-                        <div class="checkbox-group" id="calc-addons-container">
-                            <!-- يتم تعبئتها تلقائياً -->
-                        </div>
-                    </div>
-
-                    <button class="btn" onclick="runSmartCalculator()">احسب التكلفة وسعر البيع المقترح 💡</button>
-
-                    <div class="calculator-result" id="calculator-output" style="display:none;">
-                        <!-- نتائج الحاسبة والذكاء الاصطناعي -->
-                    </div>
+                    <div class="title">🧮 الحاسبة الذكية للتسعير</div>
+                    <div class="subtitle">اختر المنتج وحدد الإضافات (ورد، كيس، إلخ) لحساب السعر بدقة</div>
+                    <div class="form-group"><label>اختر المنتج الأساسي</label><select id="calc-product" onchange="runCalculator()"></select></div>
+                    <div class="form-group"><label>الإضافات المتاحة:</label><div id="calc-addons" style="display:flex; flex-direction:column; gap:6px; background:var(--surface-sub); padding:10px; border-radius:10px;"></div></div>
+                    <button class="btn" onclick="runCalculator()">احسب أسعار البيع والتكلفة</button>
+                    <div id="calc-result" style="background:var(--surface-sub); padding:12px; border-radius:10px; margin-top:10px; font-size:12px; display:none;"></div>
                 </div>
+            </div>
 
-                <!-- 4. مساعد نيريس الذكي (AI) -->
-                <div class="card" style="background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(19,31,30,0.9));">
+            <!-- الذكاء الاصطناعي -->
+            <div class="view-section" id="view-ai">
+                <div class="card">
                     <div class="title">🤖 مساعد نيريس الذكي (AI)</div>
-                    <div class="subtitle">اسأل الذكاء الاصطناعي عن السوق، اقتراحات التسعير، أو اتجاهات الهدايا.</div>
-                    <div class="chat-box" id="ai-chat-box">
-                        <div class="msg other"><b>Neris AI:</b> أهلاً بك يا فهد! أنا مساعدك الذكي جاهز لحساب وتوجيه تسعير منتجات متجر نيريس بدقة.</div>
+                    <div class="subtitle">اسأل الذكاء الاصطناعي عن السوق واتجاهات التسعير</div>
+                    <div style="height:180px; overflow-y:auto; background:var(--surface-sub); border:1px solid var(--border); border-radius:10px; padding:10px; margin-bottom:8px; display:flex; flex-direction:column; gap:6px;" id="ai-chat">
+                        <div style="background:var(--surface); padding:8px; border-radius:8px; font-size:11px;"><b>Neris AI:</b> مرحباً بك يا فهد! أنا جاهز لمساعدتك في تسعير الهدايا وإدارة المتجر.</div>
                     </div>
-                    <div style="display:flex; gap:6px;">
-                        <input type="text" id="ai-input" placeholder="اسأل الذكاء الاصطناعي..." style="flex:1;">
-                        <button class="btn" style="width:75px; margin-top:0;" onclick="askAI()">إرسال</button>
-                    </div>
+                    <div style="display:flex; gap:6px;"><input type="text" id="ai-prompt" placeholder="اسأل الذكاء الاصطناعي..." style="flex:1;"><button class="btn" style="width:70px; margin-top:0;" onclick="askAI()">إرسال</button></div>
                 </div>
+            </div>
 
+            <!-- إدارة الموظفين والصلاحيات (للملاك فقط) -->
+            <div class="view-section" id="view-employees">
+                <div class="card">
+                    <div class="title">👥 لوحة إدارة الموظفين والصلاحيات (للملاك فقط)</div>
+                    <div class="subtitle">صلاحيات كاملة للمالك الأساسي والملاك المشتركين</div>
+                    <div id="employees-admin-list" style="display:flex; flex-direction:column; gap:8px; margin-top:10px;"></div>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
-        // تخزين محلي ديناميكي متطور يضمن بقاء البيانات وتحديثها فورياً
-        let inventory = JSON.parse(localStorage.getItem('neris_inventory')) || [
-            { id: 1, name: 'عقد ذهب عيار 18', cost: 250, image: 'https://via.placeholder.com/80' },
-            { id: 2, name: 'سلسال فضة نلسون', cost: 120, image: 'https://via.placeholder.com/80' }
-        ];
-
-        let addons = JSON.parse(localStorage.getItem('neris_addons')) || [
-            { id: 1, name: 'كيس هدايا فاخر نيريس', cost: 10 },
-            { id: 2, name: 'وردة جوري طبيعية مع تنسيق', cost: 25 },
-            { id: 3, name: 'بطاقة إهداء مع رسالة صوتية QR', cost: 15 }
-        ];
-
-        window.onload = function() {
-            document.getElementById('loading-screen').style.display = 'none';
-            renderInventory();
-            renderAddons();
-            renderCalculatorOptions();
+        // ⚠️ ضع هنا بيانات Firebase الخاصة بك
+        const firebaseConfig = {
+            apiKey: "ضع_مفتاح_API_هنا",
+            authDomain: "neris-store.firebaseapp.com",
+            projectId: "neris-store",
+            storageBucket: "neris-store.appspot.com",
+            messagingSenderId: "123",
+            appId: "1:123"
         };
 
-        function saveData() {
-            localStorage.setItem('neris_inventory', JSON.stringify(inventory));
-            localStorage.setItem('neris_addons', JSON.stringify(addons));
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUserData = null;
+
+        function toggleTheme() {
+            const body = document.body;
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('show');
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+        }
+
+        function switchAuthView(viewName) {
+            document.getElementById('view-login').style.display = viewName === 'login' ? 'flex' : 'none';
+            document.getElementById('view-register').style.display = viewName === 'register' ? 'flex' : 'none';
+        }
+
+        function checkPasswordStrong(password) {
+            // شروط كلمة المرور القوية: 8 أحرف على الأقل، تحتوي على أحرف كبيرة وصغيرة وأرقام ورموز
+            const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+            return strongRegex.test(password);
+        }
+
+        function execRegister() {
+            const email = document.getElementById('r-email').value.trim();
+            const pass = document.getElementById('r-pass').value;
+            const role = document.getElementById('r-role').value;
+
+            if(!email || !pass) return showAlert('r-err', 'الرجاء تعبئة جميع الحقول');
+            if(!checkPasswordStrong(pass)) return showAlert('r-err', 'كلمة المرور ضعيفة جداً! يجب أن تحتوي على 8 أحرف على الأقل، حروف كبيرة وصغيرة، أرقام ورموز خاصة.');
+
+            // فحص عدد الملاك إذا كان الدور مالك
+            if(role === 'owner') {
+                db.collection("users").where("role", "==", "owner").get().then(snap => {
+                    if(snap.size >= 2) {
+                        alert('عذراً، الحد الأقصى للملاك هو مالكان فقط (أنت والشخص الثاني) ولا يمكن إضافة مالك ثالث.');
+                        return;
+                    }
+                    createAuthUser(email, pass, role);
+                });
+            } else {
+                createAuthUser(email, pass, role);
+            }
+        }
+
+        function createAuthUser(email, pass, role) {
+            auth.createUserWithEmailAndPassword(email, pass).then(res => {
+                res.user.sendEmailVerification().then(() => {
+                    // حفظ المستند في Firestore
+                    db.collection("users").doc(res.user.uid).set({
+                        email: email,
+                        role: role,
+                        isOnline: true,
+                        createdAt: new Date()
+                    }).then(() => {
+                        showAlert('r-succ', 'تم إنشاء الحساب بنجاح! أرسلنا رسالة تحقق (Verification) إلى بريدك الإلكتروني. يرجى تأكيدها قبل الدخول.');
+                        setTimeout(() => switchAuthView('login'), 4000);
+                    });
+                });
+            }).catch(err => showAlert('r-err', err.message));
+        }
+
+        function execLogin() {
+            const email = document.getElementById('l-email').value.trim();
+            const pass = document.getElementById('l-pass').value;
+            if(!email || !pass) return showAlert('l-err', 'أدخل البريد وكلمة المرور');
+
+            auth.signInWithEmailAndPassword(email, pass).then(res => {
+                if(!res.user.emailVerified) {
+                    alert('⚠️ تنبيه أمني: لم تقم بتأكيد بريدك الإلكتروني بعد! يرجى فتح بريدك والضغط على رابط التحقق المرسل.');
+                    auth.signOut();
+                    return;
+                }
+                // تحديث حالة الاتصال
+                db.collection("users").doc(res.user.uid).update({ isOnline: true });
+            }).catch(err => showAlert('l-err', err.message));
+        }
+
+        function execLogout() {
+            if(auth.currentUser) {
+                db.collection("users").doc(auth.currentUser.uid).update({ isOnline: false }).then(() => {
+                    auth.signOut().then(() => window.location.reload());
+                });
+            }
+        }
+
+        function showAlert(id, msg) {
+            const el = document.getElementById(id);
+            el.innerText = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 5000);
+        }
+
+        // مراقبة حالة المصادقة
+        auth.onAuthStateChanged(user => {
+            const loading = document.getElementById('view-loading');
+            const login = document.getElementById('view-login');
+            const menuBtn = document.getElementById('menu-icon');
+
+            if(user && user.emailVerified) {
+                db.collection("users").doc(user.uid).get().then(doc => {
+                    if(doc.exists) {
+                        currentUserData = { uid: user.uid, ...doc.data() };
+                        loading.style.display = 'none';
+                        login.style.display = 'none';
+                        menuBtn.style.display = 'block';
+                        switchView('dash');
+
+                        document.getElementById('user-status-info').innerHTML = `
+                            <b>البريد:</b> ${currentUserData.email}<br>
+                            <b>الدور:</b> <span style="color:var(--primary); font-weight:800;">${currentUserData.role.toUpperCase()}</span>
+                        `;
+
+                        if(currentUserData.role === 'owner') {
+                            document.getElementById('menu-emp-link').style.display = 'block';
+                            loadEmployeesAdmin();
+                        }
+                        loadDashboardEmployees();
+                        loadProducts();
+                        loadCalculator();
+                    }
+                });
+            } else {
+                loading.style.display = 'none';
+                login.style.display = 'flex';
+                menuBtn.style.display = 'none';
+            }
+        });
+
+        // إدارة المنتجات والمخزون
+        let localProducts = JSON.parse(localStorage.getItem('neris_products')) || [
+            { id: 1, name: 'عقد ذهب فاخر', cost: 200, img: 'https://via.placeholder.com/80' }
+        ];
 
         function addProduct() {
             const name = document.getElementById('p-name').value.trim();
             const cost = parseFloat(document.getElementById('p-cost').value);
-            const image = document.getElementById('p-img').value.trim() || 'https://via.placeholder.com/80';
-            if(!name || isNaN(cost)) return alert('يرجى إدخال اسم المنتج والتكلفة بشكل صحيح');
+            const img = document.getElementById('p-img').value.trim() || 'https://via.placeholder.com/80';
+            if(!name || isNaN(cost)) return alert('أدخل اسم المنتج والتكلفة بشكل صحيح');
 
-            inventory.push({ id: Date.now(), name, cost, image });
-            saveData();
+            localProducts.push({ id: Date.now(), name, cost, img });
+            localStorage.setItem('neris_products', JSON.stringify(localProducts));
             document.getElementById('p-name').value = '';
             document.getElementById('p-cost').value = '';
             document.getElementById('p-img').value = '';
-            renderInventory();
-            renderCalculatorOptions();
-            alert('تمت إضافة المنتج بنجاح إلى المخزون!');
+            loadProducts();
+            loadCalculator();
+            alert('تمت إضافة المنتج بنجاح مع الصورة للمخزون!');
         }
 
-        function renderInventory() {
-            const list = document.getElementById('products-inventory-list');
+        function loadProducts() {
+            const list = document.getElementById('products-list-view');
             list.innerHTML = '';
-            inventory.forEach((p, idx) => {
+            localProducts.forEach((p, i) => {
                 list.innerHTML += `
                     <div style="background:var(--surface-sub); padding:8px; border-radius:8px; display:flex; align-items:center; gap:10px; font-size:11px;">
-                        <img src="${p.image}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
-                        <div style="flex:1;">
-                            <b>${p.name}</b><br>
-                            <span style="color:var(--text-muted);">التكلفة: ${p.cost} ر.س</span>
-                        </div>
-                        <button onclick="deleteProduct(${idx})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:12px;">حذف</button>
+                        <img src="${p.img}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
+                        <div style="flex:1;"><b>${p.name}</b><br><span style="color:var(--text-muted);">التكلفة: ${p.cost} ر.س</span></div>
+                        <button onclick="deleteProduct(${i})" style="background:none; border:none; color:var(--danger); cursor:pointer;">حذف</button>
                     </div>`;
             });
         }
 
-        function deleteProduct(idx) {
-            inventory.splice(idx, 1);
-            saveData();
-            renderInventory();
-            renderCalculatorOptions();
+        function deleteProduct(i) {
+            localProducts.splice(i, 1);
+            localStorage.setItem('neris_products', JSON.stringify(localProducts));
+            loadProducts();
+            loadCalculator();
         }
 
-        function addCustomAddon() {
-            const name = document.getElementById('add-name').value.trim();
-            const cost = parseFloat(document.getElementById('add-cost').value);
-            if(!name || isNaN(cost)) return alert('أدخل اسم الإضافة والتكلفة');
-
-            addons.push({ id: Date.now(), name, cost });
-            saveData();
-            document.getElementById('add-name').value = '';
-            document.getElementById('add-cost').value = '';
-            renderAddons();
-            renderCalculatorOptions();
-            alert('تمت إضافة الخيار الجديد بنجاح!');
-        }
-
-        function renderAddons() {
-            const display = document.getElementById('addons-list-display');
-            let text = 'الإضافات المتاحة حالياً: ';
-            addons.forEach(a => text += `• ${a.name} (${a.cost} ر.س) `);
-            display.innerText = text;
-        }
-
-        function renderCalculatorOptions() {
-            const select = document.getElementById('calc-product-select');
-            const container = document.getElementById('calc-addons-container');
-            
+        // الحاسبة الذكية
+        function loadCalculator() {
+            const select = document.getElementById('calc-product');
             select.innerHTML = '';
-            inventory.forEach(p => {
-                select.innerHTML += `<option value="${p.id}">${p.name} (التكلفة الأساسية: ${p.cost} ر.س)</option>`;
+            localProducts.forEach(p => {
+                select.innerHTML += `<option value="${p.id}">${p.name} (التكلفة: ${p.cost} ر.س)</option>`;
             });
 
-            container.innerHTML = '';
-            addons.forEach(a => {
-                container.innerHTML += `
-                    <label class="checkbox-item">
-                        <input type="checkbox" class="addon-checkbox" value="${a.cost}" data-name="${a.name}" onchange="runSmartCalculator()">
-                        ${a.name} (+${a.cost} ر.س)
-                    </label>`;
-            });
-        }
-
-        function runSmartCalculator() {
-            const productId = document.getElementById('calc-product-select').value;
-            const product = inventory.find(p => p.id == productId);
-            if(!product) return;
-
-            let totalCost = product.cost;
-            let selectedAddonsText = [];
-
-            const checkboxes = document.querySelectorAll('.addon-checkbox:checked');
-            checkboxes.forEach(cb => {
-                totalCost += parseFloat(cb.value);
-                selectedAddonsText.push(cb.getAttribute('data-name'));
-            });
-
-            // حساب الذكاء الاصطناعي لأسعار السوق (أقل سعر، مقترح، أقصى سعر)
-            const minPrice = (totalCost * 1.35).toFixed(2); // هامش ربح أساسي 35%
-            const suggestedPrice = (totalCost * 1.60).toFixed(2); // السعر الأمثل في السوق 60%
-            const maxPrice = (totalCost * 2.10).toFixed(2); // السعر الفاخر أقصى حد
-
-            const output = document.getElementById('calculator-output');
-            output.style.display = 'block';
-            output.innerHTML = `
-                <b>📊 نتيجة الحساب الذكي لمتجر نيريس:</b><br>
-                • المنتج الأساسي: ${product.name} (${product.cost} ر.س)<br>
-                • الإضافات المختارة: ${selectedAddonsText.length > 0 ? selectedAddonsText.join(' + ') : 'بدون إضافات'}<br>
-                • <b>إجمالي التكلفة عليك: ${totalCost} ر.س</b><br>
-                <hr style="border:0; border-top:1px solid var(--border); margin:6px 0;">
-                🔹 <b>أقل سعر للبيع (تخفيضات/تكلفة):</b> ${minPrice} ر.س<br>
-                ⭐ <b>السعر المقترح المثالي (سوق الهدايا):</b> <span style="color:var(--primary); font-weight:900;">${suggestedPrice} ر.س</span><br>
-                💎 <b>أقصى سعر للبيع (الفئة الفاخرة VIP):</b> ${maxPrice} ر.س
+            const addonsContainer = document.getElementById('calc-addons');
+            addonsContainer.innerHTML = `
+                <label><input type="checkbox" class="calc-addon" value="10" data-name="كيس هدية فاخر"> كيس هدية فاخر (+10 ر.س)</label>
+                <label><input type="checkbox" class="calc-addon" value="25" data-name="وردة طبيعية"> وردة طبيعية (+25 ر.س)</label>
+                <label><input type="checkbox" class="calc-addon" value="15" data-name="رسالة صوتية QR"> رسالة صوتية QR (+15 ر.س)</label>
             `;
         }
 
-        function askAI() {
-            const input = document.getElementById('ai-input');
-            const box = document.getElementById('ai-chat-box');
-            const prompt = input.value.trim();
-            if(!prompt) return;
+        function runCalculator() {
+            const prodId = document.getElementById('calc-product').value;
+            const product = localProducts.find(p => p.id == prodId);
+            if(!product) return;
 
-            box.innerHTML += `<div class="msg me"><b>أنت:</b><br>${prompt}</div>`;
+            let totalCost = product.cost;
+            let selectedAddons = [];
+            document.querySelectorAll('.calc-addon:checked').forEach(cb => {
+                totalCost += parseFloat(cb.value);
+                selectedAddons.push(cb.getAttribute('data-name'));
+            });
+
+            const minPrice = (totalCost * 1.35).toFixed(2);
+            const suggested = (totalCost * 1.60).toFixed(2);
+            const maxPrice = (totalCost * 2.10).toFixed(2);
+
+            const res = document.getElementById('calc-result');
+            res.style.display = 'block';
+            res.innerHTML = `
+                <b>📊 نتيجة الحاسبة الذكية:</b><br>
+                • المنتج: ${product.name} (${product.cost} ر.س)<br>
+                • الإضافات: ${selectedAddons.length > 0 ? selectedAddons.join(' + ') : 'بدون'}<br>
+                • <b>إجمالي التكلفة: ${totalCost} ر.س</b><br>
+                <hr style="border:0; border-top:1px solid var(--border); margin:6px 0;">
+                🔹 أقل سعر للبيع: ${minPrice} ر.س<br>
+                ⭐ <b>السعر المقترح المثالي: <span style="color:var(--primary);">${suggested} ر.س</span></b><br>
+                💎 أقصى سعر (VIP): ${maxPrice} ر.س
+            `;
+        }
+
+        // عرض الموظفين في لوحة التحكم (متصل / غير متصل)
+        function loadDashboardEmployees() {
+            db.collection("users").onSnapshot(snap => {
+                const box = document.getElementById('dashboard-employees-list');
+                box.innerHTML = '';
+                snap.forEach(doc => {
+                    const u = doc.data();
+                    box.innerHTML += `
+                        <div style="background:var(--surface-sub); padding:8px 12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                            <span>${u.email} (${u.role.toUpperCase()})</span>
+                            <span><span class="status-dot ${u.isOnline ? 'status-online' : 'status-offline'}"></span>${u.isOnline ? 'متصل' : 'غير متصل'}</span>
+                        </div>`;
+                });
+            });
+        }
+
+        // إدارة الموظفين للملاك فقط
+        function loadEmployeesAdmin() {
+            db.collection("users").onSnapshot(snap => {
+                const box = document.getElementById('employees-admin-list');
+                box.innerHTML = '';
+                snap.forEach(doc => {
+                    const u = doc.data();
+                    box.innerHTML += `
+                        <div style="background:var(--surface-sub); padding:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                            <div><b>${u.email}</b><br>الدور: ${u.role}</div>
+                            ${u.role !== 'owner' ? `<button class="btn btn-danger" style="width:auto; padding:6px 10px; margin:0;" onclick="deleteUserDoc('${doc.id}')">حذف</button>` : '<span style="color:var(--primary); font-weight:700;">محمي 👑</span>'}
+                        </div>`;
+                });
+            });
+        }
+
+        function deleteUserDoc(uid) {
+            if(confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
+                db.collection("users").doc(uid).delete().then(() => alert('تم الحذف بنجاح'));
+            }
+        }
+
+        // الذكاء الاصطناعي
+        function askAI() {
+            const input = document.getElementById('ai-prompt');
+            const chat = document.getElementById('ai-chat');
+            const val = input.value.trim();
+            if(!val) return;
+
+            chat.innerHTML += `<div style="background:var(--primary); color:#0b1111; padding:8px; border-radius:8px; font-size:11px; align-self:flex-end;"><b>أنت:</b> ${val}</div>`;
             input.value = '';
 
             setTimeout(() => {
-                let reply = "بصفتي مساعد نيريس الذكي، أنصحك دائماً بحساب تكلفة الورد والتغليف بدقة مع المنتج لضمان صافي ربح ممتاز لا يقل عن 50%.";
-                if(prompt.includes("تسعير") || prompt.includes("سعر")) {
-                    reply = "تسعير هدايا المجوهرات مع الورد والكروت الصوتية يتيح لك رفع هامش الربح لأن العملاء يبحثون عن الجاهزية والجودة العالية.";
-                }
-                box.innerHTML += `<div class="msg other"><b>Neris AI:</b><br>${reply}</div>`;
-                box.scrollTop = box.scrollHeight;
+                let reply = "بصفتي مساعد نيريس الذكي، أنصحك دائماً بمراجعة تكاليف الورد والتغليف لضمان هامش ربح ممتاز ومناسب للسوق.";
+                chat.innerHTML += `<div style="background:var(--surface); padding:8px; border-radius:8px; font-size:11px; border:1px solid var(--border);"><b>Neris AI:</b> ${reply}</div>`;
+                chat.scrollTop = chat.scrollHeight;
             }, 1000);
         }
     </script>
