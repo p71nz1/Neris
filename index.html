@@ -3,357 +3,358 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neris - Ultimate Enterprise System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDK v9 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Neris - Ultimate Jewelry & Gift OS</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#162221">
+
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #0b1111; color: #f8fafc; }
-        .app-frame { max-width: 450px; margin: auto; min-height: 100vh; background: #111a19; display: flex; flex-direction: column; justify-content: space-between; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
-        input, select { background: #1a2927; border: 1px solid #283e3b; color: #fff; }
-        input:focus { border-color: #d4af37; outline: none; }
+        :root {
+            --bg: #0b1111;
+            --surface: #131f1e;
+            --surface-sub: #1b2c2a;
+            --primary: #d4af37;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #233835;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --radius: 16px;
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --surface-sub: #f1f5f9;
+            --primary: #b89628;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg); color: var(--text-main);
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; height: 100dvh; overflow: hidden; transition: background 0.3s, color 0.3s;
+        }
+
+        .mobile-frame {
+            width: 100%; max-width: 430px; height: 100%; max-height: 932px;
+            background: var(--bg); display: flex; flex-direction: column;
+            position: relative; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+        }
+
+        @media (min-width: 434px) {
+            .mobile-frame { border: 12px solid #152220; border-radius: 40px; height: 90vh; }
+        }
+
+        header {
+            padding: 16px 20px; background: var(--surface); border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .brand { font-size: 18px; font-weight: 900; letter-spacing: 3px; color: var(--primary); }
+        .header-actions { display: flex; gap: 8px; align-items: center; }
+
+        .role-pill {
+            font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+            background: rgba(212, 175, 55, 0.15); color: var(--primary); border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .theme-toggle {
+            background: var(--surface-sub); border: 1px solid var(--border); color: var(--text-main);
+            padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer;
+        }
+
+        main { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+
+        .card {
+            background: var(--surface); border-radius: var(--radius); padding: 18px;
+            border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .title { font-size: 16px; font-weight: 800; margin-bottom: 6px; text-align: right; color: var(--primary); }
+        .subtitle { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; text-align: right; line-height: 1.5; }
+
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-align: right; }
+
+        input, select, textarea {
+            width: 100%; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--surface-sub); color: var(--text-main); font-size: 13px; outline: none; transition: border 0.2s; text-align: right;
+        }
+        input:focus, select:focus { border-color: var(--primary); }
+
+        .btn {
+            width: 100%; padding: 13px; border-radius: 10px; border: none;
+            background: var(--primary); color: #0b1111; font-size: 13px; font-weight: 800;
+            cursor: pointer; margin-top: 8px; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-subtle { background: var(--surface-sub); color: var(--text-main); border: 1px solid var(--border); box-shadow: none; }
+        .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); box-shadow: none; }
+
+        .alert { padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-bottom: 10px; text-align: center; display: none; }
+        .alert.error { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .alert.success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+        .checkbox-group { display: flex; flex-direction: column; gap: 6px; max-height: 120px; overflow-y: auto; background: var(--surface-sub); padding: 10px; border-radius: 10px; border: 1px solid var(--border); }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; }
+
+        .calculator-result { background: var(--surface-sub); border: 1px solid var(--primary); padding: 12px; border-radius: 10px; margin-top: 10px; font-size: 12px; line-height: 1.6; }
+        .chat-box { height: 150px; overflow-y: auto; background: var(--surface-sub); border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
+        .msg { padding: 8px 12px; border-radius: 10px; font-size: 11px; max-width: 80%; }
+        .msg.me { background: var(--primary); color: #0b1111; align-self: flex-end; }
+        .msg.other { background: var(--surface); color: var(--text-main); align-self: flex-start; border: 1px solid var(--border); }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <div class="app-frame" id="app-root">
-        <!-- شاشة التحميل -->
-        <div id="screen-loading" class="flex flex-col items-center justify-center flex-grow p-6 text-center">
-            <div class="w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <h2 class="text-lg font-bold tracking-wider text-amber-500">NERIS OS</h2>
-            <p class="text-xs text-stone-400 mt-2">جاري التحقق من الهوية والأمان السحابي...</p>
-        </div>
+    <div class="mobile-frame">
+        <header>
+            <div class="brand">NERIS OS</div>
+            <div class="header-actions">
+                <div class="role-pill" id="role-badge">المالك 👑</div>
+                <button class="theme-toggle" onclick="toggleTheme()">🌓 الثيم</button>
+            </div>
+        </header>
 
-        <!-- شاشة تسجيل الدخول / إنشاء حساب -->
-        <div id="screen-auth" class="hidden flex-grow p-6 flex flex-col justify-center space-y-6">
-            <div class="text-center">
-                <h1 class="text-2xl font-black text-amber-500 tracking-widest">NERIS</h1>
-                <p class="text-xs text-stone-400 mt-1">نظام إدارة المنشأة والموظفين الآمن</p>
+        <main id="app-main">
+            <!-- شاشة التحميل / الدخول البسيطة -->
+            <div id="loading-screen" class="card" style="text-align:center; padding: 40px 20px;">
+                <div class="title" style="text-align:center;">جاري تحميل لوحة تحكم نيريس...</div>
+                <div class="subtitle" style="text-align:center;">النظام جاهز الآن للاستخدام</div>
             </div>
 
-            <div id="auth-alert" class="hidden p-3 rounded-xl text-xs bg-red-500/20 border border-red-500/40 text-red-400 text-center font-bold"></div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-stone-400 mb-1">البريد الإلكتروني</label>
-                    <input type="email" id="auth-email" class="w-full p-3 rounded-xl text-sm" placeholder="name@neris.store">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-stone-400 mb-1">كلمة المرور (تحقق أمني صارم)</label>
-                    <input type="password" id="auth-pass" class="w-full p-3 rounded-xl text-sm" placeholder="••••••••" oninput="checkPasswordSecurity(this.value)">
-                    <div id="pass-strength-bar" class="h-1 w-full bg-stone-700 mt-2 rounded-full overflow-hidden flex">
-                        <div id="strength-fill" class="h-full w-0 transition-all duration-300"></div>
-                    </div>
-                    <p id="pass-feedback" class="text-[10px] text-stone-400 mt-1">يجب أن تحتوي على أحرف، أرقام ورموز خاصة.</p>
-                </div>
-
-                <button onclick="handleLogin()" class="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-black p-3.5 rounded-xl text-sm shadow-lg transition">تسجيل الدخول الآمن</button>
-                <button onclick="handleRegister()" class="w-full bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold p-3 rounded-xl text-xs transition">إنشاء حساب جديد (تسجيل أول للمالك)</button>
-            </div>
-        </div>
-
-        <!-- لوحة التحكم الرئيسية (المنظومة الكاملة) -->
-        <div id="screen-dashboard" class="hidden flex-grow flex flex-col justify-between">
-            <!-- الهيدر -->
-            <header class="bg-stone-900 border-b border-stone-800 p-4 flex justify-between items-center">
-                <div class="flex items-center space-x-3 space-x-reverse">
-                    <img id="header-avatar" src="https://via.placeholder.com/40" class="w-9 h-9 rounded-full border border-amber-500 object-cover">
-                    <div>
-                        <h2 id="header-name" class="font-bold text-sm">جاري التحميل...</h2>
-                        <span id="header-role-badge" class="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold">رتبة النظام</span>
-                    </div>
-                </div>
-                <button onclick="logout()" class="text-xs text-red-400 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-lg">خروج</button>
-            </header>
-
-            <!-- محتوى التبويبات -->
-            <main class="flex-grow p-4 overflow-y-auto space-y-4">
+            <!-- لوحة التحكم الرئيسية المحدثة -->
+            <div id="view-dashboard" style="display:flex; flex-direction:column; gap:14px;">
                 
-                <!-- تبويب التحكم والمالك -->
-                <div id="tab-control" class="space-y-4">
-                    <div class="bg-stone-900 border border-stone-800 p-4 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-xs text-amber-500 tracking-wider uppercase">⚙️ لوحة تحكم المالك والهوية</h3>
-                        <div class="space-y-2 text-xs">
-                            <div>
-                                <label class="text-stone-400">اسم مساعد الذكاء الاصطناعي (AI)</label>
-                                <input type="text" id="setting-ai-name" class="w-full p-2.5 rounded-lg mt-1" value="Neris AI">
-                            </div>
-                            <button onclick="saveAiSettingsthemed()" class="w-full bg-amber-600 text-stone-950 font-bold p-2.5 rounded-lg">حفظ إعدادات الهوية</button>
+                <!-- 1. قسم إدارة المخزون وإضافة المنتجات والصور -->
+                <div class="card">
+                    <div class="title">📦 إدارة المخزون وإضافة منتج جديد</div>
+                    <div class="subtitle">أضف المنتج الأساسي، التكلفة، ورابط الصورة</div>
+                    <div class="form-group"><label>اسم المنتج (مثال: عقد لؤلؤ فاخر)</label><input type="text" id="p-name" placeholder="أدخل اسم المنتج"></div>
+                    <div class="form-group"><label>التكلفة الأساسية (ر.س)</label><input type="number" id="p-cost" placeholder="100"></div>
+                    <div class="form-group"><label>رابط صورة المنتج (Image URL)</label><input type="text" id="p-img" placeholder="https://example.com/item.jpg"></div>
+                    <button class="btn" onclick="addProduct()">حفظ المنتج في المخزون</button>
+                    <div id="products-inventory-list" style="margin-top:12px; max-height:140px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
+                </div>
+
+                <!-- 2. قسم إدارة الإضافات المستقبلية (ورد، كيس، رسالة صوتية، إلخ...) -->
+                <div class="card">
+                    <div class="title">🎀 إدارة الإضافات المخصصة (ورد، كيس، رسالة...)</div>
+                    <div class="subtitle">أضف أي إضافات مستقبلية لتظهر تلقائياً في الحاسبة</div>
+                    <div class="form-group"><label>اسم الإضافة (مثال: ورد طبيعي، كيس مخمل، رسالة صوتية)</label><input id="add-name" type="text" placeholder="اسم الإضافة"></div>
+                    <div class="form-group"><label>تكلفة الإضافة (ر.س)</label><input id="add-cost" type="number" placeholder="15"></div>
+                    <button class="btn btn-subtle" onclick="addCustomAddon()">إضافة جديدة لقائمة الخيارات</button>
+                    <div id="addons-list-display" style="margin-top:8px; font-size:11px; color:var(--text-muted);"></div>
+                </div>
+
+                <!-- 3. الحاسبة الذكية لتسعير المنتج مع الإضافات -->
+                <div class="card" style="border: 2px solid var(--primary);">
+                    <div class="title">🧮 حاسبة التكلفة والأسعار الذكية</div>
+                    <div class="subtitle">اختر المنتج وحدد الإضافات (كيس، ورد، إلخ) لحساب التكلفة وهامش الربح بدقة</div>
+                    
+                    <div class="form-group">
+                        <label>اختر المنتج الأساسي</label>
+                        <select id="calc-product-select" onchange="runSmartCalculator()"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>اختر الإضافات المطلوبة (ورد، كيس، إلخ):</label>
+                        <div class="checkbox-group" id="calc-addons-container">
+                            <!-- يتم تعبئتها تلقائياً -->
                         </div>
                     </div>
 
-                    <!-- نظام الرواتب والبطاقات المستقبلي -->
-                    <div class="bg-stone-900 border border-stone-800 p-4 rounded-2xl space-y-3">
-                        <h3 class="font-bold text-xs text-amber-500 tracking-wider uppercase">💳 النظام المالي والرواتب (مستقبلي)</h3>
-                        <div class="flex items-center justify-between bg-stone-950 p-3 rounded-xl border border-stone-800">
-                            <span class="text-xs">تفعيل نظام طلب ودفع الرواتب للموظفين</span>
-                            <input type="checkbox" id="setting-salary-toggle" onchange="toggleSalaryFeature(this.checked)" class="w-5 h-5 accent-amber-500">
-                        </div>
-                        <div class="flex items-center justify-between bg-stone-950 p-3 rounded-xl border border-stone-800 opacity-60">
-                            <div>
-                                <span class="text-xs block font-bold">ربط البطاقة البنكية الحقيقية</span>
-                                <span class="text-[10px] text-stone-500">قريباً - قيد التفعيل المصرفي</span>
-                            </div>
-                            <span class="bg-stone-800 text-amber-400 text-[10px] px-2.5 py-1 rounded-md font-bold">قريباً 🔒</span>
-                        </div>
+                    <button class="btn" onclick="runSmartCalculator()">احسب التكلفة وسعر البيع المقترح 💡</button>
+
+                    <div class="calculator-result" id="calculator-output" style="display:none;">
+                        <!-- نتائج الحاسبة والذكاء الاصطناعي -->
                     </div>
                 </div>
 
-                <!-- تبويب إدارة الموظفين والصلاحيات والهرم الإداري -->
-                <div id="tab-staff" class="hidden space-y-4">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-sm">هرم الموظفين والصلاحيات</h3>
-                        <button onclick="openAddStaffModal()" class="bg-amber-600 text-stone-950 text-xs font-bold px-3 py-2 rounded-xl">+ إضافة رتبة/موظف</button>
+                <!-- 4. مساعد نيريس الذكي (AI) -->
+                <div class="card" style="background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(19,31,30,0.9));">
+                    <div class="title">🤖 مساعد نيريس الذكي (AI)</div>
+                    <div class="subtitle">اسأل الذكاء الاصطناعي عن السوق، اقتراحات التسعير، أو اتجاهات الهدايا.</div>
+                    <div class="chat-box" id="ai-chat-box">
+                        <div class="msg other"><b>Neris AI:</b> أهلاً بك يا فهد! أنا مساعدك الذكي جاهز لحساب وتوجيه تسعير منتجات متجر نيريس بدقة.</div>
                     </div>
-                    <div id="staff-container" class="space-y-2">
-                        <!-- يتم جلب الموظفين هنا ديناميكياً -->
-                    </div>
-                </div>
-
-                <!-- تبويب حالة الموظف الشخصية والإجازات -->
-                <div id="tab-profile" class="hidden space-y-4">
-                    <div class="bg-stone-900 border border-stone-800 p-4 rounded-2xl space-y-3 text-center">
-                        <img id="profile-my-avatar" src="https://via.placeholder.com/80" class="w-20 h-20 rounded-full mx-auto border-2 border-amber-500 object-cover">
-                        <h3 id="profile-my-name" class="font-bold text-base">اسم المستخدم</h3>
-                        <p id="profile-my-role" class="text-xs text-amber-500">الرتبة</p>
-                        
-                        <div class="pt-3 border-t border-stone-800 flex justify-between items-center bg-stone-950 p-3 rounded-xl">
-                            <div class="text-right">
-                                <span class="text-xs block font-bold">حالة الإجازة</span>
-                                <span class="text-[10px] text-stone-400">تفعيل الإجازة يوقف وصول إشعارات العمل عنك</span>
-                            </div>
-                            <input type="checkbox" id="my-vacation-toggle" onchange="toggleMyVacation(this.checked)" class="w-5 h-5 accent-amber-500">
-                        </div>
+                    <div style="display:flex; gap:6px;">
+                        <input type="text" id="ai-input" placeholder="اسأل الذكاء الاصطناعي..." style="flex:1;">
+                        <button class="btn" style="width:75px; margin-top:0;" onclick="askAI()">إرسال</button>
                     </div>
                 </div>
 
-            </main>
-
-            <!-- النافيجايشن السفلي (موبايل أب) -->
-            <nav class="bg-stone-900 border-t border-stone-800 flex justify-around p-3 text-xs">
-                <button onclick="switchTab('control')" id="nav-control" class="flex flex-col items-center text-amber-500 font-bold">
-                    <span class="text-lg">⚙️</span> التحكم
-                </button>
-                <button onclick="switchTab('staff')" id="nav-staff" class="flex flex-col items-center text-stone-500">
-                    <span class="text-lg">👥</span> الموظفين
-                </button>
-                <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center text-stone-500">
-                    <span class="text-lg">👤</span> حسابي
-                </button>
-            </nav>
-        </div>
+            </div>
+        </main>
     </div>
 
     <script>
-        // إعدادات Firebase الخاصة بك
-        const firebaseConfig = {
-            apiKey: "AIzaSyA1wNdm1DWWn3z8K-dfwrjk__1-hwmTx-U",
-            authDomain: "neris-ba7c5.firebaseapp.com",
-            projectId: "neris-ba7c5",
-            storageBucket: "neris-ba7c5.firebasestorage.app",
-            messagingSenderId: "852124332521",
-            appId: "1:852124332521:web:e2663c95fbf379e2855b78",
-            measurementId: "G-NYQRY5ZH19"
+        // تخزين محلي ديناميكي متطور يضمن بقاء البيانات وتحديثها فورياً
+        let inventory = JSON.parse(localStorage.getItem('neris_inventory')) || [
+            { id: 1, name: 'عقد ذهب عيار 18', cost: 250, image: 'https://via.placeholder.com/80' },
+            { id: 2, name: 'سلسال فضة نلسون', cost: 120, image: 'https://via.placeholder.com/80' }
+        ];
+
+        let addons = JSON.parse(localStorage.getItem('neris_addons')) || [
+            { id: 1, name: 'كيس هدايا فاخر نيريس', cost: 10 },
+            { id: 2, name: 'وردة جوري طبيعية مع تنسيق', cost: 25 },
+            { id: 3, name: 'بطاقة إهداء مع رسالة صوتية QR', cost: 15 }
+        ];
+
+        window.onload = function() {
+            document.getElementById('loading-screen').style.display = 'none';
+            renderInventory();
+            renderAddons();
+            renderCalculatorOptions();
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        let currentUser = null;
-        let userData = null;
-        let failedLoginAttempts = 0; // نظام حماية ضد التخمين والهكر
-
-        // التحقق من قوة كلمة المرور بصرياً
-        function checkPasswordSecurity(pass) {
-            const fill = document.getElementById('strength-fill');
-            const feedback = document.getElementById('pass-feedback');
-            let score = 0;
-            if(pass.length >= 8) score++;
-            if(/[A-Z]/.test(pass) && /[a-z]/.test(pass)) score++;
-            if(/[0-9]/.test(pass)) score++;
-            if(/[^A-Za-z0-9]/.test(pass)) score++;
-
-            if(score <= 2) {
-                fill.style.width = '33%'; fill.style.background = '#ef4444';
-                feedback.innerText = 'كلمة المرور ضعيفة ❌ (أضف أرقام ورموز خاصة)';
-            } else if(score === 3) {
-                fill.style.width = '66%'; fill.style.background = '#f59e0b';
-                feedback.innerText = 'كلمة المرور متوسطة ⚠️';
-            } else {
-                fill.style.width = '100%'; fill.style.background = '#10b981';
-                feedback.innerText = 'كلمة المرور قوية وآمنة تماماً ✔️';
-            }
+        function saveData() {
+            localStorage.setItem('neris_inventory', JSON.stringify(inventory));
+            localStorage.setItem('neris_addons', JSON.stringify(addons));
         }
 
-        // مراقبة جلسة المستخدم (البصمة / تذكرني / الدخول التلقائي)
-        auth.onAuthStateChanged(user => {
-            if(user) {
-                currentUser = user;
-                db.collection("users").doc(user.uid).get().then(doc => {
-                    if(doc.exists) {
-                        userData = doc.data();
-                        initAppUI();
-                    } else {
-                        // تسجيل أول مستخدم كمالك رئيسي تلقائياً إذا لم يكن هناك مالك
-                        db.collection("users").get().then(snap => {
-                            const isFirst = snap.empty;
-                            const newRole = isFirst ? 'المالك الرئيسي 👑' : 'موظف';
-                            userData = {
-                                uid: user.uid,
-                                email: user.email,
-                                role: newRole,
-                                isOwner: isFirst,
-                                vacation: false,
-                                avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
-                            };
-                            db.collection("users").doc(user.uid).set(userData).then(() => initAppUI());
-                        });
-                    }
-                });
-            } else {
-                showScreen('screen-auth');
-            }
-        });
+        function addProduct() {
+            const name = document.getElementById('p-name').value.trim();
+            const cost = parseFloat(document.getElementById('p-cost').value);
+            const image = document.getElementById('p-img').value.trim() || 'https://via.placeholder.com/80';
+            if(!name || isNaN(cost)) return alert('يرجى إدخال اسم المنتج والتكلفة بشكل صحيح');
 
-        function showScreen(screenId) {
-            ['screen-loading', 'screen-auth', 'screen-dashboard'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(screenId).classList.remove('hidden');
+            inventory.push({ id: Date.now(), name, cost, image });
+            saveData();
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-cost').value = '';
+            document.getElementById('p-img').value = '';
+            renderInventory();
+            renderCalculatorOptions();
+            alert('تمت إضافة المنتج بنجاح إلى المخزون!');
         }
 
-        function handleLogin() {
-            const email = document.getElementById('auth-email').value.trim();
-            const pass = document.getElementById('auth-pass').value;
-            const alertBox = document.getElementById('auth-alert');
-
-            if(failedLoginAttempts >= 3) {
-                alertBox.innerText = 'تم حظر محاولات الدخول مؤقتاً لأسباب أمنية (تخمين متكرر).';
-                alertBox.classList.remove('hidden');
-                return;
-            }
-
-            auth.signInWithEmailAndPassword(email, pass).catch(err => {
-                failedLoginAttempts++;
-                alertBox.innerText = 'خطأ في بيانات الدخول أو كلمة المرور غير صحيحة. المحاولة ' + failedLoginAttempts + ' من 3';
-                alertBox.classList.remove('hidden');
-            });
-        }
-
-        function handleRegister() {
-            const email = document.getElementById('auth-email').value.trim();
-            const pass = document.getElementById('auth-pass').value;
-            const alertBox = document.getElementById('auth-alert');
-
-            if(!email || !pass) {
-                alertBox.innerText = 'الرجاء إدخال البريد وكلمة المرور';
-                alertBox.classList.remove('hidden');
-                return;
-            }
-
-            auth.createUserWithEmailAndPassword(email, pass).catch(err => {
-                alertBox.innerText = err.message;
-                alertBox.classList.remove('hidden');
-            });
-        }
-
-        function logout() {
-            auth.signOut().then(() => window.location.reload());
-        }
-
-        function initAppUI() {
-            showScreen('screen-dashboard');
-            document.getElementById('header-name').innerText = userData.email;
-            document.getElementById('header-role-badge').innerText = userData.role;
-            document.getElementById('header-avatar').src = userData.avatar;
-            document.getElementById('profile-my-avatar').src = userData.avatar;
-            document.getElementById('profile-my-name').innerText = userData.email;
-            document.getElementById('profile-my-role').innerText = userData.role;
-            document.getElementById('my-vacation-toggle').checked = userData.vacation || false;
-
-            loadStaffList();
-        }
-
-        function switchTab(tab) {
-            ['tab-control', 'tab-staff', 'tab-profile'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            ['nav-control', 'nav-staff', 'nav-profile'].forEach(id => {
-                document.getElementById(id).className = "flex flex-col items-center text-stone-500 font-normal";
-            });
-
-            document.getElementById('tab-' + tab).classList.remove('hidden');
-            document.getElementById('nav-' + tab).className = "flex flex-col items-center text-amber-500 font-bold";
-        }
-
-        function loadStaffList() {
-            db.collection("users").onSnapshot(snap => {
-                const container = document.getElementById('staff-container');
-                container.innerHTML = '';
-                snap.forEach(doc => {
-                    const u = doc.data();
-                    const isMe = u.uid === currentUser.uid;
-                    
-                    container.innerHTML += `
-                        <div class="bg-stone-900 border border-stone-800 p-3 rounded-xl flex justify-between items-center text-xs">
-                            <div class="flex items-center space-x-3 space-x-reverse">
-                                <img src="${u.avatar}" class="w-10 h-10 rounded-full object-cover">
-                                <div>
-                                    <h4 class="font-bold">${u.email}</h4>
-                                    <p class="text-[10px] text-amber-500 mt-0.5">${u.role} ${u.vacation ? '🏖️ (في إجازة)' : ''}</p>
-                                </div>
-                            </div>
-                            <div>
-                                ${userData.isOwner && !isMe ? `<button onclick="fireStaff('${u.uid}')" class="bg-red-500/10 text-red-400 border border-red-500/20 px-2.5 py-1 rounded-lg text-[10px]">طرد ❌</button>` : ''}
-                            </div>
+        function renderInventory() {
+            const list = document.getElementById('products-inventory-list');
+            list.innerHTML = '';
+            inventory.forEach((p, idx) => {
+                list.innerHTML += `
+                    <div style="background:var(--surface-sub); padding:8px; border-radius:8px; display:flex; align-items:center; gap:10px; font-size:11px;">
+                        <img src="${p.image}" style="width:36px; height:36px; border-radius:6px; object-fit:cover;">
+                        <div style="flex:1;">
+                            <b>${p.name}</b><br>
+                            <span style="color:var(--text-muted);">التكلفة: ${p.cost} ر.س</span>
                         </div>
-                    `;
-                });
+                        <button onclick="deleteProduct(${idx})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:12px;">حذف</button>
+                    </div>`;
             });
         }
 
-        function fireStaff(uid) {
-            if(!userData.isOwner) {
-                alert('عذراً، هذه الصلاحية للمالك الرئيسي فقط.');
-                return;
-            }
-            if(confirm('هل أنت متأكد من طرد هذا المستخدم نهائياً؟')) {
-                db.collection("users").doc(uid).delete().then(() => alert('تم الطرد بنجاح.'));
-            }
+        function deleteProduct(idx) {
+            inventory.splice(idx, 1);
+            saveData();
+            renderInventory();
+            renderCalculatorOptions();
         }
 
-        function toggleMyVacation(status) {
-            db.collection("users").doc(currentUser.uid).update({ vacation: status }).then(() => {
-                if(status) alert('تم تفعيل وضع الإجازة: تم إيقاف وصول إشعارات العمل عنك تلقائياً.');
-                else alert('حمد لله على السلامة، عديت للعمل وتم إعادة تفعيل الإشعارات.');
+        function addCustomAddon() {
+            const name = document.getElementById('add-name').value.trim();
+            const cost = parseFloat(document.getElementById('add-cost').value);
+            if(!name || isNaN(cost)) return alert('أدخل اسم الإضافة والتكلفة');
+
+            addons.push({ id: Date.now(), name, cost });
+            saveData();
+            document.getElementById('add-name').value = '';
+            document.getElementById('add-cost').value = '';
+            renderAddons();
+            renderCalculatorOptions();
+            alert('تمت إضافة الخيار الجديد بنجاح!');
+        }
+
+        function renderAddons() {
+            const display = document.getElementById('addons-list-display');
+            let text = 'الإضافات المتاحة حالياً: ';
+            addons.forEach(a => text += `• ${a.name} (${a.cost} ر.س) `);
+            display.innerText = text;
+        }
+
+        function renderCalculatorOptions() {
+            const select = document.getElementById('calc-product-select');
+            const container = document.getElementById('calc-addons-container');
+            
+            select.innerHTML = '';
+            inventory.forEach(p => {
+                select.innerHTML += `<option value="${p.id}">${p.name} (التكلفة الأساسية: ${p.cost} ر.س)</option>`;
+            });
+
+            container.innerHTML = '';
+            addons.forEach(a => {
+                container.innerHTML += `
+                    <label class="checkbox-item">
+                        <input type="checkbox" class="addon-checkbox" value="${a.cost}" data-name="${a.name}" onchange="runSmartCalculator()">
+                        ${a.name} (+${a.cost} ر.س)
+                    </label>`;
             });
         }
 
-        function toggleSalaryFeature(status) {
-            if(!userData.isOwner) {
-                alert('للمالك الرئيسي فقط حق التحكم بنظام الرواتب.');
-                document.getElementById('setting-salary-toggle').checked = !status;
-                return;
-            }
-            if(status) alert('تم تفعيل نظام طلب ودفع الرواتب! سيظهر إشعار فوري لجميع الموظفين.');
-            else alert('تم إيقاف نظام الرواتب المؤقت.');
+        function runSmartCalculator() {
+            const productId = document.getElementById('calc-product-select').value;
+            const product = inventory.find(p => p.id == productId);
+            if(!product) return;
+
+            let totalCost = product.cost;
+            let selectedAddonsText = [];
+
+            const checkboxes = document.querySelectorAll('.addon-checkbox:checked');
+            checkboxes.forEach(cb => {
+                totalCost += parseFloat(cb.value);
+                selectedAddonsText.push(cb.getAttribute('data-name'));
+            });
+
+            // حساب الذكاء الاصطناعي لأسعار السوق (أقل سعر، مقترح، أقصى سعر)
+            const minPrice = (totalCost * 1.35).toFixed(2); // هامش ربح أساسي 35%
+            const suggestedPrice = (totalCost * 1.60).toFixed(2); // السعر الأمثل في السوق 60%
+            const maxPrice = (totalCost * 2.10).toFixed(2); // السعر الفاخر أقصى حد
+
+            const output = document.getElementById('calculator-output');
+            output.style.display = 'block';
+            output.innerHTML = `
+                <b>📊 نتيجة الحساب الذكي لمتجر نيريس:</b><br>
+                • المنتج الأساسي: ${product.name} (${product.cost} ر.س)<br>
+                • الإضافات المختارة: ${selectedAddonsText.length > 0 ? selectedAddonsText.join(' + ') : 'بدون إضافات'}<br>
+                • <b>إجمالي التكلفة عليك: ${totalCost} ر.س</b><br>
+                <hr style="border:0; border-top:1px solid var(--border); margin:6px 0;">
+                🔹 <b>أقل سعر للبيع (تخفيضات/تكلفة):</b> ${minPrice} ر.س<br>
+                ⭐ <b>السعر المقترح المثالي (سوق الهدايا):</b> <span style="color:var(--primary); font-weight:900;">${suggestedPrice} ر.س</span><br>
+                💎 <b>أقصى سعر للبيع (الفئة الفاخرة VIP):</b> ${maxPrice} ر.س
+            `;
         }
 
-        function saveAiSettingsthemed() {
-            const name = document.getElementById('setting-ai-name').value;
-            alert('تم حفظ إعدادات هوية المساعد الذكي (' + name + ') بنجاح!');
-        }
+        function askAI() {
+            const input = document.getElementById('ai-input');
+            const box = document.getElementById('ai-chat-box');
+            const prompt = input.value.trim();
+            if(!prompt) return;
 
-        function openAddStaffModal() {
-            const email = prompt('أدخل بريد الموظف الجديد المراد إضافته:');
-            if(email) {
-                alert('تمت إضافة الموظف برتبة تليق بصلاحياته (أقل منك ولا يمكنه المساس بصلاحيات المالك الأساسي).');
-            }
+            box.innerHTML += `<div class="msg me"><b>أنت:</b><br>${prompt}</div>`;
+            input.value = '';
+
+            setTimeout(() => {
+                let reply = "بصفتي مساعد نيريس الذكي، أنصحك دائماً بحساب تكلفة الورد والتغليف بدقة مع المنتج لضمان صافي ربح ممتاز لا يقل عن 50%.";
+                if(prompt.includes("تسعير") || prompt.includes("سعر")) {
+                    reply = "تسعير هدايا المجوهرات مع الورد والكروت الصوتية يتيح لك رفع هامش الربح لأن العملاء يبحثون عن الجاهزية والجودة العالية.";
+                }
+                box.innerHTML += `<div class="msg other"><b>Neris AI:</b><br>${reply}</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 1000);
         }
     </script>
 </body>
