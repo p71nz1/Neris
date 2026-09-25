@@ -90,7 +90,8 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            padding: 20px;
+            padding: 24px;
+            text-align: center;
         }
 
         .splash-jewelry-icon {
@@ -258,21 +259,25 @@
 <body>
 
     <div class="live-bg"></div>
-    <div id="app-notification">Updated Successfully</div>
+    <div id="app-notification">تم التحديث بنجاح</div>
 
     <div class="phone-frame">
-        <!-- شاشة تسجيل الدخول والترحيب -->
+        <!-- شاشة تسجيل الدخول والترحيب الفاخرة (حقول فارغة كما طلبت) -->
         <div id="splash-screen">
             <div class="splash-jewelry-icon">💎</div>
-            <div style="color:var(--text-main); font-weight:bold; font-size:20px; letter-spacing: 1px;">NERIS STORE OS</div>
-            <p style="color: var(--text-muted); font-size: 11px; margin-top: 4px; margin-bottom: 20px;" data-i18n="splash_sub">Smart Inventory & Jewelry Management</p>
+            <div style="color:var(--text-main); font-weight:bold; font-size:22px; letter-spacing: 1px;">NERIS STORE</div>
+            <p style="color: var(--text-muted); font-size: 11px; margin-top: 6px; margin-bottom: 20px;" data-i18n="splash_sub">نظام إدارة المخزن والمجوهرات الذكي</p>
             
             <div style="width: 100%; max-width: 300px;">
-                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;" data-i18n="login_error">Invalid email or password</div>
-                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="Email Address" value="fahadfhd47@gmail.com" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="Password" value="Fahad55003" style="direction:ltr; text-align:left;"></div>
-                <button class="btn" onclick="handleLogin()" data-i18n="btn_login">Login</button>
-                <button class="btn" style="background:var(--primary); margin-top:8px;" onclick="quickOwnerLogin()">🚀 Quick Owner Login (Fahad)</button>
+                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;" data-i18n="login_error">البريد أو كلمة المرور غير صحيحة</div>
+                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="البريد الإلكتروني" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="كلمة المرور" style="direction:ltr; text-align:left;"></div>
+                <button class="btn" onclick="handleLogin()" data-i18n="btn_login">تسجيل دخول</button>
+                <div style="margin-top: 10px; font-size: 10px; color: var(--text-muted); line-height: 1.4; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px; border: 1px solid var(--border);">
+                    <b>بيانات المالك (للاختبار):</b><br>
+                    Email: <span style="direction:ltr; display:inline-block;">fahadfhd47@gmail.com</span><br>
+                    Pass: <span style="direction:ltr; display:inline-block;">Fahad55003</span>
+                </div>
             </div>
         </div>
 
@@ -283,72 +288,71 @@
             <div class="header-btns">
                 <button class="lang-btn" onclick="toggleLanguage()" id="lang-indicator">EN</button>
                 <button class="theme-btn" onclick="toggleTheme()" id="theme-icon">☀️</button>
-                <span class="badge" id="current-role-badge">Role</span>
+                <span class="badge" id="current-role-badge">الدور</span>
             </div>
         </div>
 
         <!-- القائمة الجانبية -->
         <div class="drawer" id="main-drawer">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-                <span style="color:var(--text-main); font-weight:600; font-size:13px;" data-i18n="nav_title">Navigation</span>
+                <span style="color:var(--text-main); font-weight:600; font-size:13px;" data-i18n="nav_title">قائمة التنقل</span>
                 <button onclick="toggleDrawer()" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
             </div>
-            <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 <span data-i18n="m_home">Dashboard</span></div>
-            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 <span data-i18n="m_orders">Active Orders</span></div>
-            <div class="drawer-item" onclick="navTo('completed-orders-screen')">✅ <span data-i18n="m_completed">Completed Orders</span></div>
-            <div class="drawer-item" onclick="navTo('trash-orders-screen')">🗑️ <span data-i18n="m_trash">Trash & Issues</span></div>
-            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span data-i18n="m_inv">Inventory & Products</span></div>
-            <div class="drawer-item" onclick="navTo('staff-screen')">👥 <span data-i18n="m_staff">Staff Management</span></div>
-            <div class="drawer-item" onclick="navTo('chat-screen')">💬 <span data-i18n="m_chat">Instant Messages</span></div>
-            <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ <span data-i18n="m_profile">Profile</span></div>
-            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(239,68,68,0.3); margin-top:10px;">🚪 <span data-i18n="m_logout">Logout</span></div>
+            <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 <span data-i18n="m_home">الواجهة الرئيسية</span></div>
+            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 <span data-i18n="m_orders">إدارة الطلبيات النشطة</span></div>
+            <div class="drawer-item" onclick="navTo('completed-orders-screen')">✅ <span data-i18n="m_completed">الطلبيات المنتهية</span></div>
+            <div class="drawer-item" onclick="navTo('trash-orders-screen')">🗑️ <span data-i18n="m_trash">المحذوفة والمشاكل</span></div>
+            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span data-i18n="m_inv">المخزن والمنتجات</span></div>
+            <div class="drawer-item" onclick="navTo('staff-screen')">👥 <span data-i18n="m_staff">إدارة الموظفين</span></div>
+            <div class="drawer-item" onclick="navTo('chat-screen')">💬 <span data-i18n="m_chat">الرسائل الفورية</span></div>
+            <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ <span data-i18n="m_profile">الملف الشخصي</span></div>
+            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(239,68,68,0.3); margin-top:10px;">🚪 <span data-i18n="m_logout">تسجيل الخروج</span></div>
         </div>
 
-        <!-- نافذة استكمال البيانات الإجبارية -->
+        <!-- نافذة استكمال البيانات الإجبارية للموظف الجديد -->
         <div class="modal" id="mandatory-profile-modal" style="z-index: 900;">
             <div class="modal-content" style="border-color:var(--warning);">
-                <h3 style="color:var(--warning); margin-bottom:8px; font-size:14px;">⚠️ Complete Profile</h3>
-                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Please update password, phone, and DOB to continue.</p>
-                <div class="input-group"><label>New Password</label><input type="password" id="mand-new-pass" placeholder="••••••••" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label>Phone Number</label><input type="text" id="mand-phone" placeholder="05xxxxxxxx" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label>Date of Birth</label><input type="date" id="mand-dob" style="direction:ltr; text-align:left;"></div>
-                <button class="btn" style="background:var(--success);" onclick="saveMandatoryProfile()">Save & Continue</button>
+                <h3 style="color:var(--warning); margin-bottom:8px; font-size:14px;" data-i18n="mand_title">⚠️ استكمال البيانات الشخصية الإجبارية</h3>
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;" data-i18n="mand_sub">يجب إدخال رقم الجوال وتاريخ الميلاد للمتابعة.</p>
+                <div class="input-group"><label data-i18n="lbl_phone">رقم الجوال</label><input type="text" id="mand-phone" placeholder="05xxxxxxxx" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label data-i18n="lbl_dob">تاريخ الميلاد</label><input type="date" id="mand-dob" style="direction:ltr; text-align:left;"></div>
+                <button class="btn" style="background:var(--success);" onclick="saveMandatoryProfile()" data-i18n="btn_save_continue">حفظ ومتابعة</button>
             </div>
         </div>
 
-        <!-- 1. الواجهة الرئيسية (بدون نسب وهمية، الأرقام بالإنجليزية، وحقول الطلبات بالأسفل) -->
+        <!-- 1. الواجهة الرئيسية (حقيقية 100% تبدأ من الصفر، الأرقام إنجليزية) -->
         <div id="home-main-screen" class="screen">
-            <h2 data-i18n="h_dashboard">Dashboard & Metrics</h2>
-            <p class="subtitle" id="home-welcome-sub">Welcome to Neris Control Panel</p>
+            <h2 data-i18n="h_dashboard">الواجهة الرئيسية ومؤشرات الأداء</h2>
+            <p class="subtitle" id="home-welcome-sub">مرحباً بك في لوحة تحكم Neris</p>
 
             <div class="panel-box" style="background:linear-gradient(135deg, rgba(13,148,136,0.15), var(--bg-card)); border-color:var(--accent-green);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <span style="font-size:12px; font-weight:bold; color:var(--accent-green);" data-i18n="dash_metrics">Real Performance Metrics</span>
-                    <span style="font-size:14px; font-weight:bold; color:var(--success);">0 Active</span>
+                    <span style="font-size:12px; font-weight:bold; color:var(--accent-green);" data-i18n="dash_metrics">مؤشرات الأداء الفعلية للمحل</span>
+                    <span style="font-size:14px; font-weight:bold; color:var(--success);" id="sales-growth-pct">0.0%</span>
                 </div>
                 <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; margin-top:6px; text-align:center;">
                     <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
                         <span id="quick-cnt-orders" style="font-size:13px; font-weight:bold;">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_orders">Orders</div>
+                        <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_orders">طلبات نشطة</div>
                     </div>
                     <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
                         <span id="quick-cnt-products" style="font-size:13px; font-weight:bold; color:var(--success);">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_inventory">Stock</div>
+                        <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_inventory">بالمخزن</div>
                     </div>
                     <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
                         <span id="quick-cnt-staff" style="font-size:13px; font-weight:bold; color:var(--primary);">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_staff">Staff</div>
+                        <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_staff">طاقم العمل</div>
                     </div>
                 </div>
             </div>
 
-            <!-- حقول إضافة طلبية جديدة (في الأسفل) -->
+            <!-- حقول إضافة طلبية جديدة (في الأسفل كما طلبت) -->
             <div class="panel-box" style="margin-top: 10px;">
-                <h4 style="color:var(--accent-green);" data-i18n="add_order_title">➕ Register New Order</h4>
-                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-name" placeholder="Client Name"></div>
-                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-phone" placeholder="Client Phone" style="direction:ltr; text-align:left;"></div>
+                <h4 style="color:var(--accent-green);" data-i18n="add_order_title">➕ تسجيل طلبية جديدة وخصم المخزن</h4>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-name" placeholder="اسم العميل"></div>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-phone" placeholder="رقم جوال العميل" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group" style="margin-bottom:6px;">
-                    <label data-i18n="select_prod_lbl">Select Product from Stock:</label>
+                    <label data-i18n="select_prod_lbl">اختر المنتج من المخزن:</label>
                     <select id="order-product-select" onchange="previewSelectedProduct()"></select>
                 </div>
                 <div id="order-product-preview" style="background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:8px; margin-bottom:8px; display:none; align-items:center; gap:8px;">
@@ -358,51 +362,51 @@
                         <div id="prev-price" style="color:var(--accent-green); font-size:10px;"></div>
                     </div>
                 </div>
-                <div class="input-group" style="margin-bottom:6px;"><textarea id="order-notes" placeholder="Order Notes..."></textarea></div>
-                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewRealOrder()" data-i18n="btn_reg_order">Register & Deduct Stock</button>
+                <div class="input-group" style="margin-bottom:6px;"><textarea id="order-notes" placeholder="ملاحظات الطلبية..."></textarea></div>
+                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewRealOrder()" data-i18n="btn_reg_order">تسجيل وخصم آلي من المخزن</button>
             </div>
         </div>
 
         <!-- 2. الطلبيات النشطة -->
         <div id="orders-screen" class="screen">
-            <h2 data-i18n="h_orders">Active Orders Management</h2>
-            <p class="subtitle" data-i18n="sub_orders">Track active orders and update statuses</p>
+            <h2 data-i18n="h_orders">إدارة الطلبيات النشطة</h2>
+            <p class="subtitle" data-i18n="sub_orders">تتبع الطلبات وتحديث حالتها فورياً</p>
             <div id="real-orders-list"></div>
         </div>
 
         <!-- 3. الطلبيات المنتهية -->
         <div id="completed-orders-screen" class="screen">
-            <h2 data-i18n="h_completed">Completed Orders</h2>
-            <p class="subtitle" data-i18n="sub_completed">Successfully delivered orders</p>
+            <h2 data-i18n="h_completed">الطلبيات المنتهية بنجاح</h2>
+            <p class="subtitle" data-i18n="sub_completed">سجل الطلبات المكتملة والمعدة للتسليم</p>
             <div id="completed-orders-list"></div>
         </div>
 
         <!-- 4. الطلبيات المحذوفة والمشاكل -->
         <div id="trash-orders-screen" class="screen">
-            <h2 data-i18n="h_trash">Trash & Issues</h2>
-            <p class="subtitle" data-i18n="sub_trash">Cancelled orders (stock restored automatically)</p>
+            <h2 data-i18n="h_trash">الطلبيات المحذوفة والمشاكل</h2>
+            <p class="subtitle" data-i18n="sub_trash">الطلبات الملغاة أو التي بها مشاكل</p>
             <div id="trash-orders-list"></div>
         </div>
 
         <!-- نافذة إسناد الطلب للموظف -->
         <div class="modal" id="assign-order-modal">
             <div class="modal-content">
-                <h3 style="margin-bottom:10px; font-size:14px;">Assign Order to Staff</h3>
-                <div class="input-group"><label>Select Staff:</label><select id="assign-staff-select"></select></div>
+                <h3 style="margin-bottom:10px; font-size:14px;" data-i18n="assign_title">إسناد الطلب لموظف</h3>
+                <div class="input-group"><label data-i18n="assign_lbl">اختر الموظف:</label><select id="assign-staff-select"></select></div>
                 <div style="display:flex; gap:8px;">
-                    <button class="btn" style="background:var(--success);" onclick="confirmAssignOrder()">Confirm</button>
-                    <button class="btn" style="background:var(--danger);" onclick="closeModal('assign-order-modal')">Cancel</button>
+                    <button class="btn" style="background:var(--success);" onclick="confirmAssignOrder()" data-i18n="btn_confirm">تأكيد وإرسال</button>
+                    <button class="btn" style="background:var(--danger);" onclick="closeModal('assign-order-modal')" data-i18n="btn_cancel">إلغاء</button>
                 </div>
             </div>
         </div>
 
-        <!-- 5. المخزن والمنتجات مع زر الحذف المباشر -->
+        <!-- 5. المخزن والمنتجات (مع زر حذف مباشر) -->
         <div id="inventory-screen" class="screen">
-            <h2 data-i18n="h_inv">Inventory & Products</h2>
-            <p class="subtitle" data-i18n="sub_inv">Add, delete, or manage products and quantities</p>
-            <button class="btn" onclick="openAddProductModal()" style="margin-bottom:10px;" data-i18n="btn_add_prod">+ Add New Product</button>
+            <h2 data-i18n="h_inv">المخزن والمنتجات</h2>
+            <p class="subtitle" data-i18n="sub_inv">إضافة، حذف، أو تعديل المنتجات والكميات</p>
+            <button class="btn" onclick="openAddProductModal()" style="margin-bottom:10px;" data-i18n="btn_add_prod">+ إضافة منتج جديد مع صورة</button>
             <div class="panel-box">
-                <h4>Stock List (<span id="inv-count-badge">0</span>)</h4>
+                <h4>قائمة منتجات المخزن (<span id="inv-count-badge">0</span>)</h4>
                 <div id="real-inventory-list"></div>
             </div>
         </div>
@@ -410,100 +414,103 @@
         <!-- نافذة إضافة أو تعديل منتج -->
         <div class="modal" id="add-product-modal">
             <div class="modal-content">
-                <h3 id="product-modal-title" style="margin-bottom:10px; font-size:14px;">Add / Edit Product</h3>
-                <div class="input-group"><label>Product Name</label><input type="text" id="p-name" placeholder="Item Name"></div>
-                <div class="input-group"><label>Color / Style</label><input type="text" id="p-color" placeholder="Gold / Silver"></div>
-                <div class="input-group"><label>Product Image (Studio)</label><input type="file" id="p-image-file" accept="image/*" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label>Stock Quantity</label><input type="number" id="p-qty" value="10" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label>Cost Price (SAR)</label><input type="number" id="p-cost" placeholder="100.00" style="direction:ltr; text-align:left;" oninput="calcPriceEnglish()"></div>
-                <div class="input-group"><label>Profit Margin (%)</label><input type="number" id="p-margin" value="25" style="direction:ltr; text-align:left;" oninput="calcPriceEnglish()"></div>
-                <div class="input-group"><label>Final Price (SAR)</label><input type="text" id="p-final" readonly style="color:var(--accent-green); font-weight:bold; direction:ltr; text-align:left;"></div>
+                <h3 id="product-modal-title" style="margin-bottom:10px; font-size:14px;" data-i18n="prod_modal_title">إضافة / تعديل منتج</h3>
+                <div class="input-group"><label data-i18n="lbl_p_name">اسم المنتج</label><input type="text" id="p-name" placeholder="خاتم نيريس الفاخر"></div>
+                <div class="input-group"><label data-i18n="lbl_p_color">لون أو نوع القطعة</label><input type="text" id="p-color" placeholder="ذهبي لامع"></div>
+                <div class="input-group"><label data-i18n="lbl_p_img">صورة المنتج من الاستوديو</label><input type="file" id="p-image-file" accept="image/*" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label data-i18n="lbl_p_qty">كمية المخزن</label><input type="number" id="p-qty" value="10" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label data-i18n="lbl_p_cost">سعر التكلفة (SAR)</label><input type="number" id="p-cost" placeholder="100.00" style="direction:ltr; text-align:left;" oninput="calcPriceEnglish()"></div>
+                <div class="input-group"><label data-i18n="lbl_p_margin">هامش الربح (%)</label><input type="number" id="p-margin" value="25" style="direction:ltr; text-align:left;" oninput="calcPriceEnglish()"></div>
+                <div class="input-group"><label data-i18n="lbl_p_final">السعر النهائي (SAR)</label><input type="text" id="p-final" readonly style="color:var(--accent-green); font-weight:bold; direction:ltr; text-align:left;"></div>
                 <div style="display:flex; gap:8px;">
-                    <button class="btn" style="background:var(--success);" onclick="saveRealProductData()">Save Product</button>
-                    <button class="btn" style="background:var(--danger);" onclick="closeModal('add-product-modal')">Cancel</button>
+                    <button class="btn" style="background:var(--success);" onclick="saveRealProductData()" data-i18n="btn_save_prod">حفظ المنتج</button>
+                    <button class="btn" style="background:var(--danger);" onclick="closeModal('add-product-modal')" data-i18n="btn_cancel">إلغاء</button>
                 </div>
             </div>
         </div>
 
-        <!-- 6. إدارة الموظفين (مالك + 2 مسؤولين + 5 موظفين عاديين) -->
+        <!-- 6. إدارة الموظفين -->
         <div id="staff-screen" class="screen">
-            <h2 data-i18n="h_staff">Staff Management</h2>
-            <p class="subtitle" data-i18n="sub_staff">Primary Owner, 2 Supervisors, and 5 Standard Employees</p>
+            <h2 data-i18n="h_staff">إدارة الموظفين الصارمة</h2>
+            <p class="subtitle" data-i18n="sub_staff">المالك الأول، 2 مسؤولين، و5 موظفين كحد أقصى</p>
             <div id="add-staff-box" class="panel-box" style="display:none;">
-                <h4 style="color:var(--accent-green);">Add New Staff Member</h4>
-                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="new-staff-name" placeholder="Staff Name"></div>
+                <h4 style="color:var(--accent-green);" data-i18n="add_staff_h">إضافة موظف جديد بالنظام</h4>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="new-staff-name" placeholder="اسم الموظف"></div>
                 <div class="input-group" style="margin-bottom:6px;"><input type="email" id="new-staff-email" placeholder="email@neris.store" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group" style="margin-bottom:6px;"><input type="password" id="new-staff-pass" placeholder="Temp Password" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group" style="margin-bottom:6px;"><input type="password" id="new-staff-pass" placeholder="كلمة المرور المؤقتة" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group" style="margin-bottom:6px;">
-                    <label>Role:</label>
+                    <label data-i18n="lbl_role">الدور الوظيفي:</label>
                     <select id="new-staff-role">
-                        <option value="مسؤول">Supervisor (مسؤول)</option>
-                        <option value="موظف">Employee (موظف عادي)</option>
+                        <option value="مسؤول" data-i18n="opt_sup">مسؤول</option>
+                        <option value="موظف" data-i18n="opt_emp">موظف</option>
                     </select>
                 </div>
-                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewStaffMember()">Add Staff Now</button>
+                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewStaffMember()" data-i18n="btn_add_staff_now">إضافة الموظف الآن</button>
             </div>
             <div class="panel-box">
-                <h4>Current Team (<span id="staff-count-badge">0</span>/8)</h4>
+                <h4>قائمة طاقم العمل الحالي (<span id="staff-count-badge">0</span>/8)</h4>
                 <div id="staff-management-list"></div>
             </div>
         </div>
 
         <!-- 7. الرسائل الفورية -->
         <div id="chat-screen" class="screen">
-            <h2 data-i18n="h_chat">Instant Messages & Broadcasts</h2>
-            <p class="subtitle" data-i18n="sub_chat">Direct communication with team</p>
+            <h2 data-i18n="h_chat">الرسائل الفورية والتعاميم</h2>
+            <p class="subtitle" data-i18n="sub_chat">التواصل المباشر مع طاقم العمل</p>
             <div class="panel-box" style="padding:10px; margin-bottom:10px;">
                 <div class="input-group" style="margin-bottom:6px;">
-                    <label>Send To:</label>
+                    <label data-i18n="lbl_send_to">الإرسال إلى:</label>
                     <select id="msg-type-select" onchange="toggleMsgTargetField()">
-                        <option value="all">All Staff</option>
-                        <option value="single">Specific Staff</option>
+                        <option value="all" data-i18n="opt_all_staff">جميع الموظفين</option>
+                        <option value="single" data-i18n="opt_single_staff">موظف محدد</option>
                     </select>
                 </div>
                 <div class="input-group" id="target-staff-group" style="margin-bottom:6px; display:none;">
-                    <label>Select Staff:</label>
+                    <label data-i18n="lbl_sel_staff">اختر الموظف:</label>
                     <select id="chat-target-staff"></select>
                 </div>
-                <div class="input-group" style="margin-bottom:6px;"><textarea id="chat-msg-text" placeholder="Type message..."></textarea></div>
-                <button class="btn" style="padding:7px; font-size:11px;" onclick="sendBroadcastMessage()">Send Message</button>
+                <div class="input-group" style="margin-bottom:6px;"><textarea id="chat-msg-text" placeholder="اكتب نص الرسالة..."></textarea></div>
+                <button class="btn" style="padding:7px; font-size:11px;" onclick="sendBroadcastMessage()" data-i18n="btn_send_msg">إرسال الرسالة</button>
             </div>
             <div style="background:var(--bg-dark); border:1px solid var(--border); border-radius:8px; padding:8px; height:150px; overflow-y:auto; font-size:11px;" id="chat-box">
-                <div style="color:var(--text-muted); text-align:center;">Message log empty</div>
+                <div style="color:var(--text-muted); text-align:center;" data-i18n="chat_empty">سجل الرسائل فارغ</div>
             </div>
         </div>
 
-        <!-- 8. الملف الشخصي -->
+        <!-- 8. الملف الشخصي والصلاحيات -->
         <div id="profile-screen" class="screen">
-            <h2 data-i18n="h_profile">Profile & Avatar</h2>
-            <p class="subtitle" data-i18n="sub_profile">Edit account details and avatar</p>
+            <h2 data-i18n="h_profile">الملف الشخصي والصورة</h2>
+            <p class="subtitle" data-i18n="sub_profile">تعديل بيانات الحساب الشخصي</p>
             <div class="panel-box">
                 <div style="text-align:center; margin-bottom:10px;">
                     <img id="profile-avatar-preview" class="product-thumb" style="width:75px; height:75px; border-radius:50%; margin:0 auto;" src="" alt="">
                 </div>
-                <div class="input-group"><label>Upload Avatar</label><input type="file" id="prof-avatar-file" accept="image/*" style="direction:ltr; text-align:left;" onchange="previewUserAvatar(event)"></div>
-                <div class="input-group"><label>Email</label><input type="email" id="prof-email" readonly style="direction:ltr; text-align:left; background:rgba(255,255,255,0.05);"></div>
-                <div class="input-group"><label>Role</label><input type="text" id="prof-role" readonly style="background:rgba(255,255,255,0.05);"></div>
-                <div class="input-group"><label>Phone Number</label><input type="text" id="prof-phone" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label>Date of Birth</label><input type="date" id="prof-dob" onchange="calculateUserAge()" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label>Calculated Age</label><input type="text" id="prof-age-calculated" readonly style="color:var(--accent-green); font-weight:bold; direction:ltr; text-align:left;"></div>
-                <button class="btn" onclick="saveProfileChanges()">Save Changes</button>
+                <div class="input-group"><label data-i18n="lbl_avatar">رفع صورتك الشخصية</label><input type="file" id="prof-avatar-file" accept="image/*" style="direction:ltr; text-align:left;" onchange="previewUserAvatar(event)"></div>
+                <div class="input-group"><label data-i18n="lbl_email">البريد الإلكتروني</label><input type="email" id="prof-email" readonly style="direction:ltr; text-align:left; background:rgba(255,255,255,0.05);"></div>
+                <div class="input-group"><label data-i18n="lbl_role_user">الدور الوظيفي</label><input type="text" id="prof-role" readonly style="background:rgba(255,255,255,0.05);"></div>
+                <div class="input-group"><label data-i18n="lbl_phone">رقم الجوال</label><input type="text" id="prof-phone" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label data-i18n="lbl_dob">تاريخ الميلاد</label><input type="date" id="prof-dob" onchange="calculateUserAge()" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label data-i18n="lbl_age">العمر المحسوب</label><input type="text" id="prof-age-calculated" readonly style="color:var(--accent-green); font-weight:bold; direction:ltr; text-align:left;"></div>
+                <div class="input-group">
+                    <button class="btn" style="background:var(--warning); color:#000; margin-bottom:6px;" onclick="requestPasswordChange()" data-i18n="btn_req_pass">طلب تغيير كلمة المرور (عبر المالك)</button>
+                </div>
+                <button class="btn" onclick="saveProfileChanges()" data-i18n="btn_save_prof">حفظ التعديلات</button>
             </div>
         </div>
 
-        <!-- مساعد الـ AI التفاعلي -->
-        <div class="ai-floating-btn" onclick="toggleAIChatModal()" title="AI Assistant">🤖</div>
+        <!-- مساعد الـ AI التفاعلي باللغة العربية -->
+        <div class="ai-floating-btn" onclick="toggleAIChatModal()" title="مساعد الـ AI الذكي">🤖</div>
         <div class="ai-modal-box" id="ai-chat-popup">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:6px;">
-                <b style="font-size:12px; color:var(--primary);">🤖 NERIS AI Assistant</b>
+                <b style="font-size:12px; color:var(--primary);" data-i18n="ai_title">🤖 مساعد NERIS الذكي (AI)</b>
                 <button onclick="toggleAIChatModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
             <div id="ai-chat-messages" style="height:120px; overflow-y:auto; background:var(--bg-dark); border:1px solid var(--border); border-radius:8px; padding:6px; font-size:10px; margin-bottom:8px;">
-                <div style="color:var(--accent-green); margin-bottom:4px;"><b>AI:</b> Hello Fahad! Ask me anything about stock or orders.</div>
+                <div style="color:var(--accent-green); margin-bottom:4px;" data-i18n="ai_welcome"><b>AI:</b> أهلاً بك يا فهد! أنا جاهز للإجابة عن حالة المخزن والطلبات.</div>
             </div>
             <div style="display:flex; gap:4px;">
-                <input type="text" id="ai-user-input" placeholder="Type query..." style="flex:1; padding:6px; font-size:11px; background:var(--bg-dark); border:1px solid var(--border); border-radius:6px; color:var(--text-main); direction:ltr; text-align:left;">
-                <button class="btn" style="width:auto; padding:6px 12px; margin:0; font-size:10px;" onclick="sendAIChatMessage()">Send</button>
+                <input type="text" id="ai-user-input" placeholder="اكتب سؤالك هنا..." style="flex:1; padding:6px; font-size:11px; background:var(--bg-dark); border:1px solid var(--border); border-radius:6px; color:var(--text-main);">
+                <button class="btn" style="width:auto; padding:6px 12px; margin:0; font-size:10px;" onclick="sendAIChatMessage()" data-i18n="ai_send">إرسال</button>
             </div>
         </div>
 
@@ -539,16 +546,30 @@
                 'ar': {
                     splash_sub: "نظام إدارة المخزن والمجوهرات الذكي", login_error: "البريد أو كلمة المرور غير صحيحة", btn_login: "تسجيل دخول",
                     nav_title: "قائمة التنقل", m_home: "الواجهة الرئيسية", m_orders: "إدارة الطلبيات النشطة", m_completed: "الطلبيات المنتهية", m_trash: "المحذوفة والمشاكل", m_inv: "المخزن والمنتجات", m_staff: "إدارة الموظفين", m_chat: "الرسائل الفورية", m_profile: "الملف الشخصي", m_logout: "تسجيل الخروج",
-                    h_dashboard: "الواجهة الرئيسية ومؤشرات الأداء", dash_metrics: "مؤشرات الأداء الفعلية", stat_orders: "الطلبات", stat_inventory: "المخزن", stat_staff: "الطاقم", add_order_title: "➕ تسجيل طلبية جديدة", select_prod_lbl: "اختر المنتج من المخزن:", btn_reg_order: "تسجيل وخصم آلي",
-                    h_orders: "إدارة الطلبيات النشطة", sub_orders: "تتبع الطلبات وحالتها", h_completed: "الطلبيات المنتهية", sub_completed: "الطلبات التي تم تسليمها", h_trash: "المحذوفة والمشاكل", sub_trash: "الطلبات الملغاة",
-                    h_inv: "المخزن والمنتجات", sub_inv: "إضافة، حذف، أو إدارة المنتجات", btn_add_prod: "+ إضافة منتج جديد", h_staff: "إدارة الموظفين", sub_staff: "مالك، 2 مسؤولين، و5 موظفين", h_chat: "الرسائل الفورية", sub_chat: "التواصل المباشر", h_profile: "الملف الشخصي والصورة", sub_profile: "تعديل البيانات"
+                    h_dashboard: "الواجهة الرئيسية ومؤشرات الأداء", dash_metrics: "مؤشرات الأداء الفعلية للمحل", stat_orders: "طلبات نشطة", stat_inventory: "بالمخزن", stat_staff: "طاقم العمل", add_order_title: "➕ تسجيل طلبية جديدة وخصم المخزن", select_prod_lbl: "اختر المنتج من المخزن:", btn_reg_order: "تسجيل وخصم آلي من المخزن",
+                    h_orders: "إدارة الطلبيات النشطة", sub_orders: "تتبع الطلبات وتحديث حالتها فورياً", h_completed: "الطلبيات المنتهية بنجاح", sub_completed: "سجل الطلبات المكتملة والمعدة للتسليم", h_trash: "الطلبيات المحذوفة والمشاكل", sub_trash: "الطلبات الملغاة أو التي بها مشاكل",
+                    h_inv: "المخزن والمنتجات", sub_inv: "إضافة، حذف، أو تعديل المنتجات والكميات", btn_add_prod: "+ إضافة منتج جديد مع صورة", h_staff: "إدارة الموظفين الصارمة", sub_staff: "المالك الأول، 2 مسؤولين، و5 موظفين كحد أقصى", h_chat: "الرسائل الفورية والتعاميم", sub_chat: "التواصل المباشر مع طاقم العمل", h_profile: "الملف الشخصي والصورة", sub_profile: "تعديل بيانات الحساب الشخصي",
+                    mand_title: "⚠️ استكمال البيانات الشخصية الإجبارية", mand_sub: "يجب إدخال رقم الجوال وتاريخ الميلاد للمتابعة.", lbl_phone: "رقم الجوال", lbl_dob: "تاريخ الميلاد", btn_save_continue: "حفظ ومتابعة",
+                    assign_title: "إسناد الطلب لموظف", assign_lbl: "اختر الموظف:", btn_confirm: "تأكيد وإرسال", btn_cancel: "إلغاء",
+                    prod_modal_title: "إضافة / تعديل منتج", lbl_p_name: "اسم المنتج", lbl_p_color: "لون أو نوع القطعة", lbl_p_img: "صورة المنتج من الاستوديو", lbl_p_qty: "كمية المخزن", lbl_p_cost: "سعر التكلفة (SAR)", lbl_p_margin: "هامش الربح (%)", lbl_p_final: "السعر النهائي (SAR)", btn_save_prod: "حفظ المنتج",
+                    add_staff_h: "إضافة موظف جديد بالنظام", lbl_role: "الدور الوظيفي:", opt_sup: "مسؤول", opt_emp: "موظف", btn_add_staff_now: "إضافة الموظف الآن",
+                    lbl_send_to: "الإرسال إلى:", opt_all_staff: "جميع الموظفين", opt_single_staff: "موظف محدد", lbl_sel_staff: "اختر الموظف:", btn_send_msg: "إرسال الرسالة", chat_empty: "سجل الرسائل فارغ",
+                    lbl_avatar: "رفع صورتك الشخصية", lbl_email: "البريد الإلكتروني", lbl_role_user: "الدور الوظيفي", lbl_age: "العمر المحسوب", btn_req_pass: "طلب تغيير كلمة المرور (عبر المالك)", btn_save_prof: "حفظ التعديلات",
+                    ai_title: "🤖 مساعد NERIS الذكي (AI)", ai_welcome: "<b>AI:</b> أهلاً بك يا فهد! أنا جاهز للإجابة عن حالة المخزن والطلبات.", ai_send: "إرسال"
                 },
                 'en': {
                     splash_sub: "Smart Inventory & Jewelry Management", login_error: "Invalid email or password", btn_login: "Login",
                     nav_title: "Navigation", m_home: "Dashboard", m_orders: "Active Orders", m_completed: "Completed Orders", m_trash: "Trash & Issues", m_inv: "Inventory & Products", m_staff: "Staff Management", m_chat: "Instant Messages", m_profile: "Profile", m_logout: "Logout",
-                    h_dashboard: "Dashboard & Metrics", dash_metrics: "Real Performance Metrics", stat_orders: "Orders", stat_inventory: "Stock", stat_staff: "Staff", add_order_title: "➕ Register New Order", select_prod_lbl: "Select Product from Stock:", btn_reg_order: "Register & Deduct Stock",
-                    h_orders: "Active Orders Management", sub_orders: "Track active orders and update statuses", h_completed: "Completed Orders", sub_completed: "Successfully delivered orders", h_trash: "Trash & Issues", sub_trash: "Cancelled orders (stock restored automatically)",
-                    h_inv: "Inventory & Products", sub_inv: "Add, delete, or manage products and quantities", btn_add_prod: "+ Add New Product", h_staff: "Staff Management", sub_staff: "Primary Owner, 2 Supervisors, and 5 Standard Employees", h_chat: "Instant Messages & Broadcasts", sub_chat: "Direct communication with team", h_profile: "Profile & Avatar", sub_profile: "Edit account details and avatar"
+                    h_dashboard: "Dashboard & Metrics", dash_metrics: "Real Store Performance", stat_orders: "Active Orders", stat_inventory: "Stock", stat_staff: "Staff", add_order_title: "➕ Register New Order", select_prod_lbl: "Select Product from Stock:", btn_reg_order: "Register & Deduct Stock",
+                    h_orders: "Active Orders Management", sub_orders: "Track active orders and update statuses", h_completed: "Completed Orders", sub_completed: "Successfully delivered orders", h_trash: "Trash & Issues", sub_trash: "Cancelled orders or issues",
+                    h_inv: "Inventory & Products", sub_inv: "Add, delete, or manage products and quantities", btn_add_prod: "+ Add New Product", h_staff: "Staff Management", sub_staff: "Primary Owner, 2 Supervisors, and 5 Employees max", h_chat: "Instant Messages", sub_chat: "Direct communication with team", h_profile: "Profile & Avatar", sub_profile: "Edit account details",
+                    mand_title: "⚠️ Complete Mandatory Profile", mand_sub: "Please enter phone and DOB to continue.", lbl_phone: "Phone Number", lbl_dob: "Date of Birth", btn_save_continue: "Save & Continue",
+                    assign_title: "Assign Order to Staff", assign_lbl: "Select Staff:", btn_confirm: "Confirm", btn_cancel: "Cancel",
+                    prod_modal_title: "Add / Edit Product", lbl_p_name: "Product Name", lbl_p_color: "Color / Style", lbl_p_img: "Product Image", lbl_p_qty: "Stock Qty", lbl_p_cost: "Cost Price (SAR)", lbl_p_margin: "Profit Margin (%)", lbl_p_final: "Final Price (SAR)", btn_save_prod: "Save Product",
+                    add_staff_h: "Add New Staff Member", lbl_role: "Role:", opt_sup: "Supervisor", opt_emp: "Employee", btn_add_staff_now: "Add Staff Now",
+                    lbl_send_to: "Send To:", opt_all_staff: "All Staff", opt_single_staff: "Specific Staff", lbl_sel_staff: "Select Staff:", btn_send_msg: "Send Message", chat_empty: "Message log empty",
+                    lbl_avatar: "Upload Avatar", lbl_email: "Email", lbl_role_user: "Role", lbl_age: "Calculated Age", btn_req_pass: "Request Password Change (Via Owner)", btn_save_prof: "Save Changes",
+                    ai_title: "🤖 NERIS AI Assistant", ai_welcome: "<b>AI:</b> Hello Fahad! Ask me anything about stock or orders.", ai_send: "Send"
                 }
             };
 
@@ -567,7 +588,6 @@
             { name: "سلطان خالد", email: "sultan@neris.store", pass: "123456", role: "موظف", phone: "", dob: "", avatar: "", mustSetup: true }
         ];
 
-        // تحديث كلمة مرور المالك الأول بالتنسيق المطلوب
         let ownerAcc = usersDB.find(u => u.role === "المالك الأول");
         if(ownerAcc) ownerAcc.pass = "Fahad55003";
 
@@ -610,12 +630,6 @@
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        function quickOwnerLogin() {
-            currentUser = usersDB.find(u => u.role === "المالك الأول") || usersDB[0];
-            initSystemAfterLogin();
-            showAppNotification("🚀 Welcome Fahad (Primary Owner)");
-        }
-
         function handleLogin() {
             let email = document.getElementById('login-email').value.trim();
             let pass = document.getElementById('login-password').value.trim();
@@ -625,7 +639,6 @@
                 currentUser = user;
                 document.getElementById('login-error').style.display = 'none';
                 if(currentUser.role !== "المالك الأول" && (currentUser.mustSetup || !currentUser.phone || !currentUser.dob)) {
-                    document.getElementById('mand-new-pass').value = currentUser.pass;
                     document.getElementById('mand-phone').value = currentUser.phone || '';
                     document.getElementById('mand-dob').value = currentUser.dob || '';
                     openModal('mandatory-profile-modal');
@@ -638,29 +651,27 @@
         }
 
         function saveMandatoryProfile() {
-            let newPass = document.getElementById('mand-new-pass').value.trim();
             let phone = document.getElementById('mand-phone').value.trim();
             let dob = document.getElementById('mand-dob').value;
             
-            if(!newPass || !phone || !dob) {
-                showAppNotification("⚠️ Please fill all required fields!");
+            if(!phone || !dob) {
+                showAppNotification("⚠️ يجب إدخال رقم الجوال وتاريخ الميلاد!");
                 return;
             }
-            currentUser.pass = newPass;
             currentUser.phone = phone;
             currentUser.dob = dob;
             currentUser.mustSetup = false;
             saveDataToStorage();
             closeModal('mandatory-profile-modal');
             initSystemAfterLogin();
-            showAppNotification("✅ Profile completed successfully.");
+            showAppNotification("✅ تم إكمال الملف الشخصي بنجاح.");
         }
 
         function initSystemAfterLogin() {
             document.getElementById('splash-screen').style.display = 'none';
             document.getElementById('app-header').style.display = 'flex';
             document.getElementById('current-role-badge').innerText = currentUser.role;
-            document.getElementById('home-welcome-sub').innerText = `Welcome (${currentUser.name}) - ${currentUser.role}`;
+            document.getElementById('home-welcome-sub').innerText = `مرحباً بك (${currentUser.name}) - ${currentUser.role}`;
 
             document.getElementById('prof-email').value = currentUser.email;
             document.getElementById('prof-role').value = currentUser.role;
@@ -692,10 +703,14 @@
             if(!msg) return;
 
             let chatMsgs = document.getElementById('ai-chat-messages');
-            chatMsgs.innerHTML += `<div style="margin-bottom:4px; text-align:left; color:var(--text-main);"><b>You:</b> ${msg}</div>`;
+            chatMsgs.innerHTML += `<div style="margin-bottom:4px; text-align:left; color:var(--text-main);"><b>أنت:</b> ${msg}</div>`;
             input.value = "";
 
-            let reply = "Hello Fahad! Systems are operational. Active orders: " + realOrders.length + ", Inventory items: " + products.length + ".";
+            let reply = `أهلاً يا فهد، النظام يعمل بكفاءة. عدد الطلبات النشطة: ${realOrders.length}، والمنتجات بالمخزن: ${products.length}.`;
+            if(msg.includes("وش أسوي") || msg.includes("مساعدة")) {
+                reply = "أنصحك بمتابعة الطلبات النشطة أو إضافة منتجات جديدة للمخزن.";
+            }
+
             setTimeout(() => {
                 chatMsgs.innerHTML += `<div style="margin-bottom:6px; color:var(--accent-green);"><b>AI:</b> ${reply}</div>`;
                 chatMsgs.scrollTop = chatMsgs.scrollHeight;
@@ -711,9 +726,22 @@
             document.getElementById('prof-age-calculated').value = age + " Years";
         }
 
+        function requestPasswordChange() {
+            if(currentUser.role === "المالك الأول") {
+                let newPass = prompt("أدخل كلمة المرور الجديدة (مثال: Fahad55003):");
+                if(newPass) {
+                    currentUser.pass = newPass;
+                    saveDataToStorage();
+                    showAppNotification("✅ تم تغيير كلمة المرور الرئيسية بنجاح!");
+                }
+            } else {
+                alert("⚠️ لا يمكنك تغيير كلمة المرور بنفسك. يرجى التواصل مع المالك الأول (فهد راشد الحسين) لتغييرها وإرسالها لك.");
+            }
+        }
+
         function populateProductDropdown() {
             let sel = document.getElementById('order-product-select');
-            sel.innerHTML = '<option value="">-- Select Product --</option>';
+            sel.innerHTML = '<option value="">-- اختر المنتج من المخزن --</option>';
             products.forEach((p, i) => {
                 sel.innerHTML += `<option value="${i}">${p.name} (${p.color}) - Stock: ${p.qty} - ${p.final}</option>`;
             });
@@ -737,13 +765,13 @@
             let notes = document.getElementById('order-notes').value.trim();
 
             if(!client || !phone || prodIdx === "") { 
-                showAppNotification("⚠️ Please enter client name, phone, and select a product!"); 
+                showAppNotification("⚠️ أدخل اسم العميل، رقم الجوال، واختار المنتج!"); 
                 return; 
             }
 
             let p = products[prodIdx];
             if(p.qty <= 0) {
-                showAppNotification("⚠️ Product is out of stock!");
+                showAppNotification("⚠️ المنتج نفد من المخزن!");
                 return;
             }
 
@@ -769,16 +797,16 @@
             document.getElementById('order-product-preview').style.display = 'none';
 
             updateDashboardCounters();
-            showAppNotification("✅ Order registered and stock deducted successfully!");
+            showAppNotification("✅ تمت تسجيل الطلبية وخصم قطعة من المخزن!");
         }
 
         function renderOrders() {
             let list = document.getElementById('real-orders-list');
-            list.innerHTML = realOrders.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:15px;">No active orders</div>' : '';
+            list.innerHTML = realOrders.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:15px;">لا توجد طلبيات نشطة</div>' : '';
             
             realOrders.forEach((o, idx) => {
-                let assignBtn = `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0;" onclick="openAssignModal(${idx})">Assign</button>`;
-                let markDoneBtn = `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0; background:var(--success);" onclick="markOrderCompleted(${idx})">Done ✓</button>`;
+                let assignBtn = `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0;" onclick="openAssignModal(${idx})">إسناد</button>`;
+                let markDoneBtn = `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0; background:var(--success);" onclick="markOrderCompleted(${idx})">تم ✓</button>`;
                 let deleteBtn = `<button class="btn" style="width:auto; padding:4px 8px; font-size:10px; margin:0; background:var(--danger);" onclick="moveOrderToTrash(${idx}, 'Cancelled')">🗑️</button>`;
 
                 list.innerHTML += `
@@ -786,8 +814,8 @@
                         <img src="${o.productImage || 'https://via.placeholder.com/48'}" class="product-thumb" alt="">
                         <div style="flex:1; margin-right:8px; margin-left:8px;">
                             <b>Order #${o.id} - ${o.client}</b> (${o.phone})<br>
-                            <span style="color:var(--accent-green); font-weight:bold;">Product: ${o.productName} (${o.productColor}) - ${o.productPrice}</span><br>
-                            <span class="badge">Staff: ${o.assigned}</span>
+                            <span style="color:var(--accent-green); font-weight:bold;">المنتج: ${o.productName} (${o.productColor}) - ${o.productPrice}</span><br>
+                            <span class="badge">الموظف: ${o.assigned}</span>
                         </div>
                         <div style="display:flex; gap:4px; flex-direction:column; align-items:flex-end;">
                             ${assignBtn}
@@ -806,19 +834,19 @@
             saveDataToStorage();
             renderOrders();
             updateDashboardCounters();
-            showAppNotification("✅ Order moved to completed!");
+            showAppNotification("✅ تم نقل الطلبية للمنتهية!");
         }
 
         function renderCompletedOrders() {
             let list = document.getElementById('completed-orders-list');
-            list.innerHTML = completedOrders.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:15px;">No completed orders</div>' : '';
+            list.innerHTML = completedOrders.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:15px;">لا توجد طلبيات منتهية</div>' : '';
             completedOrders.forEach(o => {
                 list.innerHTML += `
                     <div class="card-item" style="border-left: 4px solid var(--success); align-items:flex-start;">
                         <img src="${o.productImage || 'https://via.placeholder.com/48'}" class="product-thumb" alt="">
                         <div style="flex:1; margin-right:8px; margin-left:8px;">
                             <b>Order #${o.id} - ${o.client}</b><br>
-                            <span style="color:var(--success); font-weight:bold;">Completed & Delivered</span>
+                            <span style="color:var(--success); font-weight:bold;">مكتمل وتم التسليم</span>
                         </div>
                     </div>
                 `;
@@ -836,19 +864,19 @@
             renderOrders();
             renderTrashOrders();
             updateDashboardCounters();
-            showAppNotification("⚠️ Order cancelled and stock restored.");
+            showAppNotification("⚠️ تم إلغاء الطلب وإرجاع الكمية للمخزن.");
         }
 
         function renderTrashOrders() {
             let list = document.getElementById('trash-orders-list');
-            list.innerHTML = trashOrders.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:15px;">No trash orders</div>' : '';
+            list.innerHTML = trashOrders.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:15px;">لا توجد طلبيات محذوفة</div>' : '';
             trashOrders.forEach(o => {
                 list.innerHTML += `
                     <div class="card-item" style="border-left: 4px solid var(--danger); align-items:flex-start;">
                         <img src="${o.productImage || 'https://via.placeholder.com/48'}" class="product-thumb" alt="">
                         <div style="flex:1; margin-right:8px; margin-left:8px;">
                             <b>Order #${o.id} - ${o.client}</b><br>
-                            <span style="color:var(--danger); font-weight:bold;">Reason: ${o.trashReason}</span>
+                            <span style="color:var(--danger); font-weight:bold;">السبب: ${o.trashReason}</span>
                         </div>
                     </div>
                 `;
@@ -869,7 +897,7 @@
             saveDataToStorage();
             closeModal('assign-order-modal');
             renderOrders();
-            showAppNotification("✅ Order assigned successfully.");
+            showAppNotification("✅ تم إسناد الطلب للموظف.");
         }
 
         function calcPriceEnglish() {
@@ -881,7 +909,7 @@
 
         function openAddProductModal() {
             editingProductIndex = null;
-            document.getElementById('product-modal-title').innerText = "Add New Product";
+            document.getElementById('product-modal-title').innerText = "إضافة منتج جديد";
             document.getElementById('p-name').value = "";
             document.getElementById('p-color').value = "";
             document.getElementById('p-image-file').value = "";
@@ -894,7 +922,7 @@
         function openEditProductModal(idx) {
             editingProductIndex = idx;
             let p = products[idx];
-            document.getElementById('product-modal-title').innerText = "Edit Product";
+            document.getElementById('product-modal-title').innerText = "تعديل المنتج";
             document.getElementById('p-name').value = p.name;
             document.getElementById('p-color').value = p.color;
             document.getElementById('p-qty').value = p.qty;
@@ -903,12 +931,12 @@
         }
 
         function deleteProduct(idx) {
-            if(confirm("Are you sure you want to delete this product?")) {
+            if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
                 products.splice(idx, 1);
                 saveDataToStorage();
                 renderInventory();
                 updateDashboardCounters();
-                showAppNotification("🗑️ Product deleted successfully.");
+                showAppNotification("🗑️ تم حذف المنتج بنجاح.");
             }
         }
 
@@ -919,7 +947,7 @@
             let final = document.getElementById('p-final').value;
             let fileInput = document.getElementById('p-image-file');
 
-            if(!name || !final) { showAppNotification("⚠️ Enter product name and price!"); return; }
+            if(!name || !final) { showAppNotification("⚠️ أدخل اسم المنتج والسعر!"); return; }
 
             let finishSave = (imgSrc) => {
                 if(editingProductIndex !== null) {
@@ -935,7 +963,7 @@
                 closeModal('add-product-modal');
                 renderInventory();
                 updateDashboardCounters();
-                showAppNotification("✅ Product saved successfully!");
+                showAppNotification("✅ تم حفظ المنتج في المخزن!");
             };
 
             if(fileInput.files && fileInput.files[0]) {
@@ -957,7 +985,7 @@
 
         function renderInventory() {
             let list = document.getElementById('real-inventory-list');
-            list.innerHTML = products.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:10px;">No products added yet</div>' : '';
+            list.innerHTML = products.length === 0 ? '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:10px;">لا توجد منتجات في المخزن</div>' : '';
             products.forEach((p, idx) => {
                 list.innerHTML += `
                     <div class="card-item" style="cursor:pointer;" onclick="openEditProductModal(${idx})">
@@ -982,7 +1010,7 @@
             if(currentUser.role === "المالك الأول" || currentUser.role === "مسؤول") {
                 document.getElementById('add-staff-box').style.display = usersDB.length < 8 ? 'block' : 'none';
             }
-            usersDB.forEach((u, idx) => {
+            usersDB.forEach((u) => {
                 list.innerHTML += `
                     <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
                         <div style="display:flex; width:100%; align-items:center; justify-content:space-between;">
@@ -1000,18 +1028,18 @@
         }
 
         function addNewStaffMember() {
-            if(usersDB.length >= 8) { showAppNotification("⚠️ Maximum limit reached (8 members)."); return; }
+            if(usersDB.length >= 8) { showAppNotification("⚠️ تم الوصول للحد الأقصى (8 أعضاء)."); return; }
             let name = document.getElementById('new-staff-name').value.trim();
             let email = document.getElementById('new-staff-email').value.trim();
             let pass = document.getElementById('new-staff-pass').value.trim();
             let role = document.getElementById('new-staff-role').value;
 
-            if(!name || !email || !pass) { showAppNotification("⚠️ Enter staff details!"); return; }
+            if(!name || !email || !pass) { showAppNotification("⚠️ أدخل بيانات الموظف بدقة!"); return; }
             usersDB.push({ name, email, pass, role, phone: "", dob: "", avatar: "", mustSetup: true });
             saveDataToStorage();
             renderStaffManagementList();
             updateDashboardCounters();
-            showAppNotification("✅ Staff added successfully.");
+            showAppNotification("✅ تم إضافة الموظف بنجاح.");
         }
 
         function toggleMsgTargetField() {
@@ -1032,7 +1060,7 @@
             box.innerHTML += `<div style="margin-bottom:6px; background:var(--bg-card); padding:6px; border-radius:6px;"><b>Sent:</b> ${text}</div>`;
             document.getElementById('chat-msg-text').value = "";
             box.scrollTop = box.scrollHeight;
-            showAppNotification("✅ Message sent!");
+            showAppNotification("✅ تم إرسال الرسالة!");
         }
 
         function previewUserAvatar(event) {
@@ -1055,7 +1083,7 @@
                 delete currentUser.tempAvatar;
             }
             saveDataToStorage();
-            showAppNotification("✅ Profile saved.");
+            showAppNotification("✅ تم حفظ التعديلات.");
         }
 
         function logout() {
