@@ -262,7 +262,7 @@
     <div id="app-notification">تم التحديث بنجاح</div>
 
     <div class="phone-frame">
-        <!-- شاشة تسجيل الدخول والترحيب الفاخرة (حقول فارغة كما طلبت) -->
+        <!-- شاشة تسجيل الدخول والترحيب (حقول فارغة تماماً وآمنة) -->
         <div id="splash-screen">
             <div class="splash-jewelry-icon">💎</div>
             <div style="color:var(--text-main); font-weight:bold; font-size:22px; letter-spacing: 1px;">NERIS STORE</div>
@@ -273,11 +273,6 @@
                 <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="البريد الإلكتروني" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="كلمة المرور" style="direction:ltr; text-align:left;"></div>
                 <button class="btn" onclick="handleLogin()" data-i18n="btn_login">تسجيل دخول</button>
-                <div style="margin-top: 10px; font-size: 10px; color: var(--text-muted); line-height: 1.4; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px; border: 1px solid var(--border);">
-                    <b>بيانات المالك (للاختبار):</b><br>
-                    Email: <span style="direction:ltr; display:inline-block;">fahadfhd47@gmail.com</span><br>
-                    Pass: <span style="direction:ltr; display:inline-block;">Fahad55003</span>
-                </div>
             </div>
         </div>
 
@@ -320,7 +315,7 @@
             </div>
         </div>
 
-        <!-- 1. الواجهة الرئيسية (حقيقية 100% تبدأ من الصفر، الأرقام إنجليزية) -->
+        <!-- 1. الواجهة الرئيسية -->
         <div id="home-main-screen" class="screen">
             <h2 data-i18n="h_dashboard">الواجهة الرئيسية ومؤشرات الأداء</h2>
             <p class="subtitle" id="home-welcome-sub">مرحباً بك في لوحة تحكم Neris</p>
@@ -346,7 +341,7 @@
                 </div>
             </div>
 
-            <!-- حقول إضافة طلبية جديدة (في الأسفل كما طلبت) -->
+            <!-- حقول إضافة طلبية جديدة (في الأسفل) -->
             <div class="panel-box" style="margin-top: 10px;">
                 <h4 style="color:var(--accent-green);" data-i18n="add_order_title">➕ تسجيل طلبية جديدة وخصم المخزن</h4>
                 <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-name" placeholder="اسم العميل"></div>
@@ -400,7 +395,7 @@
             </div>
         </div>
 
-        <!-- 5. المخزن والمنتجات (مع زر حذف مباشر) -->
+        <!-- 5. المخزن والمنتجات -->
         <div id="inventory-screen" class="screen">
             <h2 data-i18n="h_inv">المخزن والمنتجات</h2>
             <p class="subtitle" data-i18n="sub_inv">إضافة، حذف، أو تعديل المنتجات والكميات</p>
@@ -477,7 +472,7 @@
             </div>
         </div>
 
-        <!-- 8. الملف الشخصي والصلاحيات -->
+        <!-- 8. الملف الشخصي -->
         <div id="profile-screen" class="screen">
             <h2 data-i18n="h_profile">الملف الشخصي والصورة</h2>
             <p class="subtitle" data-i18n="sub_profile">تعديل بيانات الحساب الشخصي</p>
@@ -498,7 +493,7 @@
             </div>
         </div>
 
-        <!-- مساعد الـ AI التفاعلي باللغة العربية -->
+        <!-- مساعد الـ AI التفاعلي -->
         <div class="ai-floating-btn" onclick="toggleAIChatModal()" title="مساعد الـ AI الذكي">🤖</div>
         <div class="ai-modal-box" id="ai-chat-popup">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:6px;">
