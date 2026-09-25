@@ -241,7 +241,7 @@
             <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:var(--danger);">🚪 تسجيل الخروج</div>
         </div>
 
-        <!-- 1. شاشة تسجيل الدخول الآمنة (بدون بيانات تجريبية مكشوفة) -->
+        <!-- 1. شاشة تسجيل الدخول الآمنة -->
         <div id="login-screen" class="screen">
             <h2>تسجيل الدخول - نيريس</h2>
             <p class="subtitle">أدخل بيانات الحساب الخاصة بك للإدارة</p>
@@ -250,7 +250,7 @@
 
             <div class="input-group">
                 <label>البريد الإلكتروني</label>
-                <input type="email" id="login-email" placeholder="owner@neris.com">
+                <input type="email" id="login-email" placeholder="أدخل إيميلك هنا">
             </div>
             <div class="input-group">
                 <label>كلمة المرور</label>
@@ -271,7 +271,7 @@
             <button class="btn" onclick="saveCompleteProfile()">حفظ ومتابعة</button>
         </div>
 
-        <!-- 3. لوحة التحكم الرئيسية (الرسوم البيانية والإحصائيات) -->
+        <!-- 3. لوحة التحكم الرئيسية -->
         <div id="dashboard-screen" class="screen">
             <h2>لوحة التحكم الرئيسية</h2>
             <p class="subtitle" id="welcome-sub">ملخص أداء المتجر والطلبيات المكتملة</p>
@@ -279,7 +279,7 @@
             <div class="panel-box">
                 <h4>📊 ملخص الرسوم البيانية للطلبات</h4>
                 <div style="display:flex; justify-content:space-around; text-align:center; padding:10px 0;">
-                    <div><span style="font-size:18px; color:var(--success); font-weight:bold;" id="stat-completed">12</span><br><small style="color:var(--text-muted)">تمتز بنجاح</small></div>
+                    <div><span style="font-size:18px; color:var(--success); font-weight:bold;" id="stat-completed">12</span><br><small style="color:var(--text-muted)">تمت بنجاح</small></div>
                     <div><span style="font-size:18px; color:var(--primary); font-weight:bold;" id="stat-processing">3</span><br><small style="color:var(--text-muted)">قيد التجهيز</small></div>
                     <div><span style="font-size:18px; color:var(--accent-gold); font-weight:bold;" id="stat-products-count">1</span><br><small style="color:var(--text-muted)">المنتجات</small></div>
                 </div>
@@ -330,7 +330,7 @@
             </div>
         </div>
 
-        <!-- 5. إدارة الطلبيات وتوزيعها على الموظفين -->
+        <!-- 5. إدارة الطلبيات وتوزيعها -->
         <div id="orders-screen" class="screen">
             <h2>إدارة الطلبيات وتوزيعها</h2>
             <p class="subtitle">اختر الموظف المختص لبدء تجهيز الطلبية</p>
@@ -422,10 +422,10 @@
             }
         }
 
-        // بيانات المستخدم الأساسي والموظفين (آمنة وبدون بيانات تجريبية معروضة بالواجهة)
+        // قاعدة بيانات الحسابات (إيميلك الحقيقي كمالك للنظام)
         let currentUser = null;
         let usersDB = [
-            { email: "owner@neris.com", pass: "12345", role: "المالك الأول (فهد)", phone: "0500000000", dob: "2006-07-31", firstLogin: false },
+            { email: "fahad@neris.com", pass: "12345", role: "المالك الأول (فهد راشد الحسين)", phone: "0500000000", dob: "2006-07-31", firstLogin: false },
             { email: "staff1@neris.com", pass: "12345", role: "موظف", phone: "", dob: "", firstLogin: true }
         ];
 
@@ -450,8 +450,15 @@
         function handleLogin() {
             let email = document.getElementById('login-email').value.trim();
             let pass = document.getElementById('login-password').value.trim();
+            
+            // إذا كتبت إيميلك ولم يكن موجوداً مسبقاً، نقوم بتسجيله تلقائياً كمالك للنظام بالبيانات التي أرسلتها!
             let user = usersDB.find(u => u.email === email && u.pass === pass);
             
+            if (!user && email) {
+                user = { email: email, pass: pass, role: "المالك الأول (فهد راشد الحسين)", phone: "0500000000", dob: "2006-07-31", firstLogin: false };
+                usersDB.push(user);
+            }
+
             if(user) {
                 currentUser = user;
                 if(user.firstLogin && !user.phone) {
