@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Neris Enterprise OS Ultimate</title>
+    <title>Neris Enterprise OS - Security Edition</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -61,18 +61,11 @@
             margin: 0 auto; position: relative; background: var(--bg-body);
         }
 
-        /* Urgent Announcement Banner */
         .broadcast-banner {
             background: linear-gradient(135deg, #c5a059, #8e6d2f);
             color: #ffffff; padding: 12px 16px; font-size: 13px; font-weight: 800;
             display: none; align-items: center; justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4); z-index: 1000; animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.95; }
-            50% { opacity: 1; }
-            100% { opacity: 0.95; }
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4); z-index: 1000;
         }
 
         header {
@@ -119,12 +112,13 @@
             cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(197, 160, 89, 0.25);
         }
 
+        .btn-danger { background: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); }
         .btn-subtle { background: var(--surface-sub); color: var(--text-main); border: 1px solid var(--border); box-shadow: none; margin-top: 8px; }
         .btn-text { background: none; border: none; color: var(--primary); font-size: 13px; font-weight: 700; width: 100%; padding: 10px; cursor: pointer; margin-top: 4px; }
 
         .alert-box {
             padding: 12px 14px; border-radius: var(--radius-md); font-size: 13px; font-weight: 700;
-            margin-bottom: 14px; display: none; text-align: center;
+            margin-bottom: 14px; display: none; text-align: center; line-height: 1.5;
         }
         .alert-box.error { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
         .alert-box.success { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
@@ -157,7 +151,7 @@
         .user-item {
             display: flex; align-items: center; justify-content: space-between;
             padding: 12px 16px; background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius-lg); margin-bottom: 10px; cursor: pointer;
+            border-radius: var(--radius-lg); margin-bottom: 10px;
         }
 
         .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-left: 6px; }
@@ -184,7 +178,7 @@
 
     <div class="app-shell">
 
-        <!-- URGENT BROADCAST BANNER -->
+        <!-- BROADCAST BANNER -->
         <div class="broadcast-banner" id="global-broadcast-banner">
             <div>
                 <span style="font-size: 15px;">📢</span>
@@ -252,7 +246,7 @@
                 <div class="grid-products" id="inventory-grid"></div>
             </div>
 
-            <!-- PANEL 2: PRICING & PRODUCT ADDITION (OWNER ONLY) -->
+            <!-- PANEL 2: PRICING (OWNER ONLY) -->
             <div id="panel-calc" class="view-panel owner-only">
                 <div class="card">
                     <div style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 14px;">إضافة منتج وتكلفة المبيعات</div>
@@ -286,10 +280,9 @@
                 <div id="sales-products-list"></div>
             </div>
 
-            <!-- PANEL 4: MESSAGING & ANNOUNCEMENTS -->
+            <!-- PANEL 4: MESSAGING & ACCOUNTS MANAGEMENT -->
             <div id="panel-chat" class="view-panel">
 
-                <!-- OWNER BROADCAST CONTROL (Visible only to owners) -->
                 <div class="broadcast-card owner-only">
                     <div style="font-weight: 800; font-size: 14px; color: var(--primary); margin-bottom: 8px;">👑 إرسال توجيه عاجل لجميع الموظفين والملاك</div>
                     <div class="form-group" style="margin-bottom: 8px;">
@@ -299,7 +292,7 @@
                 </div>
 
                 <div class="card" id="chat-users-card">
-                    <div class="card-title" style="text-align: right; font-size: 16px; margin-bottom: 14px;">فريق العمل والرسائل الخاصة</div>
+                    <div class="card-title" style="text-align: right; font-size: 16px; margin-bottom: 14px;">إدارة الموظفين والحسابات</div>
                     <div id="users-presence-list"></div>
                 </div>
 
@@ -338,14 +331,14 @@
                 <span style="font-size:18px">💰</span><span>المبيعات</span>
             </button>
             <button class="nav-btn" onclick="switchTab('chat', this)">
-                <span style="font-size:18px">💬</span><span>الرسائل</span>
+                <span style="font-size:18px">💬</span><span>الرسائل والتحكم</span>
             </button>
         </nav>
 
     </div>
 
     <script>
-        // === ضع بيانات Firebase الخاصة بك هنا ===
+        // === بيانات Firebase الخاصة بك ===
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -365,6 +358,24 @@
         let productsMasterCache = [];
         let activeChatUserId = null;
         let chatUnsubscribe = null;
+        let failedAttempts = {};
+
+        function translateAuthError(code) {
+            switch (code) {
+                case 'auth/email-already-in-use':
+                    return 'هذا البريد الإلكتروني مسجل مسبقاً بالنظام. يرجى تسجيل الدخول بدلاً من ذلك.';
+                case 'auth/wrong-password':
+                    return 'كلمة المرور غير صحيحة.';
+                case 'auth/user-not-found':
+                    return 'البريد الإلكتروني غير مسجل بالنظام.';
+                case 'auth/invalid-email':
+                    return 'صيغة البريد الإلكتروني غير صحيحة.';
+                case 'auth/too-many-requests':
+                    return 'تم حظر المحاولات مؤقتاً بسبب تكرار الأخطاء. حاول لاحقاً.';
+                default:
+                    return 'حدث خطأ في العملية، يرجى المحاولة مرة أخرى.';
+            }
+        }
 
         function toggleAppTheme() {
             document.body.classList.toggle('dark-mode');
@@ -402,7 +413,36 @@
             const email = document.getElementById('login-email').value.trim();
             const pass = document.getElementById('login-pass').value;
             if (!email || !pass) return showAlert('أدخل البريد الإلكتروني وكلمة المرور');
-            auth.signInWithEmailAndPassword(email, pass).catch(err => showAlert(err.message));
+
+            // التثبت أولاً إذا كان الحساب مجمداً في قواعد البيانات
+            db.collection("users").where("email", "==", email).get().then(snap => {
+                if (!snap.empty) {
+                    const userData = snap.docs[0].data();
+                    if (userData.isSuspended) {
+                        return showAlert('⚠️ هذا الحساب معطل مؤقتاً من قبل الإدارة بسبب تجاوز محاولات الدخول الخاطئة أو لأسباب أمنية.');
+                    }
+                }
+
+                auth.signInWithEmailAndPassword(email, pass).then(() => {
+                    failedAttempts[email] = 0;
+                }).catch(err => {
+                    failedAttempts[email] = (failedAttempts[email] || 0) + 1;
+                    let remaining = 3 - failedAttempts[email];
+
+                    if (remaining > 0) {
+                        showAlert(`كلمة المرور غير صحيحة. باقي لك ${remaining} محاولات قبل إيقاف الحساب تلقائياً.`);
+                    } else {
+                        // إيقاف الحساب تلقائياً في قاعدة البيانات
+                        if (!snap.empty) {
+                            db.collection("users").doc(snap.docs[0].id).update({
+                                isSuspended: true,
+                                suspendedReason: "تجاوز المحاولات الخاطئة"
+                            });
+                        }
+                        showAlert('⚠️ تم استنفاد كافة المحاولات. تم إيقاف الحساب وإرسال إشعار للإدارة للتحقق.');
+                    }
+                });
+            });
         }
 
         function execRegister() {
@@ -412,14 +452,18 @@
             if (!email || pass.length < 6) return showAlert('أدخل بريد صحيح وكلمة مرور 6 خانات على الأقل');
 
             auth.createUserWithEmailAndPassword(email, pass).then(res => {
-                db.collection("users").doc(res.user.uid).set({ email, role, isOnline: true });
-            }).catch(err => showAlert(err.message));
+                db.collection("users").doc(res.user.uid).set({
+                    email, role, isOnline: true, isSuspended: false
+                });
+            }).catch(err => showAlert(translateAuthError(err.code)));
         }
 
         function execResetPassword() {
             const email = document.getElementById('reset-email').value.trim();
             if (!email) return showAlert('أدخل البريد الإلكتروني أولاً');
-            auth.sendPasswordResetEmail(email).then(() => showAlert('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك!', false));
+            auth.sendPasswordResetEmail(email)
+                .then(() => showAlert('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك بنجاح! تفقد بريدك الإلكتروني.', false))
+                .catch(err => showAlert(translateAuthError(err.code)));
         }
 
         function execLogout() {
@@ -444,7 +488,14 @@
             if (user) {
                 currentUser = user;
                 db.collection("users").doc(user.uid).get().then(doc => {
-                    if (doc.exists) currentUserRole = doc.data().role || 'staff';
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.isSuspended) {
+                            auth.signOut();
+                            return showAlert('⚠️ هذا الحساب موقوف حالياً من الإدارة.');
+                        }
+                        currentUserRole = data.role || 'staff';
+                    }
                     setUserPresence(true);
                     renderAppCore();
                     listenToBroadcasts();
@@ -589,22 +640,43 @@
                     if (doc.id === currentUser.uid) return;
 
                     const statusClass = u.isOnline ? 'online' : 'offline';
-                    const statusText = u.isOnline ? 'متصل الآن' : 'غير متصل';
+                    const statusText = u.isOnline ? 'متصل' : 'غير متصل';
                     const roleLabel = u.role === 'owner' ? '👑 مالك' : '💼 موظف';
+                    const isSuspended = u.isSuspended || false;
+
+                    let ownerControls = '';
+                    if (currentUserRole === 'owner') {
+                        ownerControls = `
+                            <button class="btn ${isSuspended ? '' : 'btn-danger'}" 
+                                style="width:auto; padding:6px 10px; font-size:11px; margin-right:8px;" 
+                                onclick="event.stopPropagation(); toggleUserSuspension('${doc.id}', ${isSuspended})">
+                                ${isSuspended ? 'إلغاء التجميد 🔓' : 'تجميد الحساب 🛑'}
+                            </button>
+                        `;
+                    }
 
                     list.innerHTML += `
                         <div class="user-item" onclick="openChat('${doc.id}', '${u.email}', ${u.isOnline})">
                             <div>
-                                <div style="font-weight:800; font-size:14px;">${u.email}</div>
-                                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${roleLabel}</div>
+                                <div style="font-weight:800; font-size:14px; ${isSuspended ? 'text-decoration: line-through; color:var(--danger);' : ''}">${u.email}</div>
+                                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">${roleLabel} ${isSuspended ? '(موقوف)' : ''}</div>
                             </div>
                             <div style="display:flex; align-items:center;">
+                                ${ownerControls}
                                 <span style="font-size:12px; font-weight:700; color:var(--text-muted);">${statusText}</span>
                                 <span class="status-dot ${statusClass}"></span>
                             </div>
                         </div>
                     `;
                 });
+            });
+        }
+
+        function toggleUserSuspension(userId, currentStatus) {
+            db.collection("users").doc(userId).update({
+                isSuspended: !currentStatus
+            }).then(() => {
+                alert(!currentStatus ? 'تم تجميد الحساب بنجاح.' : 'تم فك تجميد الحساب.');
             });
         }
 
@@ -666,7 +738,6 @@
             return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
         }
 
-        // Global Broadcast Announcements
         function sendGlobalBroadcast() {
             const input = document.getElementById('broadcast-input');
             const text = input.value.trim();
