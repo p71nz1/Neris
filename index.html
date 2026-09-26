@@ -4,32 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NERIS OS - النظام الإداري المتكامل</title>
+    <title>NERIS OS - النظام الإداري الفاخر</title>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --bg-card-hover: #334155;
-            --accent-green: #0ea5e9;
-            --accent-green-hover: #0284c7;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border: #334155;
-            --danger: #ef4444;
-            --success: #22c55e;
-            --warning: #f59e0b;
-            --primary: #6366f1;
+            --bg-dark: #12100e;
+            --bg-card: #1c1815;
+            --bg-card-hover: #26211d;
+            --accent-gold: #c5a059;
+            --accent-gold-hover: #b08d4b;
+            --text-main: #f5f2eb;
+            --text-muted: #a89f91;
+            --border: #332d27;
+            --danger: #e05252;
+            --success: #2e8b57;
+            --warning: #d99b26;
         }
 
         [data-theme="light"] {
-            --bg-dark: #f8fafc;
+            --bg-dark: #fbf9f5;
             --bg-card: #ffffff;
-            --bg-card-hover: #f1f5f9;
-            --accent-green: #0ea5e9;
-            --accent-green-hover: #0284c7;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #cbd5e1;
+            --bg-card-hover: #f5f0e6;
+            --accent-gold: #a67c37;
+            --accent-gold-hover: #8f682c;
+            --text-main: #2b2621;
+            --text-muted: #73685e;
+            --border: #e6dfd5;
         }
 
         * {
@@ -37,7 +36,6 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         body {
@@ -48,32 +46,16 @@
             justify-content: center;
             align-items: center;
             padding: 10px;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        .live-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, #0f172a, #1e1b4b, #0f172a);
-            background-size: 400% 400%;
-            animation: gradientBG 18s ease infinite;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .phone-frame {
             width: 100%;
             max-width: 420px;
             background: var(--bg-card);
-            border: 2px solid var(--border);
-            border-radius: 34px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -84,7 +66,7 @@
         #splash-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            background: linear-gradient(135deg, #12100e, #241f1a);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -94,25 +76,18 @@
             text-align: center;
         }
 
-        .splash-jewelry-icon {
-            width: 90px; height: 90px;
+        .splash-logo {
+            width: 80px; height: 80px;
             border-radius: 50%;
-            border: 2px solid var(--accent-green);
-            background: rgba(14, 165, 233, 0.1);
+            border: 2px solid var(--accent-gold);
+            background: rgba(197, 160, 89, 0.08);
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--accent-green);
-            font-size: 38px;
-            margin-bottom: 14px;
-            box-shadow: 0 0 30px rgba(14, 165, 233, 0.3);
-            animation: floatJewelry 3s ease-in-out infinite;
-        }
-
-        @keyframes floatJewelry {
-            0% { transform: translateY(0px) scale(1); box-shadow: 0 0 20px rgba(14,165,233,0.3); }
-            50% { transform: translateY(-8px) scale(1.04); box-shadow: 0 0 35px rgba(14,165,233,0.5); }
-            100% { transform: translateY(0px) scale(1); box-shadow: 0 0 20px rgba(14,165,233,0.3); }
+            color: var(--accent-gold);
+            font-size: 32px;
+            margin-bottom: 16px;
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.2);
         }
 
         .header-bar {
@@ -127,13 +102,13 @@
 
         .header-btns { display: flex; gap: 8px; align-items: center; }
         .menu-btn, .theme-btn, .lang-btn { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 4px; }
-        .menu-btn:hover, .theme-btn:hover, .lang-btn:hover { color: var(--accent-green); transform: scale(1.1); }
-        .brand-title { color: var(--accent-green); font-size: 14px; font-weight: bold; letter-spacing: 1.5px; }
+        .menu-btn:hover, .theme-btn:hover, .lang-btn:hover { color: var(--accent-gold); }
+        .brand-title { color: var(--accent-gold); font-size: 15px; font-weight: bold; letter-spacing: 1px; }
 
         .drawer {
             position: absolute;
             top: 0; right: -320px;
-            width: 290px; height: 100%;
+            width: 280px; height: 100%;
             background: var(--bg-card);
             border-left: 1px solid var(--border);
             z-index: 700;
@@ -141,18 +116,18 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            box-shadow: -20px 0 40px rgba(0,0,0,0.6);
+            box-shadow: -15px 0 30px rgba(0,0,0,0.4);
             overflow-y: auto;
         }
         .drawer.open { right: 0; }
-        [dir="ltr"] .drawer { right: auto; left: -320px; border-left: none; border-right: 1px solid var(--border); box-shadow: 20px 0 40px rgba(0,0,0,0.6); }
+        [dir="ltr"] .drawer { right: auto; left: -320px; border-left: none; border-right: 1px solid var(--border); }
         [dir="ltr"] .drawer.open { left: 0; }
 
         .drawer-item {
-            padding: 12px 14px;
+            padding: 11px 14px;
             color: var(--text-main);
             background: var(--bg-card-hover);
-            border-radius: 10px;
+            border-radius: 8px;
             margin-bottom: 8px;
             cursor: pointer;
             font-size: 12px;
@@ -160,10 +135,9 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.2s ease;
+            transition: 0.2s;
         }
-        .drawer-item:hover { background: rgba(14, 165, 233, 0.15); border-color: var(--accent-green); color: var(--accent-green); transform: translateX(-4px); }
-        [dir="ltr"] .drawer-item:hover { transform: translateX(4px); }
+        .drawer-item:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
 
         .screen {
             display: none;
@@ -174,108 +148,93 @@
         }
         .screen.active { display: flex; }
 
-        h2 { color: var(--text-main); font-size: 17px; margin-bottom: 4px; font-weight: 600; }
+        h2 { color: var(--text-main); font-size: 16px; margin-bottom: 4px; font-weight: 600; }
         p.subtitle { color: var(--text-muted); font-size: 11px; margin-bottom: 14px; }
 
         .input-group { margin-bottom: 10px; text-align: right; }
         [dir="ltr"] .input-group { text-align: left; }
         .input-group label { display: block; margin-bottom: 4px; font-size: 11px; color: var(--text-muted); }
         .input-group input, .input-group select, .input-group textarea {
-            width: 100%; padding: 11px 13px; background: var(--bg-dark);
-            border: 1px solid var(--border); border-radius: 10px; color: var(--text-main); font-size: 12px; outline: none;
-            resize: vertical; min-height: 40px; direction: inherit;
+            width: 100%; padding: 10px 12px; background: var(--bg-dark);
+            border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 12px; outline: none;
         }
-        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(14,165,233,0.25); }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--accent-gold); }
 
         .btn {
-            width: 100%; padding: 12px; background: var(--accent-green); color: #fff;
-            border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 6px;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.25);
-            transition: transform 0.15s ease, background 0.15s ease;
+            width: 100%; padding: 11px; background: var(--accent-gold); color: #1c1815;
+            border: none; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; margin-top: 6px;
+            transition: background 0.2s;
         }
-        .btn:hover { background: var(--accent-green-hover); transform: translateY(-1px); }
-        .btn:active { transform: translateY(1px); }
+        .btn:hover { background: var(--accent-gold-hover); color: #fff; }
 
         .panel-box {
             background: var(--bg-dark); border: 1px solid var(--border);
-            border-radius: 12px; padding: 14px; margin-bottom: 12px;
+            border-radius: 10px; padding: 12px; margin-bottom: 12px;
         }
-        .panel-box h4 { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
+        .panel-box h4 { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
 
         .card-item {
             background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 10px; padding: 12px; margin-bottom: 9px; font-size: 11px;
+            border-radius: 8px; padding: 10px; margin-bottom: 8px; font-size: 11px;
             display: flex; justify-content: space-between; align-items: center;
         }
 
         .badge {
-            background: rgba(14, 165, 233, 0.15); color: var(--accent-green);
-            padding: 4px 9px; border-radius: 12px; font-size: 10px; border: 1px solid rgba(14, 165, 233, 0.3);
+            background: rgba(197, 160, 89, 0.15); color: var(--accent-gold);
+            padding: 3px 8px; border-radius: 10px; font-size: 10px; border: 1px solid rgba(197, 160, 89, 0.3);
         }
 
         .modal {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 800; padding: 20px;
+            background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 800; padding: 20px;
         }
         .modal-content {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; width: 100%; max-width: 360px;
-            max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; width: 100%; max-width: 350px;
+            max-height: 90vh; overflow-y: auto;
         }
 
         #app-notification {
-            position: absolute; top: -70px; left: 50%; transform: translateX(-50%);
-            background: var(--success); color: white; padding: 10px 20px; border-radius: 20px;
+            position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+            background: var(--success); color: white; padding: 8px 16px; border-radius: 16px;
             font-size: 11px; font-weight: bold; z-index: 1500; transition: top 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5); text-align: center;
         }
-        #app-notification.show { top: 20px; }
+        #app-notification.show { top: 15px; }
 
-        .product-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+        .product-thumb { width: 42px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
 
         .ai-floating-btn {
             position: absolute; bottom: 20px; left: 20px;
-            width: 46px; height: 46px; background: linear-gradient(135deg, var(--primary), var(--accent-green));
+            width: 44px; height: 44px; background: linear-gradient(135deg, #a67c37, #c5a059);
             border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            color: #fff; font-size: 20px; cursor: pointer; z-index: 500;
-            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.5);
-            animation: pulseAI 2.5s infinite;
+            color: #1c1815; font-size: 20px; cursor: pointer; z-index: 500;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
         }
         [dir="ltr"] .ai-floating-btn { left: auto; right: 20px; }
 
-        @keyframes pulseAI {
-            0% { transform: scale(1); box-shadow: 0 0 10px rgba(99,102,241,0.4); }
-            50% { transform: scale(1.08); box-shadow: 0 0 22px rgba(99,102,241,0.8); }
-            100% { transform: scale(1); box-shadow: 0 0 10px rgba(99,102,241,0.4); }
-        }
-
         .ai-modal-box {
             position: absolute; bottom: 75px; left: 15px; right: 15px;
-            background: var(--bg-card); border: 1px solid var(--primary);
-            border-radius: 14px; padding: 14px; z-index: 600; display: none;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            background: var(--bg-card); border: 1px solid var(--accent-gold);
+            border-radius: 12px; padding: 12px; z-index: 600; display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
     </style>
 </head>
 <body>
 
-    <div class="live-bg"></div>
     <div id="app-notification">تم التحديث بنجاح</div>
 
     <div class="phone-frame">
-        <!-- شاشة تسجيل الدخول والترحيب -->
+        <!-- شاشة تسجيل الدخول والترحيب الفاخرة -->
         <div id="splash-screen">
-            <div class="splash-jewelry-icon">💎</div>
-            <div style="color:var(--text-main); font-weight:bold; font-size:22px; letter-spacing: 1px;">NERIS STORE</div>
-            <p style="color: var(--text-muted); font-size: 11px; margin-top: 6px; margin-bottom: 20px;" data-i18n="splash_sub">نظام إدارة المخزن والمجوهرات الذكي</p>
+            <div class="splash-logo">💎</div>
+            <div style="color:var(--text-main); font-weight:bold; font-size:20px; letter-spacing: 1px;">NERIS STORE</div>
+            <p style="color: var(--text-muted); font-size: 11px; margin-top: 6px; margin-bottom: 20px;">نظام إدارة المخزن والمجوهرات الفاخر</p>
             
             <div style="width: 100%; max-width: 300px;">
-                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;" data-i18n="login_error">البريد أو كلمة المرور غير صحيحة</div>
+                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;">البريد أو كلمة المرور غير صحيحة</div>
                 <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="البريد الإلكتروني" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="كلمة المرور" style="direction:ltr; text-align:left;"></div>
-                <button class="btn" onclick="handleLogin()" data-i18n="btn_login">تسجيل دخول</button>
-                <div style="text-align: center; margin-top: 10px;">
-                    <a href="javascript:void(0)" onclick="forgotPasswordAlert()" style="color: var(--accent-green); font-size: 11px; text-decoration: none;" data-i18n="forgot_pass">نسيت كلمة المرور؟</a>
-                </div>
+                <button class="btn" onclick="handleLogin()">تسجيل دخول</button>
             </div>
         </div>
 
@@ -286,78 +245,84 @@
             <div class="header-btns">
                 <button class="lang-btn" onclick="toggleLanguage()" id="lang-indicator">EN</button>
                 <button class="theme-btn" onclick="toggleTheme()" id="theme-icon">☀️</button>
-                <span class="badge" id="current-role-badge">الدور</span>
+                <img id="header-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:1px solid var(--accent-gold);">
             </div>
         </div>
 
         <!-- القائمة الجانبية -->
         <div class="drawer" id="main-drawer">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-                <span style="color:var(--text-main); font-weight:600; font-size:13px;" data-i18n="nav_title">قائمة التنقل</span>
+                <span style="color:var(--text-main); font-weight:600; font-size:13px;">قائمة التنقل</span>
                 <button onclick="toggleDrawer()" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
             </div>
-            <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 <span data-i18n="m_home">الواجهة الرئيسية</span></div>
-            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 <span data-i18n="m_orders">إدارة الطلبيات النشطة</span></div>
-            <div class="drawer-item" onclick="navTo('completed-orders-screen')">✅ <span data-i18n="m_completed">الطلبيات المنتهية</span></div>
-            <div class="drawer-item" onclick="navTo('trash-orders-screen')">🗑️ <span data-i18n="m_trash">المحذوفة والمشاكل</span></div>
-            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span data-i18n="m_inv">المخزن والمنتجات</span></div>
-            <div class="drawer-item" onclick="navTo('addons-screen')">🎀 <span data-i18n="m_addons">إدارة الإضافات والتغليف</span></div>
-            <div class="drawer-item" onclick="navTo('staff-screen')">👥 <span data-i18n="m_staff">إدارة الموظفين</span></div>
-            <div class="drawer-item" onclick="navTo('chat-screen')">💬 <span data-i18n="m_chat">الرسائل الفورية</span></div>
-            <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ <span data-i18n="m_profile">الملف الشخصي</span></div>
-            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(239,68,68,0.3); margin-top:10px;">🚪 <span data-i18n="m_logout">تسجيل الخروج</span></div>
+            <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 <span>الواجهة الرئيسية</span></div>
+            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 <span>إدارة الطلبيات النشطة</span></div>
+            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span>المخزن والمنتجات</span></div>
+            <div class="drawer-item" onclick="navTo('addons-screen')">🎀 <span>الإضافات والتغليف الحر</span></div>
+            <div class="drawer-item" onclick="navTo('staff-screen')">👥 <span>إدارة المسؤولين</span></div>
+            <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ <span>الملف الشخصي والحساب</span></div>
+            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(224,82,82,0.3); margin-top:10px;">🚪 <span>تسجيل الخروج</span></div>
         </div>
 
         <!-- نافذة استكمال البيانات الإجبارية -->
         <div class="modal" id="mandatory-profile-modal" style="z-index: 900;">
             <div class="modal-content" style="border-color:var(--warning);">
-                <h3 style="color:var(--warning); margin-bottom:8px; font-size:14px;" data-i18n="mand_title">⚠️ استكمال البيانات الشخصية الإجبارية</h3>
-                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;" data-i18n="mand_sub">يجب إدخال رقم الجوال وتاريخ الميلاد للمتابعة.</p>
-                <div class="input-group"><label data-i18n="lbl_phone">رقم الجوال</label><input type="text" id="mand-phone" placeholder="05xxxxxxxx" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label data-i18n="lbl_dob">تاريخ الميلاد</label><input type="date" id="mand-dob" style="direction:ltr; text-align:left;"></div>
-                <button class="btn" style="background:var(--success);" onclick="saveMandatoryProfile()" data-i18n="btn_save_continue">حفظ ومتابعة</button>
+                <h3 style="color:var(--warning); margin-bottom:8px; font-size:13px;">⚠️ استكمال البيانات الشخصية</h3>
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">يرجى إدخال رقم الجوال وتاريخ الميلاد (بالأرقام الإنجليزية).</p>
+                <div class="input-group"><label>رقم الجوال</label><input type="text" id="mand-phone" placeholder="05xxxxxxxx" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label>تاريخ الميلاد</label><input type="date" id="mand-dob" style="direction:ltr; text-align:left;"></div>
+                <button class="btn" style="background:var(--success); color:#fff;" onclick="saveMandatoryProfile()">حفظ ومتابعة</button>
             </div>
         </div>
 
-        <!-- 1. الواجهة الرئيسية -->
-        <div id="home-main-screen" class="screen">
-            <h2 data-i18n="h_dashboard">الواجهة الرئيسية ومؤشرات الأداء</h2>
-            <p class="subtitle" id="home-welcome-sub">مرحباً بك في لوحة تحكم Neris</p>
-
-            <div class="panel-box" style="background:linear-gradient(135deg, rgba(14,165,233,0.15), var(--bg-card)); border-color:var(--accent-green);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <span style="font-size:12px; font-weight:bold; color:var(--accent-green);" data-i18n="dash_metrics">مؤشرات الأداء الفعلية للمحل</span>
-                    <span style="font-size:14px; font-weight:bold; color:var(--success);">100%</span>
+        <!-- نافذة تأكيد الطرد داخل الموقع -->
+        <div class="modal" id="confirm-modal">
+            <div class="modal-content" style="text-align: center;">
+                <h3 id="confirm-title" style="margin-bottom:8px; font-size:14px; color:var(--danger);">تأكيد إجراء</h3>
+                <p id="confirm-text" style="font-size:11px; color:var(--text-muted); margin-bottom:16px;">هل أنت متأكد من هذا الإجراء؟</p>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn" style="background:var(--danger); color:#fff;" id="confirm-yes-btn">نعم، متأكد</button>
+                    <button class="btn" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('confirm-modal')">إلغاء</button>
                 </div>
-                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; margin-top:6px; text-align:center;">
-                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="quick-cnt-orders" style="font-size:13px; font-weight:bold;">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_orders">طلبات نشطة</div>
+            </div>
+        </div>
+
+        <!-- 1. الواجهة الرئيسية المؤشرات الحقيقية -->
+        <div id="home-main-screen" class="screen">
+            <h2>الواجهة الرئيسية ومؤشرات الأداء</h2>
+            <p class="subtitle" id="home-welcome-sub">مرحباً بك في لوحة تحكم Neris الفاخرة</p>
+
+            <div class="panel-box" style="background:linear-gradient(135deg, rgba(197,160,89,0.08), var(--bg-card)); border-color:var(--accent-gold);">
+                <div style="font-size:12px; font-weight:bold; color:var(--accent-gold); margin-bottom:8px;">مؤشرات الأداء الفعلي للمحل</div>
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; text-align:center;">
+                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
+                        <span id="metric-active-orders" style="font-size:14px; font-weight:bold; direction:ltr; display:inline-block;">0</span>
+                        <div style="font-size:9px; color:var(--text-muted);">طلبات نشطة</div>
                     </div>
-                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="quick-cnt-products" style="font-size:13px; font-weight:bold; color:var(--success);">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_inventory">بالمخزن</div>
+                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
+                        <span id="metric-inventory-count" style="font-size:14px; font-weight:bold; color:var(--success); direction:ltr; display:inline-block;">0</span>
+                        <div style="font-size:9px; color:var(--text-muted);">منتج بالمخزن</div>
                     </div>
-                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="quick-cnt-staff" style="font-size:13px; font-weight:bold; color:var(--primary);">3</span>
-                        <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_staff">طاقم العمل</div>
+                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
+                        <span id="metric-staff-count" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">3</span>
+                        <div style="font-size:9px; color:var(--text-muted);">فريق الإدارة</div>
                     </div>
                 </div>
             </div>
 
-            <!-- تسجيل طلبية جديدة مع اختيار المنتج والإضافات -->
-            <div class="panel-box" style="margin-top: 10px;">
-                <h4 style="color:var(--accent-green);" data-i18n="add_order_title">➕ تسجيل طلبية جديدة وخصم المخزن</h4>
-                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-name" data-i18n-placeholder="ph_client_name" placeholder="اسم العميل"></div>
-                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-phone" data-i18n-placeholder="ph_client_phone" placeholder="رقم جوال العميل" style="direction:ltr; text-align:left;"></div>
+            <!-- تسجيل طلبية جديدة -->
+            <div class="panel-box">
+                <h4 style="color:var(--accent-gold);">➕ تسجيل طلبية جديدة وخصم المخزن</h4>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-name" placeholder="اسم العميل"></div>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-phone" placeholder="رقم جوال العميل" style="direction:ltr; text-align:left;"></div>
                 
                 <div class="input-group" style="margin-bottom:6px;">
-                    <label data-i18n="select_prod_lbl">اختر المنتج الأساسي:</label>
+                    <label>اختر المنتج الأساسي:</label>
                     <select id="order-product-select" onchange="calcTotalOrderPreview()"></select>
                 </div>
 
                 <div class="input-group" style="margin-bottom:6px;">
-                    <label data-i18n="select_addon_lbl">اختر الإضافات والتغليف (ورد، بكج، كيس):</label>
+                    <label>اختر الإضافات الحرة:</label>
                     <select id="order-addon-select" onchange="calcTotalOrderPreview()"></select>
                 </div>
 
@@ -366,300 +331,137 @@
                         <img id="prev-img" class="product-thumb" src="" alt="">
                         <div>
                             <div id="prev-title" style="font-weight:bold;"></div>
-                            <div id="prev-price" style="color:var(--accent-green); font-size:10px;"></div>
+                            <div id="prev-price" style="color:var(--accent-gold); font-size:10px; direction:ltr; text-align:right;"></div>
                         </div>
                     </div>
                     <div id="prev-addon-info" style="font-size:10px; color:var(--warning); display:none;"></div>
-                    <div id="prev-total-price" style="font-size:11px; font-weight:bold; color:var(--success); border-top:1px dashed var(--border); padding-top:4px; margin-top:2px;"></div>
+                    <div id="prev-total-price" style="font-size:11px; font-weight:bold; color:var(--success); border-top:1px dashed var(--border); padding-top:4px; margin-top:2px; direction:ltr; text-align:right;"></div>
                 </div>
 
-                <div class="input-group" style="margin-bottom:6px;"><textarea id="order-notes" data-i18n-placeholder="ph_order_notes" placeholder="ملاحظات الطلبية..."></textarea></div>
-                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewRealOrder()" data-i18n="btn_reg_order">تسجيل وخصم آلي من المخزن</button>
+                <div class="input-group" style="margin-bottom:6px;"><textarea id="order-notes" placeholder="ملاحظات الطلبية..."></textarea></div>
+                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewRealOrder()">تسجيل وخصم آلي من المخزن</button>
             </div>
         </div>
 
         <!-- 2. الطلبيات النشطة -->
         <div id="orders-screen" class="screen">
-            <h2 data-i18n="h_orders">إدارة الطلبيات النشطة</h2>
-            <p class="subtitle" data-i18n="sub_orders">تتبع الطلبات وتحديث حالتها فورياً</p>
+            <h2>إدارة الطلبيات النشطة</h2>
+            <p class="subtitle">تتبع وتحديث الطلبات المباشرة</p>
             <div id="real-orders-list"></div>
         </div>
 
-        <!-- 3. الطلبيات المنتهية -->
-        <div id="completed-orders-screen" class="screen">
-            <h2 data-i18n="h_completed">الطلبيات المنتهية بنجاح</h2>
-            <p class="subtitle" data-i18n="sub_completed">سجل الطلبات المكتملة والمعدة للتسليم</p>
-            <div id="completed-orders-list"></div>
-        </div>
-
-        <!-- 4. الطلبيات المحذوفة والمشاكل -->
-        <div id="trash-orders-screen" class="screen">
-            <h2 data-i18n="h_trash">الطلبيات المحذوفة والمشاكل</h2>
-            <p class="subtitle" data-i18n="sub_trash">الطلبات الملغاة أو التي بها مشاكل</p>
-            <div id="trash-orders-list"></div>
-        </div>
-
-        <!-- نافذة إسناد الطلب للموظف -->
-        <div class="modal" id="assign-order-modal">
-            <div class="modal-content">
-                <h3 style="margin-bottom:10px; font-size:14px;" data-i18n="assign_title">إسناد الطلب لموظف</h3>
-                <div class="input-group"><label data-i18n="assign_lbl">اختر المسؤول:</label><select id="assign-staff-select"></select></div>
-                <div style="display:flex; gap:8px;">
-                    <button class="btn" style="background:var(--success);" onclick="confirmAssignOrder()" data-i18n="btn_confirm">تأكيد وإرسال</button>
-                    <button class="btn" style="background:var(--danger);" onclick="closeModal('assign-order-modal')" data-i18n="btn_cancel">إلغاء</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. المخزن والمنتجات -->
+        <!-- 3. المخزن والمنتجات -->
         <div id="inventory-screen" class="screen">
-            <h2 data-i18n="h_inv">المخزن والمنتجات</h2>
-            <p class="subtitle" data-i18n="sub_inv">إضافة، حذف، أو تعديل المنتجات والكميات</p>
-            <button class="btn" onclick="openAddProductModal()" style="margin-bottom:10px;" data-i18n="btn_add_prod">+ إضافة منتج جديد مع صورة</button>
+            <h2>المخزن والمنتجات</h2>
+            <p class="subtitle">إدارة المنتجات والكميات بأرقام إنجليزية دقيقة</p>
+            <button class="btn" onclick="openAddProductModal()" style="margin-bottom:10px;">+ إضافة منتج جديد مع صورة</button>
             <div class="panel-box">
-                <h4><span data-i18n="inv_list_title">قائمة منتجات المخزن</span> (<span id="inv-count-badge">0</span>)</h4>
+                <h4>قائمة منتجات المخزن (<span id="inv-count-badge" style="direction:ltr; display:inline-block;">0</span>)</h4>
                 <div id="real-inventory-list"></div>
             </div>
         </div>
 
-        <!-- 5.1. إدارة الإضافات والتغليف -->
+        <!-- 4. الإضافات والتغليف الحر -->
         <div id="addons-screen" class="screen">
-            <h2 data-i18n="h_addons">إدارة الإضافات والتغليف (ورد، بكج، كيس)</h2>
-            <p class="subtitle" data-i18n="sub_addons">أضف صور وأسعار الإضافات لتنضاف للسعر الإجمالي</p>
-            <button class="btn" onclick="openAddAddonModal()" style="margin-bottom:10px;" data-i18n="btn_add_addon">+ إضافة إضافة جديدة (ورد/بكج/كيس)</button>
+            <h2>الإضافات والتغليف الحر</h2>
+            <p class="subtitle">أضف أي اسم إضافة، صورة، وسعر تريده بحرية كاملة</p>
+            <button class="btn" onclick="openAddAddonModal()" style="margin-bottom:10px;">+ إضافة إضافة جديدة بحرية</button>
             <div class="panel-box">
-                <h4><span data-i18n="addons_list_title">قائمة الإضافات المتاحة</span> (<span id="addons-count-badge">0</span>)</h4>
+                <h4>قائمة الإضافات المخصصة (<span id="addons-count-badge" style="direction:ltr; display:inline-block;">0</span>)</h4>
                 <div id="addons-list-container"></div>
             </div>
         </div>
 
-        <!-- نافذة إضافة أو تعديل منتج المخزن -->
+        <!-- نافذة إضافة منتج مخزن -->
         <div class="modal" id="add-product-modal">
             <div class="modal-content">
-                <h3 id="product-modal-title" style="margin-bottom:10px; font-size:14px;" data-i18n="prod_modal_title">إضافة / تعديل منتج</h3>
-                <div class="input-group"><label data-i18n="lbl_p_name">اسم المنتج</label><input type="text" id="p-name" placeholder="خاتم نيريس الفاخر"></div>
-                <div class="input-group"><label data-i18n="lbl_p_color">لون أو نوع القطعة</label><input type="text" id="p-color" placeholder="ذهبي لامع"></div>
-                <div class="input-group"><label data-i18n="lbl_p_img">صورة المنتج من الاستوديو</label><input type="file" id="p-image-file" accept="image/*" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label data-i18n="lbl_p_qty">كمية المخزن</label><input type="number" id="p-qty" value="10" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label data-i18n="lbl_p_cost">سعر التكلفة (SAR)</label><input type="number" id="p-cost" placeholder="100.00" style="direction:ltr; text-align:left;" oninput="calcPriceEnglish()"></div>
-                <div class="input-group"><label data-i18n="lbl_p_margin">هامش الربح (%)</label><input type="number" id="p-margin" value="25" style="direction:ltr; text-align:left;" oninput="calcPriceEnglish()"></div>
-                <div class="input-group"><label data-i18n="lbl_p_final">السعر النهائي (SAR)</label><input type="text" id="p-final" readonly style="color:var(--accent-green); font-weight:bold; direction:ltr; text-align:left;"></div>
+                <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);">إضافة منتج جديد للمخزن</h3>
+                <div class="input-group"><label>اسم المنتج</label><input type="text" id="p-name" placeholder="خاتم الماس"></div>
+                <div class="input-group"><label>لون أو نوع القطعة</label><input type="text" id="p-color" placeholder="ذهبي وردي"></div>
+                <div class="input-group"><label>صورة المنتج</label><input type="file" id="p-image-file" accept="image/*" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label>كمية المخزن (أرقام إنجليزية)</label><input type="number" id="p-qty" value="10" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label>سعر التكلفة (SAR)</label><input type="number" id="p-cost" placeholder="100.00" style="direction:ltr; text-align:left;" oninput="calcPriceEnglish()"></div>
+                <div class="input-group"><label>هامش الربح (%)</label><input type="number" id="p-margin" value="25" style="direction:ltr; text-align:left;" oninput="calcPriceEnglish()"></div>
+                <div class="input-group"><label>السعر النهائي (SAR)</label><input type="text" id="p-final" readonly style="color:var(--accent-gold); font-weight:bold; direction:ltr; text-align:left;"></div>
                 <div style="display:flex; gap:8px;">
-                    <button class="btn" style="background:var(--success);" onclick="saveRealProductData()" data-i18n="btn_save_prod">حفظ المنتج</button>
-                    <button class="btn" style="background:var(--danger);" onclick="closeModal('add-product-modal')" data-i18n="btn_cancel">إلغاء</button>
+                    <button class="btn" style="background:var(--success); color:#fff;" onclick="saveRealProductData()">حفظ المنتج</button>
+                    <button class="btn" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('add-product-modal')">إلغاء</button>
                 </div>
             </div>
         </div>
 
-        <!-- نافذة إضافة أو تعديل إضافة -->
+        <!-- نافذة إضافة إضافة حرة -->
         <div class="modal" id="add-addon-modal">
             <div class="modal-content">
-                <h3 id="addon-modal-title" style="margin-bottom:10px; font-size:14px;" data-i18n="addon_modal_title">إضافة إضافة جديدة</h3>
-                <div class="input-group"><label data-i18n="lbl_a_name">اسم الإضافة</label><input type="text" id="a-name" placeholder="باقة ورد جوري"></div>
-                <div class="input-group"><label data-i18n="lbl_a_type">نوع الإضافة</label>
-                    <select id="a-type">
-                        <option value="ورد">ورد</option>
-                        <option value="بكج">بكج هدايا</option>
-                        <option value="كيس">كيس تسوق</option>
-                    </select>
-                </div>
-                <div class="input-group"><label data-i18n="lbl_a_img">صورة الإضافة</label><input type="file" id="a-image-file" accept="image/*" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label data-i18n="lbl_a_price">سعر الإضافة (SAR)</label><input type="number" id="a-price" placeholder="50.00" style="direction:ltr; text-align:left;"></div>
+                <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);">إضافة عنصر تغليف أو إضافة جديدة</h3>
+                <div class="input-group"><label>اسم الإضافة (اكتب ما تشاء)</label><input type="text" id="a-name" placeholder="مثلاً: كيس مخمل خاص مع شريطة"></div>
+                <div class="input-group"><label>صورة الإضافة</label><input type="file" id="a-image-file" accept="image/*" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label>سعر الإضافة (SAR - أرقام إنجليزية)</label><input type="number" id="a-price" placeholder="50.00" style="direction:ltr; text-align:left;"></div>
                 <div style="display:flex; gap:8px;">
-                    <button class="btn" style="background:var(--success);" onclick="saveAddonData()" data-i18n="btn_save_addon">حفظ الإضافة</button>
-                    <button class="btn" style="background:var(--danger);" onclick="closeModal('add-addon-modal')" data-i18n="btn_cancel">إلغاء</button>
+                    <button class="btn" style="background:var(--success); color:#fff;" onclick="saveAddonData()">حفظ الإضافة</button>
+                    <button class="btn" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('add-addon-modal')">إلغاء</button>
                 </div>
             </div>
         </div>
 
-        <!-- 6. إدارة المسؤولين -->
+        <!-- 5. إدارة المسؤولين -->
         <div id="staff-screen" class="screen">
-            <h2 data-i18n="h_staff">إدارة المسؤولين والصلاحيات</h2>
-            <p class="subtitle" data-i18n="sub_staff">تحكم كامل بحالة الحسابات، الإجازات، الاستقالات، والطرد (للمالك فقط)</p>
+            <h2>إدارة المسؤولين والصلاحيات</h2>
+            <p class="subtitle">إدارة طاقم العمل مع تنبيهات تأكيد داخل الموقع</p>
             <div class="panel-box">
-                <h4><span data-i18n="staff_list_title">قائمة المسؤولين الحاليين</span> (<span id="staff-count-badge">3</span>)</h4>
+                <h4>قائمة المسؤولين الحاليين (<span id="staff-count-badge" style="direction:ltr; display:inline-block;">3</span>)</h4>
                 <div id="staff-management-list"></div>
             </div>
         </div>
 
-        <!-- 7. الرسائل الفورية -->
-        <div id="chat-screen" class="screen">
-            <h2 data-i18n="h_chat">الرسائل الفورية والتعاميم</h2>
-            <p class="subtitle" data-i18n="sub_chat">التواصل المباشر مع طاقم العمل</p>
-            <div class="panel-box" style="padding:10px; margin-bottom:10px;">
-                <div class="input-group" style="margin-bottom:6px;">
-                    <label data-i18n="lbl_send_to">الإرسال إلى:</label>
-                    <select id="msg-type-select" onchange="toggleMsgTargetField()">
-                        <option value="all">جميع المسؤولين</option>
-                        <option value="single">مسؤول محدد</option>
-                    </select>
-                </div>
-                <div class="input-group" id="target-staff-group" style="margin-bottom:6px; display:none;">
-                    <label data-i18n="lbl_sel_staff">اختر المسؤول:</label>
-                    <select id="chat-target-staff"></select>
-                </div>
-                <div class="input-group" style="margin-bottom:6px;"><textarea id="chat-msg-text" placeholder="اكتب نص الرسالة..."></textarea></div>
-                <button class="btn" style="padding:7px; font-size:11px;" onclick="sendBroadcastMessage()" data-i18n="btn_send_msg">إرسال الرسالة</button>
-            </div>
-            <div style="background:var(--bg-dark); border:1px solid var(--border); border-radius:8px; padding:8px; height:150px; overflow-y:auto; font-size:11px;" id="chat-box">
-                <div style="color:var(--text-muted); text-align:center;" data-i18n="chat_empty">سجل الرسائل فارغ</div>
-            </div>
-        </div>
-
-        <!-- 8. الملف الشخصي والـ AI المساعد -->
+        <!-- 6. الملف الشخصي الشامل -->
         <div id="profile-screen" class="screen">
-            <h2 data-i18n="h_profile">الملف الشخصي وإعدادات النظام</h2>
-            <p class="subtitle">بيانات الحساب الشخصي وحالة النظام الذكي</p>
+            <h2>الملف الشخصي والحساب</h2>
+            <p class="subtitle">تعديل بياناتك، البريد، الجوال، والصورة الشخصية بحرية</p>
             <div class="panel-box">
-                <div id="profile-details-box" style="font-size:12px; line-height:1.6;"></div>
+                <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:14px;">
+                    <img id="profile-view-img" src="" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-gold); margin-bottom:8px;">
+                    <input type="file" id="profile-img-file" accept="image/*" style="font-size:10px; direction:ltr;" onchange="updateProfileAvatar(this)">
+                </div>
+                <div class="input-group"><label>الاسم الحقيقي</label><input type="text" id="prof-name" readonly style="opacity:0.8;"></div>
+                <div class="input-group"><label>البريد الإلكتروني (قابل للتعديل)</label><input type="email" id="prof-email" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label>رقم الجوال (قابل للتعديل - أرقام إنجليزية)</label><input type="text" id="prof-phone" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label>تاريخ الميلاد</label><input type="date" id="prof-dob" style="direction:ltr; text-align:left;"></div>
+                <button class="btn" style="background:var(--success); color:#fff;" onclick="saveProfileChanges()">حفظ التعديلات الشخصية</button>
             </div>
         </div>
 
-        <!-- مساعد الذكاء الاصطناعي العائم (AI) -->
-        <div class="ai-floating-btn" onclick="toggleAIChat()">🤖</div>
+        <!-- مساعد الذكاء الاصطناعي -->
+        <div class="ai-floating-btn" onclick="toggleAIChat()">✨</div>
         <div class="ai-modal-box" id="ai-chat-box">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:6px;">
-                <span style="font-size:12px; font-weight:bold; color:var(--accent-green);">🤖 NERIS AI Assistant</span>
+                <span style="font-size:12px; font-weight:bold; color:var(--accent-gold);">✨ Neris Elite AI Assistant</span>
                 <button onclick="toggleAIChat()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
-            <div id="ai-messages-list" style="max-height:120px; overflow-y:auto; font-size:11px; margin-bottom:8px; color:var(--text-muted);">
-                أهلاً بك يا فهد، أنا مساعدك الذكي جاهز لإدارة النظام ومساعدتك في أي استفسار.
+            <div id="ai-messages-list" style="max-height:140px; overflow-y:auto; font-size:11px; margin-bottom:8px; color:var(--text-muted); line-height:1.5;">
+                أهلاً بك يا فهد. أنا مساعدك الذكي المطور خصيصاً لإدارة متجرك ومخزونك ومتابعة الطلبات بدقة فائقة. تفضل بطرح أمرك أو استفسارك.
             </div>
             <div style="display:flex; gap:6px;">
-                <input type="text" id="ai-input" placeholder="اسأل مساعد الذكاء الاصطناعي..." style="flex:1; padding:6px; font-size:11px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:6px; outline:none;">
-                <button class="btn" style="margin-top:0; padding:6px 12px; font-size:11px;" onclick="sendAIMessage()">إرسال</button>
+                <input type="text" id="ai-input" placeholder="اكتب أمرك للمساعد الذكي..." style="flex:1; padding:6px; font-size:11px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:6px; outline:none;">
+                <button class="btn" style="margin-top:0; padding:6px 12px; font-size:11px; width:auto;" onclick="sendAIMessage()">إرسال</button>
             </div>
         </div>
 
     </div>
 
     <script>
-        // قاعدة بيانات الحسابات الثلاثة المطلوبة حصراً مع بيانات الدخول المعتمدة
         let staffRegistry = [
-            { id: 1, name: "فهد (المالك)", email: "owner@neris.store", pass: "Fahad2026_Owner#", role: "مالك", status: "نشط", phone: "0500000000", dob: "2006-07-31" },
-            { id: 2, name: "محمد راشد الحسين", email: "walhan_3003@hotmail.com", pass: "Walhan#2026M", role: "مسؤول", status: "نشط", phone: "", dob: "" },
-            { id: 3, name: "فاطمة", email: "fa6oom.2014@gmail.com", pass: "Fatima#2014F", role: "مسؤول", status: "نشط", phone: "", dob: "" }
+            { id: 1, name: "فهد (المالك)", email: "owner@neris.store", pass: "Fahad2026_Owner#", role: "مالك", status: "نشط", phone: "0500000000", dob: "2006-07-31", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" },
+            { id: 2, name: "محمد راشد الحسين", email: "walhan_3003@hotmail.com", pass: "Walhan#2026M", role: "مسؤول", status: "نشط", phone: "0511111111", dob: "2005-01-01", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" },
+            { id: 3, name: "فاطمة", email: "fa6oom.2014@gmail.com", pass: "Fatima#2014F", role: "مسؤول", status: "نشط", phone: "0522222222", dob: "2005-05-05", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" }
         ];
 
         let currentUser = null;
         let inventory = [];
         let addons = [];
         let orders = [];
-        let chatMessages = [];
         let currentLang = 'ar';
         let currentTheme = 'dark';
-
-        // الترجمات البسيطة لـ AR / EN
-        const i18n = {
-            ar: {
-                splash_sub: "نظام إدارة المخزن والمجوهرات الذكي",
-                login_error: "البريد أو كلمة المرور غير صحيحة",
-                btn_login: "تسجيل دخول",
-                forgot_pass: "نسيت كلمة المرور؟",
-                nav_title: "قائمة التنقل",
-                m_home: "الواجهة الرئيسية",
-                m_orders: "إدارة الطلبيات النشطة",
-                m_completed: "الطلبيات المنتهية",
-                m_trash: "المحذوفة والمشاكل",
-                m_inv: "المخزن والمنتجات",
-                m_addons: "إدارة الإضافات والتغليف",
-                m_staff: "إدارة المسؤولين",
-                m_chat: "الرسائل الفورية",
-                m_profile: "الملف الشخصي",
-                m_logout: "تسجيل الخروج",
-                mand_title: "⚠️ استكمال البيانات الشخصية الإجبارية",
-                mand_sub: "يجب إدخال رقم الجوال وتاريخ الميلاد للمتابعة.",
-                lbl_phone: "رقم الجوال",
-                lbl_dob: "تاريخ الميلاد",
-                btn_save_continue: "حفظ ومتابعة",
-                h_dashboard: "الواجهة الرئيسية ومؤشرات الأداء",
-                dash_metrics: "مؤشرات الأداء الفعلية للمحل",
-                stat_orders: "طلبات نشطة",
-                stat_inventory: "بالمخزن",
-                stat_staff: "طاقم الإدارة",
-                add_order_title: "➕ تسجيل طلبية جديدة وخصم المخزن",
-                ph_client_name: "اسم العميل",
-                ph_client_phone: "رقم جوال العميل",
-                select_prod_lbl: "اختر المنتج الأساسي:",
-                select_addon_lbl: "اختر الإضافات والتغليف (ورد، بكج، كيس):",
-                ph_order_notes: "ملاحظات الطلبية...",
-                btn_reg_order: "تسجيل وخصم آلي من المخزن",
-                h_orders: "إدارة الطلبيات النشطة",
-                sub_orders: "تتبع الطلبات وتحديث حالتها فورياً",
-                h_completed: "الطلبيات المنتهية بنجاح",
-                sub_completed: "سجل الطلبات المكتملة والمعدة للتسليم",
-                h_trash: "الطلبيات المحذوفة والمشاكل",
-                sub_trash: "الطلبات الملغاة أو التي بها مشاكل",
-                h_inv: "المخزن والمنتجات",
-                sub_inv: "إضافة، حذف، أو تعديل المنتجات والكميات",
-                btn_add_prod: "+ إضافة منتج جديد مع صورة",
-                inv_list_title: "قائمة منتجات المخزن",
-                h_addons: "إدارة الإضافات والتغليف (ورد، بكج، كيس)",
-                sub_addons: "أضف صور وأسعار الإضافات لتنضاف للسعر الإجمالي",
-                btn_add_addon: "+ إضافة إضافة جديدة",
-                addons_list_title: "قائمة الإضافات المتاحة",
-                h_staff: "إدارة المسؤولين والصلاحيات",
-                sub_staff: "تحكم كامل بحالة الحسابات والإجازات والاستقالات",
-                staff_list_title: "قائمة المسؤولين الحاليين",
-                h_chat: "الرسائل الفورية والتعاميم",
-                sub_chat: "التواصل المباشر مع طاقم العمل",
-                h_profile: "الملف الشخصي وإعدادات النظام"
-            },
-            en: {
-                splash_sub: "Smart Jewelry & Inventory Management System",
-                login_error: "Invalid email or password",
-                btn_login: "Login",
-                forgot_pass: "Forgot Password?",
-                nav_title: "Navigation",
-                m_home: "Dashboard",
-                m_orders: "Active Orders",
-                m_completed: "Completed Orders",
-                m_trash: "Trash & Issues",
-                m_inv: "Inventory",
-                m_addons: "Addons & Packaging",
-                m_staff: "Staff Management",
-                m_chat: "Instant Chat",
-                m_profile: "Profile",
-                m_logout: "Logout",
-                mand_title: "⚠️ Mandatory Profile Info",
-                mand_sub: "Please enter your phone number and DOB to continue.",
-                lbl_phone: "Phone Number",
-                lbl_dob: "Date of Birth",
-                btn_save_continue: "Save & Continue",
-                h_dashboard: "Dashboard & Performance Metrics",
-                dash_metrics: "Store Performance Metrics",
-                stat_orders: "Active Orders",
-                stat_inventory: "In Stock",
-                stat_staff: "Management Team",
-                add_order_title: "➕ Register New Order",
-                ph_client_name: "Client Name",
-                ph_client_phone: "Client Phone",
-                select_prod_lbl: "Select Base Product:",
-                select_addon_lbl: "Select Addon/Packaging:",
-                ph_order_notes: "Order Notes...",
-                btn_reg_order: "Register & Deduct Stock",
-                h_orders: "Active Orders Management",
-                sub_orders: "Track and update orders in real-time",
-                h_completed: "Completed Orders",
-                sub_completed: "Successful orders ready for delivery",
-                h_trash: "Trash & Issues",
-                sub_trash: "Cancelled or problematic orders",
-                h_inv: "Inventory & Products",
-                sub_inv: "Add, delete or edit products",
-                btn_add_prod: "+ Add New Product with Image",
-                inv_list_title: "Inventory Products",
-                h_addons: "Addons & Packaging Management",
-                sub_addons: "Manage flowers, packages and bags",
-                btn_add_addon: "+ Add New Addon",
-                addons_list_title: "Available Addons",
-                h_staff: "Staff Management & Permissions",
-                sub_staff: "Full control over accounts, leaves and resignations",
-                staff_list_title: "Current Staff List",
-                h_chat: "Instant Chat & Broadcasts",
-                sub_chat: "Direct communication with the team",
-                h_profile: "Profile & System Settings"
-            }
-        };
 
         function showNotification(msg) {
             const notif = document.getElementById("app-notification");
@@ -679,19 +481,6 @@
             document.getElementById("html-root").setAttribute("dir", currentLang === 'ar' ? 'rtl' : 'ltr');
             document.getElementById("html-root").setAttribute("lang", currentLang);
             document.getElementById("lang-indicator").innerText = currentLang === 'ar' ? 'EN' : 'AR';
-            updateTexts();
-        }
-
-        function updateTexts() {
-            const dict = i18n[currentLang];
-            document.querySelectorAll("[data-i18n]").forEach(el => {
-                const key = el.getAttribute("data-i18n");
-                if (dict[key]) el.innerText = dict[key];
-            });
-            document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-                const key = el.getAttribute("data-i18n-placeholder");
-                if (dict[key]) el.placeholder = dict[key];
-            });
         }
 
         function toggleDrawer() {
@@ -703,7 +492,7 @@
             document.getElementById(screenId).classList.add("active");
             toggleDrawer();
             if(screenId === 'staff-screen') renderStaffManagement();
-            if(screenId === 'profile-screen') renderProfileDetails();
+            if(screenId === 'profile-screen') loadProfileData();
         }
 
         function handleLogin() {
@@ -720,7 +509,6 @@
             errBox.style.display = "none";
             currentUser = found;
 
-            // التحقق من إدخال البيانات الإجبارية (الجوال وتاريخ الميلاد) للمسؤولين الجدد
             if (currentUser.role !== "مالك" && (!currentUser.phone || !currentUser.dob)) {
                 document.getElementById("mandatory-profile-modal").style.display = "flex";
                 return;
@@ -733,7 +521,7 @@
             const phone = document.getElementById("mand-phone").value.trim();
             const dob = document.getElementById("mand-dob").value;
             if(!phone || !dob) {
-                alert("يرجى إدخال رقم الجوال وتاريخ الميلاد للمتابعة!");
+                alert("يرجى إدخال رقم الجوال وتاريخ الميلاد!");
                 return;
             }
             currentUser.phone = phone;
@@ -745,10 +533,11 @@
         function completeLoginProcess() {
             document.getElementById("splash-screen").style.display = "none";
             document.getElementById("app-header").style.display = "flex";
-            document.getElementById("current-role-badge").innerText = currentUser.name + " (" + currentUser.role + ")";
-            document.getElementById("home-welcome-sub").innerText = "مرحباً بك يا " + currentUser.name + " في لوحة تحكم Neris OS";
+            document.getElementById("header-avatar").src = currentUser.avatar;
+            document.getElementById("home-welcome-sub").innerText = "مرحباً بك يا " + currentUser.name + " في لوحة تحكم Neris";
             navTo('home-main-screen');
-            showNotification("مرحباً بك، تم تسجيل الدخول بنجاح");
+            showNotification("تم تسجيل الدخول بنجاح");
+            updateMetrics();
             renderInventoryDropdowns();
         }
 
@@ -761,18 +550,14 @@
             showNotification("تم تسجيل الخروج بنجاح");
         }
 
-        function forgotPasswordAlert() {
-            alert("يرجى التواصل مع المالك الأساسي (فهد) لاستعادة كلمة المرور الخاصة بك.");
+        function updateMetrics() {
+            document.getElementById("metric-active-orders").innerText = orders.filter(o => o.status === 'نشط').length;
+            document.getElementById("metric-inventory-count").innerText = inventory.length;
+            document.getElementById("metric-staff-count").innerText = staffRegistry.length;
         }
 
-        // إدارة المخزن والمنتجات
-        function openAddProductModal() {
-            document.getElementById("add-product-modal").style.display = "flex";
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = "none";
-        }
+        function openAddProductModal() { document.getElementById("add-product-modal").style.display = "flex"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
         function calcPriceEnglish() {
             const cost = parseFloat(document.getElementById("p-cost").value) || 0;
@@ -790,21 +575,14 @@
             const final = cost + (cost * margin / 100);
             const fileInput = document.getElementById("p-image-file");
 
-            if(!name) {
-                alert("يرجى إدخال اسم المنتج");
-                return;
-            }
+            if(!name) { alert("يرجى إدخال اسم المنتج"); return; }
 
-            let imgSrc = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=100"; // صورة افتراضية مجوهرات
+            let imgSrc = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=100";
             if(fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    addProductToList(name, color, qty, final, e.target.result);
-                };
+                reader.onload = function(e) { addProductToList(name, color, qty, final, e.target.result); };
                 reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                addProductToList(name, color, qty, final, imgSrc);
-            }
+            } else { addProductToList(name, color, qty, final, imgSrc); }
         }
 
         function addProductToList(name, color, qty, final, img) {
@@ -812,31 +590,31 @@
             closeModal('add-product-modal');
             renderInventory();
             renderInventoryDropdowns();
-            showNotification("تم حفظ المنتج بنجاح في المخزن");
+            updateMetrics();
+            showNotification("تم حفظ المنتج بنجاح");
         }
 
         function renderInventory() {
             const list = document.getElementById("real-inventory-list");
             list.innerHTML = "";
             document.getElementById("inv-count-badge").innerText = inventory.length;
-            document.getElementById("quick-cnt-products").innerText = inventory.length;
 
             if(inventory.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد منتجات بالمخزن حالياً</div>`;
+                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد منتجات بالمخزن</div>`;
                 return;
             }
 
-            inventory.forEach((p, idx) => {
+            inventory.forEach(p => {
                 list.innerHTML += `
                     <div class="card-item">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <img src="${p.img}" class="product-thumb">
                             <div>
                                 <div style="font-weight:bold;">${p.name} (${p.color})</div>
-                                <div style="color:var(--accent-green);">${p.final.toFixed(2)} SAR | الكمية: ${p.qty}</div>
+                                <div style="color:var(--accent-gold); direction:ltr; text-align:right;">${p.final.toFixed(2)} SAR | Qty: ${p.qty}</div>
                             </div>
                         </div>
-                        <button class="btn" style="background:var(--danger); width:auto; padding:6px 10px; font-size:10px; margin-top:0;" onclick="deleteProduct(${p.id})">حذف</button>
+                        <button class="btn" style="background:var(--danger); width:auto; padding:5px 8px; font-size:10px; margin-top:0; color:#fff;" onclick="deleteProduct(${p.id})">حذف</button>
                     </div>
                 `;
             });
@@ -846,43 +624,33 @@
             inventory = inventory.filter(p => p.id !== id);
             renderInventory();
             renderInventoryDropdowns();
+            updateMetrics();
             showNotification("تم حذف المنتج");
         }
 
-        // إدارة الإضافات (ورد، بكج، كيس)
-        function openAddAddonModal() {
-            document.getElementById("add-addon-modal").style.display = "flex";
-        }
+        function openAddAddonModal() { document.getElementById("add-addon-modal").style.display = "flex"; }
 
         function saveAddonData() {
             const name = document.getElementById("a-name").value.trim();
-            const type = document.getElementById("a-type").value;
             const price = parseFloat(document.getElementById("a-price").value) || 0;
             const fileInput = document.getElementById("a-image-file");
 
-            if(!name) {
-                alert("يرجى إدخال اسم الإضافة");
-                return;
-            }
+            if(!name) { alert("يرجى إدخال اسم الإضافة"); return; }
 
             let imgSrc = "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=100";
             if(fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    addAddonToList(name, type, price, e.target.result);
-                };
+                reader.onload = function(e) { addAddonToList(name, price, e.target.result); };
                 reader.readAsDataURL(fileInput.files[0]);
-            } else {
-                addAddonToList(name, type, price, imgSrc);
-            }
+            } else { addAddonToList(name, price, imgSrc); }
         }
 
-        function addAddonToList(name, type, price, img) {
-            addons.push({ id: Date.now(), name, type, price, img });
+        function addAddonToList(name, price, img) {
+            addons.push({ id: Date.now(), name, price, img });
             closeModal('add-addon-modal');
             renderAddons();
             renderInventoryDropdowns();
-            showNotification("تم حفظ الإضافة بنجاح");
+            showNotification("تم حفظ الإضافة الحرّة بنجاح");
         }
 
         function renderAddons() {
@@ -891,7 +659,7 @@
             document.getElementById("addons-count-badge").innerText = addons.length;
 
             if(addons.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد إضافات أو تغليف مضاف حالياً</div>`;
+                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد إضافات مخصصة</div>`;
                 return;
             }
 
@@ -901,11 +669,11 @@
                         <div style="display:flex; align-items:center; gap:8px;">
                             <img src="${a.img}" class="product-thumb">
                             <div>
-                                <div style="font-weight:bold;">${a.name} <span class="badge">${a.type}</span></div>
-                                <div style="color:var(--accent-green);">${a.price.toFixed(2)} SAR</div>
+                                <div style="font-weight:bold;">${a.name}</div>
+                                <div style="color:var(--accent-gold); direction:ltr; text-align:right;">${a.price.toFixed(2)} SAR</div>
                             </div>
                         </div>
-                        <button class="btn" style="background:var(--danger); width:auto; padding:6px 10px; font-size:10px; margin-top:0;" onclick="deleteAddon(${a.id})">حذف</button>
+                        <button class="btn" style="background:var(--danger); width:auto; padding:5px 8px; font-size:10px; margin-top:0; color:#fff;" onclick="deleteAddon(${a.id})">حذف</button>
                     </div>
                 `;
             });
@@ -923,14 +691,14 @@
             prodSel.innerHTML = `<option value="">-- اختر منتج --</option>`;
             inventory.forEach(p => {
                 if(p.qty > 0) {
-                    prodSel.innerHTML += `<option value="${p.id}">${p.name} - ${p.final.toFixed(2)} SAR (متبقي: ${p.qty})</option>`;
+                    prodSel.innerHTML += `<option value="${p.id}">${p.name} - ${p.final.toFixed(2)} SAR (Stock: ${p.qty})</option>`;
                 }
             });
 
             const addonSel = document.getElementById("order-addon-select");
-            addonSel.innerHTML = `<option value="">-- بدون إضافة إضافية --</option>`;
+            addonSel.innerHTML = `<option value="">-- بدون إضافة --</option>`;
             addons.forEach(a => {
-                addonSel.innerHTML += `<option value="${a.id}">${a.name} (${a.type}) - ${a.price.toFixed(2)} SAR</option>`;
+                addonSel.innerHTML += `<option value="${a.id}">${a.name} - ${a.price.toFixed(2)} SAR</option>`;
             });
         }
 
@@ -939,10 +707,7 @@
             const addonId = document.getElementById("order-addon-select").value;
             const previewBox = document.getElementById("order-product-preview");
 
-            if(!prodId) {
-                previewBox.style.display = "none";
-                return;
-            }
+            if(!prodId) { previewBox.style.display = "none"; return; }
 
             const prod = inventory.find(p => p.id == prodId);
             const addon = addons.find(a => a.id == addonId);
@@ -950,19 +715,17 @@
             previewBox.style.display = "flex";
             document.getElementById("prev-img").src = prod.img;
             document.getElementById("prev-title").innerText = prod.name;
-            document.getElementById("prev-price").innerText = `سعر المنتج: ${prod.final.toFixed(2)} SAR`;
+            document.getElementById("prev-price").innerText = `Product Price: ${prod.final.toFixed(2)} SAR`;
 
             let total = prod.final;
             const addonInfo = document.getElementById("prev-addon-info");
             if(addon) {
                 addonInfo.style.display = "block";
-                addonInfo.innerText = `الإضافة: ${addon.name} (+${addon.price.toFixed(2)} SAR)`;
+                addonInfo.innerText = `Addon: ${addon.name} (+${addon.price.toFixed(2)} SAR)`;
                 total += addon.price;
-            } else {
-                addonInfo.style.display = "none";
-            }
+            } else { addonInfo.style.display = "none"; }
 
-            document.getElementById("prev-total-price").innerText = `الإجمالي الكلي: ${total.toFixed(2)} SAR`;
+            document.getElementById("prev-total-price").innerText = `Total: ${total.toFixed(2)} SAR`;
         }
 
         function addNewRealOrder() {
@@ -972,18 +735,11 @@
             const addonId = document.getElementById("order-addon-select").value;
             const notes = document.getElementById("order-notes").value.trim();
 
-            if(!clientName || !prodId) {
-                alert("يرجى إدخال اسم العميل واختيار المنتج الأساسي");
-                return;
-            }
+            if(!clientName || !prodId) { alert("يرجى إدخال اسم العميل واختيار المنتج الأساسي"); return; }
 
             const prod = inventory.find(p => p.id == prodId);
-            if(prod.qty <= 0) {
-                alert("عذراً، المنتج نفذ من المخزن!");
-                return;
-            }
+            if(prod.qty <= 0) { alert("عذراً، المنتج نفذ من المخزن!"); return; }
 
-            // خصم المخزن آلياً
             prod.qty -= 1;
             renderInventory();
             renderInventoryDropdowns();
@@ -1000,8 +756,7 @@
                 addonName: addon ? addon.name : 'بدون',
                 total,
                 notes,
-                status: 'نشط',
-                assignedTo: 'غير مسند'
+                status: 'نشط'
             });
 
             document.getElementById("order-client-name").value = "";
@@ -1010,227 +765,116 @@
             document.getElementById("order-product-preview").style.display = "none";
 
             renderOrders();
-            showNotification("تم تسجيل الطلبية وخصم الكمية من المخزن بنجاح");
+            updateMetrics();
+            showNotification("تم تسجيل الطلبية بنجاح");
         }
 
         function renderOrders() {
             const list = document.getElementById("real-orders-list");
             list.innerHTML = "";
-            document.getElementById("quick-cnt-orders").innerText = orders.filter(o => o.status === 'نشط').length;
-
             const activeOrders = orders.filter(o => o.status === 'نشط');
+
             if(activeOrders.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد طلبيات نشطة حالياً</div>`;
+                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد طلبيات نشطة</div>`;
                 return;
             }
 
             activeOrders.forEach(o => {
                 list.innerHTML += `
                     <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
-                        <div style="display:flex; justify-content:space-width; width:100%; justify-content:space-between;">
+                        <div style="display:flex; justify-content:space-between; width:100%;">
                             <strong>العميل: ${o.clientName}</strong>
-                            <span class="badge">${o.total.toFixed(2)} SAR</span>
+                            <span class="badge" style="direction:ltr;">${o.total.toFixed(2)} SAR</span>
                         </div>
                         <div style="font-size:10px; color:var(--text-muted);">المنتج: ${o.productName} | الإضافة: ${o.addonName}</div>
-                        <div style="font-size:10px; color:var(--warning);">المسؤول المسند: ${o.assignedTo}</div>
                         <div style="display:flex; gap:6px; width:100%; margin-top:4px;">
-                            <button class="btn" style="padding:6px; font-size:10px; margin-top:0; background:var(--primary);" onclick="openAssignModal(${o.id})">إسناد لمسؤول</button>
-                            <button class="btn" style="padding:6px; font-size:10px; margin-top:0; background:var(--success);" onclick="completeOrder(${o.id})">إتمام</button>
-                            <button class="btn" style="padding:6px; font-size:10px; margin-top:0; background:var(--danger);" onclick="trashOrder(${o.id})">إلغاء ومشاكل</button>
+                            <button class="btn" style="padding:5px; font-size:10px; margin-top:0; background:var(--success); color:#fff;" onclick="completeOrder(${o.id})">إتمام وتسليم</button>
+                            <button class="btn" style="padding:5px; font-size:10px; margin-top:0; background:var(--danger); color:#fff;" onclick="cancelOrder(${o.id})">إلغاء</button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        let selectedOrderIdForAssign = null;
-        function openAssignModal(orderId) {
-            selectedOrderIdForAssign = orderId;
-            const sel = document.getElementById("assign-staff-select");
-            sel.innerHTML = "";
-            staffRegistry.forEach(s => {
-                sel.innerHTML += `<option value="${s.name}">${s.name} (${s.role})</option>`;
-            });
-            document.getElementById("assign-order-modal").style.display = "flex";
-        }
-
-        function confirmAssignOrder() {
-            const staffName = document.getElementById("assign-staff-select").value;
-            const order = orders.find(o => o.id === selectedOrderIdForAssign);
-            if(order) {
-                order.assignedTo = staffName;
-                renderOrders();
-                closeModal('assign-order-modal');
-                showNotification("تم إسناد الطلب بنجاح");
-            }
-        }
-
         function completeOrder(id) {
-            const order = orders.find(o => o.id === id);
-            if(order) {
-                order.status = 'منتهي';
-                renderOrders();
-                renderCompletedOrders();
-                showNotification("تم نقل الطلب للطلبيات المنتهية");
-            }
+            orders = orders.filter(o => o.id !== id);
+            renderOrders();
+            updateMetrics();
+            showNotification("تم إتمام الطلب بنجاح");
         }
 
-        function trashOrder(id) {
-            const order = orders.find(o => o.id === id);
-            if(order) {
-                order.status = 'محذوف';
-                renderOrders();
-                renderTrashOrders();
-                showNotification("تم نقل الطلب للمحذوفة والمشاكل");
-            }
+        function cancelOrder(id) {
+            orders = orders.filter(o => o.id !== id);
+            renderOrders();
+            updateMetrics();
+            showNotification("تم إلغاء الطلب");
         }
 
-        function renderCompletedOrders() {
-            const list = document.getElementById("completed-orders-list");
-            list.innerHTML = "";
-            const comp = orders.filter(o => o.status === 'منتهي');
-            if(comp.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد طلبيات منتهية</div>`;
-                return;
-            }
-            comp.forEach(o => {
-                list.innerHTML += `<div class="card-item"><div><strong>${o.clientName}</strong> - ${o.productName}</div><span class="badge" style="background:var(--success);">${o.total.toFixed(2)} SAR</span></div>`;
-            });
-        }
-
-        function renderTrashOrders() {
-            const list = document.getElementById("trash-orders-list");
-            list.innerHTML = "";
-            const trash = orders.filter(o => o.status === 'محذوف');
-            if(trash.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد طلبيات محذوفة</div>`;
-                return;
-            }
-            trash.forEach(o => {
-                list.innerHTML += `<div class="card-item"><div><strong>${o.clientName}</strong> - ${o.productName}</div><span class="badge" style="background:var(--danger);">ملغى/مشكلة</span></div>`;
-            });
-        }
-
-        // إدارة المسؤولين (ثلاثة مسؤولين، فهد مالك وصلاحيات كاملة، محمد وفاطمة صلاحيات محددة)
         function renderStaffManagement() {
             const list = document.getElementById("staff-management-list");
             list.innerHTML = "";
             document.getElementById("staff-count-badge").innerText = staffRegistry.length;
 
             staffRegistry.forEach(s => {
-                let actionButtons = '';
-                // زر الطرد أو تعديل الحالة يظهر للمالك (فهد) فقط
-                if(currentUser.role === 'مالك' && s.role !== 'مالك') {
-                    actionButtons = `
-                        <div style="display:flex; gap:4px; margin-top:6px;">
-                            <button class="btn" style="padding:4px 8px; font-size:9px; background:var(--warning); width:auto; margin-top:0;" onclick="setStaffStatus(${s.id}, 'إجازة')">إجازة</button>
-                            <button class="btn" style="padding:4px 8px; font-size:9px; background:var(--primary); width:auto; margin-top:0;" onclick="setStaffStatus(${s.id}, 'استقالة')">استقالة</button>
-                            <button class="btn" style="padding:4px 8px; font-size:9px; background:var(--success); width:auto; margin-top:0;" onclick="setStaffStatus(${s.id}, 'نشط')">إرجاع نشط</button>
-                            <button class="btn" style="padding:4px 8px; font-size:9px; background:var(--danger); width:auto; margin-top:0;" onclick="fireStaff(${s.id})">طرد / حذف</button>
-                        </div>
-                    `;
+                let actionBtn = '';
+                if(s.role !== 'مالك') {
+                    actionBtn = `<button class="btn" style="padding:4px 8px; font-size:9px; background:var(--danger); width:auto; margin-top:0; color:#fff;" onclick="promptFireStaff(${s.id}, '${s.name}')">طرد / حذف</button>`;
                 }
 
                 list.innerHTML += `
                     <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
                         <div style="display:flex; justify-content:space-between; width:100%;">
                             <strong>${s.name} <span class="badge">${s.role}</span></strong>
-                            <span class="badge" style="background:${s.status === 'نشط' ? 'var(--success)' : 'var(--warning)'};">${s.status}</span>
+                            <span class="badge" style="background:var(--success); color:#fff;">${s.status}</span>
                         </div>
-                        <div style="font-size:10px; color:var(--text-muted); direction:ltr; text-align:left;">Email: ${s.email}</div>
-                        <div style="font-size:10px; color:var(--text-muted);">الجوال: ${s.phone || 'غير مسجل'} | تاريخ الميلاد: ${s.dob || 'غير مسجل'}</div>
-                        ${actionButtons}
+                        <div style="font-size:10px; color:var(--text-muted); direction:ltr; text-align:left;">Email: ${s.email} | Phone: ${s.phone}</div>
+                        ${actionBtn}
                     </div>
                 `;
             });
         }
 
-        function setStaffStatus(id, status) {
-            const st = staffRegistry.find(s => s.id === id);
-            if(st) {
-                st.status = status;
-                renderStaffManagement();
-                showNotification("تم تحديث حالة المسؤول إلى: " + status);
-            }
-        }
-
-        function fireStaff(id) {
-            if(confirm("هل أنت متأكد من طرد وحذف هذا المسؤول نهائياً؟")) {
+        function promptFireStaff(id, name) {
+            document.getElementById("confirm-title").innerText = "تأكيد طرد المسؤول";
+            document.getElementById("confirm-text").innerText = `هل أنت متأكد من طرد وحذف المسؤول (${name}) نهائياً من النظام؟`;
+            document.getElementById("confirm-yes-btn").onclick = function() {
                 staffRegistry = staffRegistry.filter(s => s.id !== id);
                 renderStaffManagement();
-                showNotification("تم طرد المسؤول وحذفه من النظام");
+                updateMetrics();
+                closeModal('confirm-modal');
+                showNotification("تم طرد المسؤول بنجاح");
+            };
+            document.getElementById("confirm-modal").style.display = "flex";
+        }
+
+        function loadProfileData() {
+            document.getElementById("prof-name").value = currentUser.name;
+            document.getElementById("prof-email").value = currentUser.email;
+            document.getElementById("prof-phone").value = currentUser.phone;
+            document.getElementById("prof-dob").value = currentUser.dob;
+            document.getElementById("profile-view-img").src = currentUser.avatar;
+        }
+
+        function updateProfileAvatar(input) {
+            if(input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentUser.avatar = e.target.result;
+                    document.getElementById("profile-view-img").src = currentUser.avatar;
+                    document.getElementById("header-avatar").src = currentUser.avatar;
+                    showNotification("تم تحديث الصورة الشخصية");
+                };
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
-        // الرسائل الفورية
-        function toggleMsgTargetField() {
-            const type = document.getElementById("msg-type-select").value;
-            const group = document.getElementById("target-staff-group");
-            if(type === 'single') {
-                group.style.display = "block";
-                const sel = document.getElementById("chat-target-staff");
-                sel.innerHTML = "";
-                staffRegistry.forEach(s => {
-                    if(s.email !== currentUser.email) {
-                        sel.innerHTML += `<option value="${s.name}">${s.name}</option>`;
-                    }
-                });
-            } else {
-                group.style.display = "none";
-            }
+        function saveProfileChanges() {
+            currentUser.email = document.getElementById("prof-email").value.trim();
+            currentUser.phone = document.getElementById("prof-phone").value.trim();
+            currentUser.dob = document.getElementById("prof-dob").value;
+            showNotification("تم حفظ وتحديث الملف الشخصي بنجاح");
         }
 
-        function sendBroadcastMessage() {
-            const text = document.getElementById("chat-msg-text").value.trim();
-            const type = document.getElementById("msg-type-select").value;
-            const target = document.getElementById("chat-target-staff").value;
-
-            if(!text) {
-                alert("يرجى كتابة نص الرسالة");
-                return;
-            }
-
-            const recipient = type === 'all' ? 'جميع المسؤولين' : target;
-            chatMessages.push({ sender: currentUser.name, recipient, text, time: new Date().toLocaleTimeString() });
-            document.getElementById("chat-msg-text").value = "";
-            renderChatBox();
-            showNotification("تم إرسال الرسالة بنجاح");
-        }
-
-        function renderChatBox() {
-            const box = document.getElementById("chat-box");
-            box.innerHTML = "";
-            if(chatMessages.length === 0) {
-                box.innerHTML = `<div style="color:var(--text-muted); text-align:center;">سجل الرسائل فارغ</div>`;
-                return;
-            }
-            chatMessages.forEach(m => {
-                box.innerHTML += `
-                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; margin-bottom:6px; border:1px solid var(--border);">
-                        <div style="display:flex; justify-content:space-between; font-weight:bold; color:var(--accent-green);">
-                            <span>${m.sender} ➔ ${m.recipient}</span>
-                            <span style="font-size:9px; color:var(--text-muted);">${m.time}</span>
-                        </div>
-                        <div style="margin-top:2px;">${m.text}</div>
-                    </div>
-                `;
-            });
-        }
-
-        // الملف الشخصي
-        function renderProfileDetails() {
-            const box = document.getElementById("profile-details-box");
-            box.innerHTML = `
-                <div style="margin-bottom:8px;"><strong>الاسم الحقيقي:</strong> ${currentUser.name}</div>
-                <div style="margin-bottom:8px;"><strong>البريد الإلكتروني:</strong> ${currentUser.email}</div>
-                <div style="margin-bottom:8px;"><strong>الدور الوظيفي:</strong> ${currentUser.role}</div>
-                <div style="margin-bottom:8px;"><strong>رقم الجوال:</strong> ${currentUser.phone || 'غير مسجل'}</div>
-                <div style="margin-bottom:8px;"><strong>تاريخ الميلاد:</strong> ${currentUser.dob || 'غير مسجل'}</div>
-                <div style="margin-bottom:8px;"><strong>حالة الحساب:</strong> <span class="badge" style="background:var(--success);">${currentUser.status}</span></div>
-            `;
-        }
-
-        // مساعد الذكاء الاصطناعي (AI)
         function toggleAIChat() {
             const box = document.getElementById("ai-chat-box");
             box.style.display = box.style.display === "block" ? "none" : "block";
@@ -1242,17 +886,17 @@
             if(!txt) return;
 
             const list = document.getElementById("ai-messages-list");
-            list.innerHTML += `<div style="margin-bottom:4px; color:var(--text-main);"><strong>أنت:</strong> ${txt}</div>`;
+            list.innerHTML += `<div style="margin-bottom:6px; color:var(--text-main);"><strong>أنت:</strong> ${txt}</div>`;
             input.value = "";
 
             setTimeout(() => {
-                let reply = "أهلاً بك يا فهد، النظام يعمل بكفاءة تامة وجاهز لإدارة المخزن والطلبيات والمسؤولين بدقة.";
+                let reply = "أهلاً بك يا فهد. بصفتي مساعدك الذكي لمتجر Neris، أؤكد لك أن النظام يعمل بكفاءة تامة، وجميع البيانات مسجلة ومحدثة بدقة عالية.";
                 if(txt.includes("مخزن") || txt.includes("منتج")) {
-                    reply = `عدد المنتجات الحالية في المخزن هو ${inventory.length} منتج.`;
+                    reply = `إجمالي المنتجات الحالية في المخزن هو ${inventory.length} منتج مسجل بأرقام إنجليزية دقيقة.`;
                 } else if(txt.includes("موظف") || txt.includes("مسؤول")) {
-                    reply = `طاقم الإدارة يتكون من 3 مسؤولين نشطين (فهد، محمد، فاطمة).`;
+                    reply = `طاقم الإدارة الحالي يتكون من ${staffRegistry.length} مسؤولين نشطين بصلاحياتهم الكاملة.`;
                 }
-                list.innerHTML += `<div style="margin-bottom:4px; color:var(--accent-green);"><strong>NERIS AI:</strong> ${reply}</div>`;
+                list.innerHTML += `<div style="margin-bottom:6px; color:var(--accent-gold);"><strong>Neris AI:</strong> ${reply}</div>`;
                 list.scrollTop = list.scrollHeight;
             }, 600);
         }
