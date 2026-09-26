@@ -187,7 +187,7 @@
                 <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);">Neris AI Assistant</span>
                 <button onclick="toggleFloatingAIPopup()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
-            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;" data-t="ai_welcome_msg">أهلاً بك يا فهد. تم تحديث النظام وصلاحيات الموظفين!</div>
+            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;" data-t="ai_welcome_msg">أهلاً بك يا فهد. تم تحديث النظام وصلاحيات القوائم!</div>
             <div style="display:flex; gap:4px;">
                 <input type="text" id="floating-ai-input" data-t-ph="ai_input_ph" placeholder="اسأل الـ AI..." style="flex:1; padding:6px; font-size:10px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:4px;">
                 <button class="btn" style="margin-top:0; padding:6px 10px; font-size:10px; width:auto;" onclick="sendFloatingAI()" data-t="send_btn">إرسال</button>
@@ -232,11 +232,11 @@
                 <button onclick="toggleDrawer()" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
             </div>
             <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 <span data-t="home">الواجهة الرئيسية</span></div>
-            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 <span data-t="orders">إدارة الطلبيات النشطة والتوزيع</span></div>
-            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span data-t="inventory">المخزن والمنتجات</span></div>
-            <div class="drawer-item" onclick="navTo('addons-screen')">🎀 <span data-t="addons">التغليف والإضافات</span></div>
-            <div class="drawer-item" onclick="navTo('chat-screen')">💬 <span data-t="chat">الرسائل والمحادثات</span></div>
-            <div class="drawer-item" onclick="navTo('ai-chat-screen')">✨ <span data-t="ai_chat">مساعد الـ AI الذكي</span></div>
+            <div class="drawer-item" id="drawer-orders-item" onclick="navTo('orders-screen')">🛒 <span data-t="orders">إدارة الطلبيات النشطة والتوزيع</span></div>
+            <div class="drawer-item" id="drawer-inventory-item" onclick="navTo('inventory-screen')">📦 <span data-t="inventory">المخزن والمنتجات</span></div>
+            <div class="drawer-item" id="drawer-addons-item" onclick="navTo('addons-screen')">🎀 <span data-t="addons">التغليف والإضافات</span></div>
+            <div class="drawer-item" id="drawer-chat-item" onclick="navTo('chat-screen')">💬 <span data-t="chat">الرسائل والمحادثات</span></div>
+            <div class="drawer-item" id="drawer-ai-item" onclick="navTo('ai-chat-screen')">✨ <span data-t="ai_chat">مساعد الـ AI الذكي</span></div>
             <div class="drawer-item" id="drawer-staff-item" onclick="navTo('staff-screen')" style="display:none;">👥 <span data-t="staff">فريق العمل والصلاحيات</span></div>
             <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ <span data-t="profile">الملف الشخصي</span></div>
             <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(224,82,82,0.3); margin-top:10px;">🚪 <span data-t="logout">تسجيل الخروج</span></div>
@@ -318,7 +318,7 @@
 
         <div id="addons-screen" class="screen">
             <h2 data-t="addons_title">التغليف والإضافات الممتازة</h2>
-            <p class="subtitle" data-t="addons_sub">إدارة عناصر التغليف مع الصور والأسعار</p>
+            <p class="subtitle" data-t="addons_sub">إدارة عناصر التغليف مع الصور والأسعار والمقاسات</p>
             <button class="btn" onclick="openAddAddonModal()" data-t="add_addon_btn">+ إضافة عنصر تغليف جديد</button>
             <div class="panel-box" style="margin-top:10px;">
                 <h4 data-t="addons_list_title">عناصر التغليف المتاحة</h4>
@@ -412,6 +412,19 @@
             </div>
         </div>
 
+        <!-- مودال إدخال كلمة السر لبيانات الموظف -->
+        <div class="modal" id="staff-pass-modal">
+            <div class="modal-content" style="text-align:center;">
+                <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="pass_modal_title">🔒 أدخل كلمة سر المشرف</h3>
+                <p style="font-size:10px; color:var(--text-muted); margin-bottom:10px;" data-t="pass_modal_sub">كلمة السر المطلوبة: 5393</p>
+                <input type="password" id="staff-secret-pin" placeholder="••••" style="text-align:center; font-size:16px; letter-spacing:4px; margin-bottom:10px;" maxlength="4">
+                <div style="display:flex; gap:8px;">
+                    <button class="btn" style="background:var(--success); color:#fff;" onclick="verifyStaffPIN()" data-t="verify_btn">تحقق</button>
+                    <button class="btn" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('staff-pass-modal')" data-t="cancel_btn">إلغاء</button>
+                </div>
+            </div>
+        </div>
+
         <!-- مودال إضافة/تعديل منتج -->
         <div class="modal" id="product-modal">
             <div class="modal-content">
@@ -437,6 +450,7 @@
                 <h3 id="addon-modal-title" style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_addon_modal">إضافة عنصر تغليف مع صورة</h3>
                 <input type="hidden" id="edit-addon-id" value="">
                 <div class="input-group"><label data-t="a_name">اسم التغليف</label><input type="text" id="a-name" data-t-ph="a_name_ph" placeholder="علبة مخمل فاخرة"></div>
+                <div class="input-group"><label data-t="a_size">المقاس</label><input type="text" id="a-size" data-t-ph="a_size_ph" placeholder="مقاس وسط / S"></div>
                 <div class="input-group"><label data-t="a_img">صورة التغليف</label><input type="file" id="a-img-file" accept="image/*" style="direction:ltr; text-align:left; font-size:10px;"></div>
                 <div class="input-group"><label data-t="a_price">السعر (SAR)</label><input type="number" id="a-price" placeholder="50" style="direction:ltr; text-align:left;"></div>
                 <div style="display:flex; gap:8px; margin-top:10px;">
@@ -468,39 +482,22 @@
         window.currentLang = 'ar';
         window.currentLoggedInUserEmail = 'fahadfhd47@gmail.com';
         window.currentUserRole = 'admin';
+        window.verifiedStaffIdForDetails = null;
+
         window.inventoryList = [
             { id: 101, name: "سوار تنس دائري من النحاس الفضي اللامع", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 24.29, suggestedPrice: (24.29*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 102, name: "سوار زهرة ثنائي الطبقات من الزركونيا", qty: 5, color: "فضي", size: "مقاس واحد", cost: 9.40, suggestedPrice: (9.40*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 103, name: "مجموعة أساور بأسلوب إنستغرام مع راينستون (3 قطع)", qty: 5, color: "متعدد الألوان", size: "مقاس واحد", cost: 10.01, suggestedPrice: (10.01*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 104, name: "سوار زهرة رباعية الأوراق ملون", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 9.35, suggestedPrice: (9.35*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 105, name: "سوار من النحاس بتصميم ورقة البرسيم الرمادي الأزرق", qty: 5, color: "فضي", size: "مقاس واحد", cost: 17.00, suggestedPrice: (17.00*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 106, name: "مجموعة أساور سلسلة مرصعة بالزركونيا والراينستون (3 قطع)", qty: 5, color: "ذهبي أصفر", size: "مقاس واحد", cost: 11.28, suggestedPrice: (11.28*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 107, name: "سوار أصبع من الفولاذ المقاوم للصدأ مع لؤلؤ", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 7.65, suggestedPrice: (7.65*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 108, name: "سوار كاحل بتصميم بحري على شكل سلحفاة", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 10.20, suggestedPrice: (10.20*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 109, name: "سوار تنس من الزركونيا قابل للتعديل", qty: 5, color: "وردي / فضي", size: "مقاس واحد", cost: 10.92, suggestedPrice: (10.92*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 110, name: "خاتم مكعب زركونيا (طقم قطعتين)", qty: 5, color: "أخضر", size: "مقاس 7-8", cost: 9.68, suggestedPrice: (9.68*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 111, name: "قلادة طبقات مزدوجة على شكل قطرة ماء", qty: 5, color: "فضي", size: "مقاس واحد", cost: 6.00, suggestedPrice: (6.00*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 112, name: "قلادة من الفولاذ المقاوم للصدأ بزهرة 8 بتلات", qty: 5, color: "ذهبي أصفر", size: "مقاس واحد", cost: 6.43, suggestedPrice: (6.43*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 113, name: "سوار بشكل قلب كلاسيكي للأطفال", qty: 5, color: "ذهبي أصفر", size: "مقاس واحد", cost: 7.36, suggestedPrice: (7.36*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 114, name: "سوار فاخر من الفولاذ المقاوم للصدأ (برسيم)", qty: 5, color: "أصفر ذهبي", size: "مقاس واحد", cost: 13.36, suggestedPrice: (13.36*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 115, name: "قلادة معلقة بشكل مربع للحلوى (مكعبات السكر)", qty: 5, color: "ذهبي", size: "مقاس واحد", cost: 6.00, suggestedPrice: (6.00*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 116, name: "أقراط التنس اللامعة بالزركونيا (زهرة وأوراق)", qty: 5, color: "ذهبي + أحمر", size: "مقاس واحد", cost: 11.44, suggestedPrice: (11.44*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 117, name: "خاتم مطلي بالذهب عيار 18 قيراط (جوهرة الميلاد)", qty: 5, color: "ذهبي", size: "قابل للتعديل", cost: 13.66, suggestedPrice: (13.66*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 118, name: "سوار مطلي بالذهب عيار 18 قيراط ملون بالزركونيا", qty: 5, color: "متعدد الألوان", size: "مقاس واحد", cost: 13.11, suggestedPrice: (13.11*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 119, name: "مجموعة قلادة وسلسلة بنجمة البحر (قطعتان)", qty: 5, color: "الذهبي", size: "سلسلة الترقوة", cost: 9.68, suggestedPrice: (9.68*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 120, name: "قلادة من الفولاذ المقاوم للصدأ بتصميم قلب أنيق", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 10.51, suggestedPrice: (10.51*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 121, name: "قلادة بزهرة بخمسة بتلات دوارة مرصعة بالزركونيا", qty: 5, color: "وردي", size: "مقاس واحد", cost: 8.50, suggestedPrice: (8.50*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" }
+            { id: 102, name: "سوار زهرة ثنائي الطبقات من الزركونيا", qty: 5, color: "فضي", size: "مقاس واحد", cost: 9.40, suggestedPrice: (9.40*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" }
         ];
         window.inventoryTrash = [];
         window.addonsList = [
-            { id: 1, name: "علبة مخمل فاخرة", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
-            { id: 2, name: "كيس هدية بشريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
+            { id: 1, name: "علبة مخمل فاخرة", size: "مقاس كبير", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
+            { id: 2, name: "كيس هدية بشريطة ذهبية", size: "مقاس وسط", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
         ];
         window.addonsTrash = [];
         window.staffList = [
-            { id: 0, name: "فهد راشد الحسين (المالك)", role: "المالك (Owner / Admin)", email: "fahadfhd47@gmail.com", pass: "Fahad55003", phone: "0549553395", dob: "2006-07-31", status: "نشط", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", permissions: { inventory: true, orders: true, chat: true, staff: true }, chat: [] },
-            { id: 1, name: "محمد", role: "مسؤول (Manager)", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", permissions: { inventory: true, orders: true, chat: true, staff: false }, chat: [] },
-            { id: 2, name: "فاطمة", role: "موظف (Staff)", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", permissions: { inventory: false, orders: true, chat: true, staff: false }, chat: [] }
+            { id: 0, name: "فهد راشد الحسين (المالك)", role: "المالك (Owner / Admin)", email: "fahadfhd47@gmail.com", pass: "Fahad55003", phone: "0549553395", dob: "2006-07-31", status: "نشط", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", permissions: { inventory: true, orders: true, chat: true, ai: true, staff: true }, chat: [] },
+            { id: 1, name: "محمد", role: "مسؤول (Manager)", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", permissions: { inventory: true, orders: true, chat: true, ai: true, staff: false }, chat: [] },
+            { id: 2, name: "فاطمة", role: "موظف (Staff)", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", permissions: { inventory: false, orders: true, chat: true, ai: false, staff: false }, chat: [] }
         ];
         window.staffTrash = [];
         window.ordersList = [];
@@ -517,7 +514,7 @@
                 orders_title: "إدارة الطلبيات النشطة والتوزيع", orders_sub: "توزيع الطلبات على الموظفين ومتابعة حالة التجهيز لحظياً",
                 inv_title: "المخزن والمنتجات", inv_sub: "إضافة وتعديل المنتجات مع حساب AI للأسعار وتنبيهات المخزون", add_prod_btn: "+ إضافة منتج جديد مع صورة", inv_list_title: "قائمة منتجات المخزن",
                 inv_trash_title: "🗑️ سلة مهملات المخزن (تسترجع خلال 30 يوم أو تحذف نهائياً)", empty_trash: "سلة محذوفات المخزن فارغة.",
-                addons_title: "التغليف والإضافات الممتازة", addons_sub: "إدارة عناصر التغليف مع الصور والأسعار", add_addon_btn: "+ إضافة عنصر تغليف جديد", addons_list_title: "عناصر التغليف المتاحة",
+                addons_title: "التغليف والإضافات الممتازة", addons_sub: "إدارة عناصر التغليف مع الصور والأسعار والمقاسات", add_addon_btn: "+ إضافة عنصر تغليف جديد", addons_list_title: "عناصر التغليف المتاحة",
                 addon_trash_title: "🗑️ سلة محذوفات التغليف", empty_addon_trash: "سلة محذوفات التغليف فارغة.",
                 chat_title: "المحادثات الخاصة (مثل واتساب)", chat_sub: "تواصل مباشر وسجل رسائل محفوظ مع الفريق", select_staff_chat: "اختر الموظف للمحادثة:", send_btn: "إرسال",
                 ai_screen_title: "مساعد الذكاء الاصطناعي المتطور (AI Chat)", ai_screen_sub: "اكتب أي استفسار أو أمر وسيجيبك المساعد فوراً",
@@ -526,14 +523,17 @@
                 prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي، صورتك، وتاريخ ميلادك", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", dob_lbl: "تاريخ الميلاد", age_lbl: "العمر المحسوب تلقائياً", save_btn: "حفظ التعديلات", photo_lbl: "صورة",
                 add_staff_modal_title: "➕ إضافة موظف جديد للنظام", s_name: "اسم الموظف", s_role: "المسمى الوظيفي", s_email: "البريد الإلكتروني", s_pass: "كلمة المرور", s_phone: "رقم الجوال", s_dob: "تاريخ الميلاد",
                 add_prod_modal: "إضافة / تعديل منتج", p_name: "اسم المنتج", p_qty_lbl: "الكمية المتاحة (المخزون)", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
-                add_addon_modal: "إضافة / تعديل تغليف", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
+                add_addon_modal: "إضافة / تعديل تغليف", a_name: "اسم التغليف", a_size: "مقاس التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
                 new_order_heading: "➕ تسجيل طلبية جديدة", sel_prod: "اختر المنتج الأساسي:", sel_addons: "اختر التغليف والإضافات المتعددة:", submit_order_btn: "تسجيل الطلبية وإضافتها للمخزن",
                 login_title: "تسجيل الدخول الآمن", login_sub: "أدخل بيانات الاعتماد الخاصة بك بدقة", login_err: "البريد أو كلمة المرور غير صحيحة", login_btn: "تسجيل دخول", ai_widget_btn: "Neris AI مساعد", menu_title: "قائمة التنقل",
                 intro_h1: "مرحباً بك في نظام نيرسي", intro_p: "NERIS CLOUD OS - متصل بالسحابة لحظياً",
                 my_orders_title: "🔔 الطلبيات المسندة إليك للتجهيز الآن", ai_init_msg: "أهلاً بك يا فهد. أنا مستعد لإجابتك على أي استفسار بخصوص المخزن، الطلبات، أو إدارة المحل.",
                 c_name_ph: "اسم العميل", c_phone_ph: "رقم الجوال", msg_ph: "اكتب رسالة...", ai_input_ph: "اسأل الـ AI...",
-                email_ph: "البريد الإلكتروني", pass_ph: "كلمة المرور", s_name_ph: "محمد / فاطمة", s_role_ph: "مسؤول أو موظف مبيعات", p_name_ph: "خاتم ألماس فاخر", p_color_ph: "ذهبي وردي", p_size_ph: "مقاس 7", a_name_ph: "علبة مخمل فاخرة",
-                perm_inv: "إدارة المخزن", perm_orders: "إدارة الطلبات", perm_chat: "المحادثات", perm_staff: "إدارة الموظفين"
+                email_ph: "البريد الإلكتروني", pass_ph: "كلمة المرور", s_name_ph: "محمد / فاطمة", s_role_ph: "مسؤول أو موظف مبيعات", p_name_ph: "خاتم ألماس فاخر", p_color_ph: "ذهبي وردي", p_size_ph: "مقاس 7", a_name_ph: "علبة مخمل فاخرة", a_size_ph: "مقاس وسط / S",
+                perm_inv: "إدارة المخزن", perm_orders: "إدارة الطلبات", perm_chat: "المحادثات", perm_ai: "مساعد الـ AI", perm_staff: "إدارة الموظفين",
+                pass_modal_title: "🔒 أدخل كلمة سر المشرف", pass_modal_sub: "كلمة السر المطلوبة: 5393", verify_btn: "تحقق",
+                show_details_btn: "عرض تفاصيل الموظف 🔐", hide_details_btn: "إخفاء التفاصيل 🔒", edit_perms_btn: "تعديل الصلاحيات المخصصة ⚙️",
+                perm_modal_title: "⚙️ إعداد صلاحيات القوائم للموظف"
             },
             en: {
                 home: "Dashboard", orders: "Active Orders", inventory: "Inventory", addons: "Packaging & Add-ons",
@@ -544,7 +544,7 @@
                 orders_title: "Active Orders & Distribution", orders_sub: "Distribute orders to staff and track progress",
                 inv_title: "Inventory & Products", inv_sub: "Add/edit products with AI pricing & stock alerts", add_prod_btn: "+ Add New Product with Image", inv_list_title: "Inventory Products",
                 inv_trash_title: "🗑️ Inventory Trash (Restorable for 30 days)", empty_trash: "Inventory trash is empty.",
-                addons_title: "Premium Packaging & Add-ons", addons_sub: "Manage packaging with images & prices", add_addon_btn: "+ Add Packaging Item", addons_list_title: "Available Packaging",
+                addons_title: "Premium Packaging & Add-ons", addons_sub: "Manage packaging with images, prices & sizes", add_addon_btn: "+ Add Packaging Item", addons_list_title: "Available Packaging",
                 addon_trash_title: "🗑️ Packaging Trash", empty_addon_trash: "Packaging trash is empty.",
                 chat_title: "Private Chats (WhatsApp style)", chat_sub: "Direct communication with persistent history", select_staff_chat: "Select staff to chat:", send_btn: "Send",
                 ai_screen_title: "Advanced AI Assistant (AI Chat)", ai_screen_sub: "Type any query or order and the assistant will reply instantly",
@@ -553,14 +553,17 @@
                 prof_title: "Profile & Account", prof_sub: "Manage your personal account details, photo and DOB", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", dob_lbl: "Date of Birth", age_lbl: "Calculated Age", save_btn: "Save Changes", photo_lbl: "Photo",
                 add_staff_modal_title: "➕ Add New Staff Member", s_name: "Staff Name", s_role: "Job Title", s_email: "Email", s_pass: "Password", s_phone: "Phone", s_dob: "Date of Birth",
                 add_prod_modal: "Add / Edit Product", p_name: "Product Name", p_qty_lbl: "Available Quantity (Stock)", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
-                add_addon_modal: "Add / Edit Packaging", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
+                add_addon_modal: "Add / Edit Packaging", a_name: "Packaging Name", a_size: "Size", a_img: "Packaging Image", a_price: "Price (SAR)",
                 new_order_heading: "➕ Register New Order", sel_prod: "Select Main Product:", sel_addons: "Select Multiple Add-ons & Packaging:", submit_order_btn: "Register Order & Add to Inventory",
                 login_title: "Secure Login", login_sub: "Enter your credentials carefully", login_err: "Incorrect email or password", login_btn: "Login", ai_widget_btn: "Neris AI Assistant", menu_title: "Navigation Menu",
                 intro_h1: "Welcome to Neris OS", intro_p: "NERIS CLOUD OS - Realtime Cloud Connected",
                 my_orders_title: "🔔 Orders Assigned to You for Processing", ai_init_msg: "Welcome Fahad. I am ready to answer any inquiries regarding inventory, orders, or store management.",
                 c_name_ph: "Client Name", c_phone_ph: "Phone Number", msg_ph: "Type a message...", ai_input_ph: "Ask AI...",
-                email_ph: "Email", pass_ph: "Password", s_name_ph: "Mohammed / Fatima", s_role_ph: "Manager or Sales Staff", p_name_ph: "Luxury Diamond Ring", p_color_ph: "Rose Gold", p_size_ph: "Size 7", a_name_ph: "Luxury Velvet Box",
-                perm_inv: "Inventory", perm_orders: "Orders", perm_chat: "Chat", perm_staff: "Staff"
+                email_ph: "Email", pass_ph: "Password", s_name_ph: "Mohammed / Fatima", s_role_ph: "Manager or Sales Staff", p_name_ph: "Luxury Diamond Ring", p_color_ph: "Rose Gold", p_size_ph: "Size 7", a_name_ph: "Luxury Velvet Box", a_size_ph: "Medium / S",
+                perm_inv: "Inventory", perm_orders: "Orders", perm_chat: "Chat", perm_ai: "AI Assistant", perm_staff: "Staff",
+                pass_modal_title: "🔒 Enter Admin PIN", pass_modal_sub: "Required PIN: 5393", verify_btn: "Verify",
+                show_details_btn: "Show Staff Details 🔐", hide_details_btn: "Hide Details 🔒", edit_perms_btn: "Configure Permissions ⚙️",
+                perm_modal_title: "⚙️ Configure Menu Permissions"
             }
         };
 
@@ -613,12 +616,10 @@
             if(email === "fahadfhd47@gmail.com" && pass === "Fahad55003") {
                 window.currentUserRole = 'admin';
                 window.currentLoggedInUserEmail = email;
-                document.getElementById('drawer-staff-item').style.display = 'flex';
                 successLogin();
             } else if(matchedStaff) {
                 window.currentUserRole = 'staff';
                 window.currentLoggedInUserEmail = email;
-                document.getElementById('drawer-staff-item').style.display = matchedStaff.permissions && matchedStaff.permissions.staff ? 'flex' : 'none';
                 successLogin();
             } else {
                 document.getElementById('login-error').style.display = 'block';
@@ -629,8 +630,32 @@
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-header').style.display = 'flex';
             document.getElementById('floating-ai-widget').style.display = 'flex';
+            applyUserPermissionsToDrawer();
             navTo('home-main-screen');
             showNotification(window.currentLang === 'ar' ? "تم تسجيل الدخول بنجاح" : "Logged in successfully");
+        }
+
+        function applyUserPermissionsToDrawer() {
+            if(window.currentUserRole === 'admin') {
+                document.getElementById('drawer-inventory-item').style.display = 'flex';
+                document.getElementById('drawer-orders-item').style.display = 'flex';
+                document.getElementById('drawer-addons-item').style.display = 'flex';
+                document.getElementById('drawer-chat-item').style.display = 'flex';
+                document.getElementById('drawer-ai-item').style.display = 'flex';
+                document.getElementById('drawer-staff-item').style.display = 'flex';
+                return;
+            }
+
+            let currentStaff = window.staffList.find(s => s.email === window.currentLoggedInUserEmail);
+            if(!currentStaff || !currentStaff.permissions) return;
+
+            let p = currentStaff.permissions;
+            document.getElementById('drawer-inventory-item').style.display = p.inventory ? 'flex' : 'none';
+            document.getElementById('drawer-orders-item').style.display = p.orders ? 'flex' : 'none';
+            document.getElementById('drawer-addons-item').style.display = p.inventory ? 'flex' : 'none'; // التغليف مرتبط بإدارة المخزن
+            document.getElementById('drawer-chat-item').style.display = p.chat ? 'flex' : 'none';
+            document.getElementById('drawer-ai-item').style.display = p.ai ? 'flex' : 'none';
+            document.getElementById('drawer-staff-item').style.display = p.staff ? 'flex' : 'none';
         }
 
         window.toggleFloatingAIPopup = function() {
@@ -725,6 +750,7 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             document.getElementById('main-drawer').classList.remove('open');
+            applyUserPermissionsToDrawer();
             refreshUI();
         }
 
@@ -750,6 +776,7 @@
             renderOrderDropdowns();
             renderOrdersList();
             renderMyAssignedOrders();
+            applyTranslations();
         }
 
         function renderMyAssignedOrders() {
@@ -788,12 +815,7 @@
             let html = '';
             window.inventoryList.forEach(item => {
                 let qty = item.qty !== undefined ? item.qty : 5;
-                let alertBadge = '';
-                if(qty < 2) {
-                    alertBadge = `<br><span style="color:var(--danger); font-size:9px; font-weight:bold;">🚨 ${window.currentLang==='ar'?'انتهى تقريباً':'Almost out'} (${qty})</span>`;
-                } else {
-                    alertBadge = `<br><span style="color:var(--success); font-size:9px;">🟢 ${window.currentLang==='ar'?'متوفر':'Available'} (${qty})</span>`;
-                }
+                let alertBadge = qty < 2 ? `<br><span style="color:var(--danger); font-size:9px;">🚨 ${window.currentLang==='ar'?'انتهى تقريباً':'Almost out'} (${qty})</span>` : `<br><span style="color:var(--success); font-size:9px;">🟢 ${window.currentLang==='ar'?'متوفر':'Available'} (${qty})</span>`;
 
                 html += `<div class="card-item">
                     <div style="display:flex; align-items:center; gap:8px;">
@@ -862,9 +884,9 @@
                 html += `<div class="card-item">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img src="${item.image || 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100'}" class="product-thumb">
-                        <div><strong>${item.name}</strong></div>
+                        <div><strong>${item.name}</strong> (${item.size || 'N/A'})</div>
                     </div>
-                    <div style="display:flex; gap:4px;">
+                    <div style="display:flex; gap:4px; align-items:center;">
                         <span class="badge">${item.price} SAR</span>
                         <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--accent-gold); color:#1c1815; width:auto; margin-top:0;" onclick="openEditAddonModal(${item.id})">${window.currentLang==='ar'?'تعديل ✏️':'Edit ✏️'}</button>
                         <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto; margin-top:0;" onclick="trashAddonItem(${item.id})">${window.currentLang==='ar'?'حذف 🗑️':'Delete 🗑️'}</button>
@@ -927,7 +949,7 @@
                 html += `<div class="addon-option-card" onclick="toggleAddonCheck(this)">
                     <input type="checkbox" name="order-addon" value="${item.id}" style="cursor:pointer;">
                     <img src="${item.image || 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100'}" style="width:28px; height:28px; border-radius:4px; object-fit:cover;">
-                    <div style="font-size:11px; flex:1;"><strong>${item.name}</strong></div>
+                    <div style="font-size:11px; flex:1;"><strong>${item.name}</strong> (${item.size || ''})</div>
                     <span class="badge">+${item.price} SAR</span>
                 </div>`;
             });
@@ -943,7 +965,9 @@
             let html = '';
             window.staffList.forEach(staff => {
                 let ageText = calcStaffAge(staff.dob);
-                let p = staff.permissions || { inventory: true, orders: true, chat: true, staff: false };
+                let isVerified = window.verifiedStaffIdForDetails === staff.id;
+                let p = staff.permissions || { inventory: true, orders: true, chat: true, ai: true, staff: false };
+
                 html += `<div class="staff-profile-card">
                     <div class="staff-header-flex">
                         <div class="staff-avatar-box" onclick="document.getElementById('file-up-${staff.id}').click()" title="تغيير الصورة الشخصية">
@@ -968,25 +992,63 @@
                             </div>
                         </div>
                     </div>
-                    <div class="staff-grid-fields">
-                        <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'البريد الإلكتروني':'Email'}</label><input type="text" value="${staff.email}" onchange="updateStaffField(${staff.id}, 'email', this.value)" style="direction:ltr; text-align:left;"></div>
-                        <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'كلمة المرور':'Password'}</label><input type="text" value="${staff.pass}" onchange="updateStaffField(${staff.id}, 'pass', this.value)" style="direction:ltr; text-align:left;"></div>
-                        <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'رقم الجوال':'Phone'}</label><input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" style="direction:ltr; text-align:left;"></div>
-                        <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'تاريخ الميلاد (العمر: ':'DOB (Age: '}<b style="color:var(--accent-gold);">${ageText}</b>)</label><input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="direction:ltr; text-align:left;"></div>
+
+                    <!-- زر عرض التفاصيل المحمي بكلمة سر -->
+                    <div style="margin-bottom:8px;">
+                        <button class="btn" style="background:var(--bg-card); color:var(--accent-gold); border:1px solid var(--accent-gold); padding:6px; font-size:10px; margin-top:0;" onclick="toggleStaffDetails(${staff.id})">
+                            ${isVerified ? (window.currentLang==='ar'?'إخفاء التفاصيل 🔒':'Hide Details 🔒') : (window.currentLang==='ar'?'عرض تفاصيل الموظف (كلمة السر) 🔐':'Show Staff Details (PIN) 🔐')}
+                        </button>
                     </div>
-                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:8px; font-size:10px;">
-                        <div style="font-weight:bold; color:var(--accent-gold); margin-bottom:4px;">🔐 الصلاحيات المخصصة:</div>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px;">
-                            <label style="cursor:pointer;"><input type="checkbox" ${p.inventory?'checked':''} onchange="updateStaffPerm(${staff.id}, 'inventory', this.checked)"> ${window.currentLang==='ar'?'إدارة المخزن':'Inventory'}</label>
-                            <label style="cursor:pointer;"><input type="checkbox" ${p.orders?'checked':''} onchange="updateStaffPerm(${staff.id}, 'orders', this.checked)"> ${window.currentLang==='ar'?'إدارة الطلبات':'Orders'}</label>
-                            <label style="cursor:pointer;"><input type="checkbox" ${p.chat?'checked':''} onchange="updateStaffPerm(${staff.id}, 'chat', this.checked)"> ${window.currentLang==='ar'?'المحادثات':'Chat'}</label>
-                            <label style="cursor:pointer;"><input type="checkbox" ${p.staff?'checked':''} onchange="updateStaffPerm(${staff.id}, 'staff', this.checked)"> ${window.currentLang==='ar'?'إدارة الموظفين':'Staff'}</label>
+
+                    <!-- حقول المعلومات المخفية تحجباً -->
+                    <div id="staff-details-box-${staff.id}" style="display:${isVerified ? 'block' : 'none'};">
+                        <div class="staff-grid-fields">
+                            <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'البريد الإلكتروني':'Email'}</label><input type="text" value="${staff.email}" onchange="updateStaffField(${staff.id}, 'email', this.value)" style="direction:ltr; text-align:left;"></div>
+                            <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'كلمة المرور':'Password'}</label><input type="text" value="${staff.pass}" onchange="updateStaffField(${staff.id}, 'pass', this.value)" style="direction:ltr; text-align:left;"></div>
+                            <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'رقم الجوال':'Phone'}</label><input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" style="direction:ltr; text-align:left;"></div>
+                            <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'تاريخ الميلاد (العمر: ':'DOB (Age: '}<b style="color:var(--accent-gold);">${ageText}</b>)</label><input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="direction:ltr; text-align:left;"></div>
+                        </div>
+
+                        <!-- الصلاحيات المخصصة للموظف -->
+                        <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:8px; font-size:10px;">
+                            <div style="font-weight:bold; color:var(--accent-gold); margin-bottom:4px;" data-t="perm_modal_title">⚙️ إعداد صلاحيات القوائم للموظف:</div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px;">
+                                <label style="cursor:pointer;"><input type="checkbox" ${p.inventory?'checked':''} onchange="updateStaffPerm(${staff.id}, 'inventory', this.checked)"> ${window.currentLang==='ar'?'إدارة المخزن':'Inventory'}</label>
+                                <label style="cursor:pointer;"><input type="checkbox" ${p.orders?'checked':''} onchange="updateStaffPerm(${staff.id}, 'orders', this.checked)"> ${window.currentLang==='ar'?'إدارة الطلبات':'Orders'}</label>
+                                <label style="cursor:pointer;"><input type="checkbox" ${p.chat?'checked':''} onchange="updateStaffPerm(${staff.id}, 'chat', this.checked)"> ${window.currentLang==='ar'?'المحادثات':'Chat'}</label>
+                                <label style="cursor:pointer;"><input type="checkbox" ${p.ai?'checked':''} onchange="updateStaffPerm(${staff.id}, 'ai', this.checked)"> ${window.currentLang==='ar'?'مساعد الـ AI':'AI Assistant'}</label>
+                                <label style="cursor:pointer;"><input type="checkbox" ${p.staff?'checked':''} onchange="updateStaffPerm(${staff.id}, 'staff', this.checked)"> ${window.currentLang==='ar'?'إدارة الموظفين':'Staff'}</label>
+                            </div>
                         </div>
                     </div>
+
                     ${staff.id !== 0 ? `<button class="btn" style="background:var(--danger); color:#fff; padding:6px; font-size:10px; margin-top:6px;" onclick="trashStaff(${staff.id})">${window.currentLang==='ar'?'حذف ونقل للسلة 🗑️':'Delete & Trash 🗑️'}</button>` : ''}
                 </div>`;
             });
             document.getElementById('staff-management-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang==='ar'?'لا توجد حسابات نشطة حالياً.':'No active staff.'}</p>`;
+        }
+
+        window.toggleStaffDetails = function(staffId) {
+            if(window.verifiedStaffIdForDetails === staffId) {
+                window.verifiedStaffIdForDetails = null;
+                refreshUI();
+            } else {
+                document.getElementById('staff-secret-pin').value = '';
+                window.targetStaffForPIN = staffId;
+                document.getElementById('staff-pass-modal').style.display = 'flex';
+            }
+        }
+
+        window.verifyStaffPIN = function() {
+            let pin = document.getElementById('staff-secret-pin').value.trim();
+            if(pin === "5393") {
+                window.verifiedStaffIdForDetails = window.targetStaffForPIN;
+                closeModal('staff-pass-modal');
+                showNotification(window.currentLang === 'ar' ? "تم التحقق بنجاح ✓" : "Verified successfully ✓");
+                refreshUI();
+            } else {
+                alert(window.currentLang === 'ar' ? "كلمة السر غير صحيحة! (الكلمة هي 5393)" : "Incorrect PIN! (PIN is 5393)");
+            }
         }
 
         window.openAddStaffModal = function() {
@@ -1011,7 +1073,7 @@
             window.staffList.push({
                 id: Date.now(), name, role, email, pass, phone, dob, status: 'نشط',
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100",
-                permissions: { inventory: true, orders: true, chat: true, staff: false }, chat: []
+                permissions: { inventory: true, orders: true, chat: true, ai: true, staff: false }, chat: []
             });
 
             closeModal('add-staff-modal');
@@ -1093,6 +1155,7 @@
                 s.permissions[permKey] = val;
                 showNotification(window.currentLang==='ar'?"تم تحديث الصلاحيات سحابياً ✓":"Permissions updated ✓");
                 syncToCloud();
+                applyUserPermissionsToDrawer();
             }
         }
 
@@ -1259,8 +1322,8 @@
 
             setTimeout(() => {
                 let reply = window.currentLang === 'ar' ? 
-                    `تحليل الـ AI لطلبك "${q}": النظام متصل بالسحابة وصلاحيات الموظفين والتعديلات تعمل بأعلى كفاءة.` :
-                    `AI Analysis for "${q}": System is operating smoothly via cloud sync with updated permissions.`;
+                    `تحليل الـ AI لطلبك "${q}": النظام متصل بالسحابة وصلاحيات القوائم والمقاسات تعمل بكفاءة.` :
+                    `AI Analysis for "${q}": System is operating smoothly via cloud sync with menu permissions and sizes.`;
                 history.innerHTML += `<div style="background:rgba(197,160,89,0.15); padding:6px 8px; border-radius:6px; color:var(--accent-gold);"><b>Neris AI:</b> ${reply}</div>`;
                 history.scrollTop = history.scrollHeight;
             }, 700);
@@ -1334,11 +1397,12 @@
             syncToCloud();
         }
 
-        // إدارة التغليف (إضافة وتعديل)
+        // إدارة التغليف (إضافة وتعديل مع المقاس)
         window.openAddAddonModal = function() {
             document.getElementById('edit-addon-id').value = '';
             document.getElementById('addon-modal-title').innerText = window.currentLang === 'ar' ? '➕ إضافة عنصر تغليف جديد' : '➕ Add Packaging';
             document.getElementById('a-name').value = '';
+            document.getElementById('a-size').value = '';
             document.getElementById('a-price').value = '';
             document.getElementById('addon-modal').style.display = 'flex';
         }
@@ -1349,6 +1413,7 @@
             document.getElementById('edit-addon-id').value = item.id;
             document.getElementById('addon-modal-title').innerText = window.currentLang === 'ar' ? '✏️ تعديل عنصر التغليف' : '✏️ Edit Packaging';
             document.getElementById('a-name').value = item.name;
+            document.getElementById('a-size').value = item.size || '';
             document.getElementById('a-price').value = item.price;
             document.getElementById('addon-modal').style.display = 'flex';
         }
@@ -1356,6 +1421,7 @@
         window.saveAddonData = function() {
             let editId = document.getElementById('edit-addon-id').value;
             let name = document.getElementById('a-name').value.trim();
+            let size = document.getElementById('a-size').value.trim();
             let price = parseFloat(document.getElementById('a-price').value) || 0;
             let imgFile = document.getElementById('a-img-file').files[0];
 
@@ -1365,6 +1431,7 @@
                 let item = window.addonsList.find(x => x.id == editId);
                 if(item) {
                     item.name = name;
+                    item.size = size;
                     item.price = price;
                     if(imgFile) item.image = URL.createObjectURL(imgFile);
                 }
@@ -1372,7 +1439,7 @@
             } else {
                 let imgUrl = "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100";
                 if(imgFile) imgUrl = URL.createObjectURL(imgFile);
-                window.addonsList.push({ id: Date.now(), name, price, image: imgUrl });
+                window.addonsList.push({ id: Date.now(), name, size, price, image: imgUrl });
                 showNotification(window.currentLang==='ar'?"تمت إضافة التغليف سحابياً":"Packaging added successfully");
             }
 
