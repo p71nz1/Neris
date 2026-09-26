@@ -108,15 +108,15 @@
         h2 { color: var(--text-main); font-size: 16px; margin-bottom: 4px; font-weight: 600; }
         p.subtitle { color: var(--text-muted); font-size: 11px; margin-bottom: 14px; }
 
-        .input-group { margin-bottom: 10px; text-align: inherit; }
-        .input-group label { display: block; margin-bottom: 4px; font-size: 11px; color: var(--text-muted); }
-        .input-group input, .input-group select, .input-group textarea {
-            width: 100%; padding: 10px 12px; background: var(--bg-dark);
-            border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); font-size: 12px; outline: none;
+        .input-group { margin-bottom: 8px; text-align: inherit; }
+        .input-group label { display: block; margin-bottom: 3px; font-size: 10px; color: var(--text-muted); }
+        .input-group input, .input-group select {
+            width: 100%; padding: 8px 10px; background: var(--bg-dark);
+            border: 1px solid var(--border); border-radius: 6px; color: var(--text-main); font-size: 11px; outline: none;
         }
 
         .btn {
-            width: 100%; padding: 11px; background: var(--accent-gold); color: #1c1815;
+            width: 100%; padding: 10px; background: var(--accent-gold); color: #1c1815;
             border: none; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; margin-top: 6px;
         }
         .btn:hover { background: var(--accent-gold-hover); color: #fff; }
@@ -141,12 +141,12 @@
         #app-notification.show { top: 15px; }
 
         .product-thumb { width: 42px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
+        .staff-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-gold); cursor: pointer; }
 
         .addon-option-card {
             background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 8px;
             display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 6px;
         }
-        .addon-option-card:hover { border-color: var(--accent-gold); }
     </style>
 </head>
 <body>
@@ -215,13 +215,12 @@
                         <div style="font-size:9px; color:var(--text-muted);" data-t="inv_count_lbl">منتج بالمخزن</div>
                     </div>
                     <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="metric-staff-count" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">3</span>
+                        <span id="metric-staff-count" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">2</span>
                         <div style="font-size:9px; color:var(--text-muted);" data-t="staff_count_lbl">فريق الإدارة</div>
                     </div>
                 </div>
             </div>
 
-            <!-- تسجيل طلبية مع إضافات أنيقة ومتعددة -->
             <div class="panel-box">
                 <h4 style="color:var(--accent-gold);" data-t="new_order_title">➕ تسجيل طلبية جديدة وإسنادها لموظف</h4>
                 <div class="input-group"><input type="text" id="order-client-name" placeholder="اسم العميل"></div>
@@ -288,7 +287,6 @@
             </div>
         </div>
 
-        <!-- شاشة مساعد الذكاء الاصطناعي الذكي المستقلة -->
         <div id="ai-chat-screen" class="screen">
             <h2 data-t="ai_screen_title">مساعد الذكاء الاصطناعي المتطور (AI Chat)</h2>
             <p class="subtitle" data-t="ai_screen_sub">اكتب أي استفسار أو أمر وسيجيبك المساعد فوراً</p>
@@ -305,12 +303,11 @@
             </div>
         </div>
 
+        <!-- شاشة فريق العمل والصلاحيات المصممة باحترافية مع صور الموظفين -->
         <div id="staff-screen" class="screen">
             <h2 data-t="staff_title">فريق العمل والصلاحيات الشاملة</h2>
-            <p class="subtitle" data-t="staff_sub">تحكم كامل بالبيانات، الإيميلات، الحالات (إجازة، استقالة، طرد)</p>
-            <div class="panel-box">
-                <div id="staff-management-list"></div>
-            </div>
+            <p class="subtitle" data-t="staff_sub">تحكم كامل بالصور، البيانات، الإيميلات، والحالات</p>
+            <div id="staff-management-list"></div>
         </div>
 
         <div id="profile-screen" class="screen">
@@ -324,7 +321,6 @@
             </div>
         </div>
 
-        <!-- مودال إضافة منتج مع صورة وحساب AI -->
         <div class="modal" id="add-product-modal">
             <div class="modal-content">
                 <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_prod_modal">إضافة منتج جديد مع صورة</h3>
@@ -341,7 +337,6 @@
             </div>
         </div>
 
-        <!-- مودال إضافة تغليف مع صورة -->
         <div class="modal" id="add-addon-modal">
             <div class="modal-content">
                 <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_addon_modal">إضافة عنصر تغليف مع صورة</h3>
@@ -364,8 +359,8 @@
             { id: 2, name: "كيس هدية بشريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
         ];
         let staffList = [
-            { id: 1, name: "محمد", role: "مسؤول", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", chat: [] },
-            { id: 2, name: "فاطمة", role: "موظف", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", chat: [] }
+            { id: 1, name: "محمد", role: "مسؤول", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", chat: [] },
+            { id: 2, name: "فاطمة", role: "موظف", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", chat: [] }
         ];
         let ordersList = [];
         let activeChatStaffId = null;
@@ -381,7 +376,7 @@
                 addons_title: "التغليف والإضافات الممتازة", addons_sub: "إدارة عناصر التغليف مع الصور والأسعار", add_addon_btn: "+ إضافة عنصر تغليف جديد", addons_list_title: "عناصر التغليف المتاحة",
                 chat_title: "المحادثات الخاصة (مثل واتساب)", chat_sub: "تواصل مباشر وسجل رسائل محفوظ مع الفريق", select_staff_chat: "اختر الموظف للمحادثة:", send_btn: "إرسال",
                 ai_screen_title: "مساعد الذكاء الاصطناعي المتطور (AI Chat)", ai_screen_sub: "اكتب أي استفسار أو أمر وسيجيبك المساعد فوراً",
-                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "تحكم كامل بالبيانات، الإيميلات، الحالات (إجازة، استقالة، طرد)",
+                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "تحكم كامل بالصور، البيانات، الإيميلات، والحالات",
                 prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", save_btn: "حفظ التعديلات",
                 add_prod_modal: "إضافة منتج جديد مع صورة", p_name: "اسم المنتج", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
                 add_addon_modal: "إضافة عنصر تغليف مع صورة", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
@@ -398,7 +393,7 @@
                 addons_title: "Packaging & Add-ons", addons_sub: "Manage packaging with images & prices", add_addon_btn: "+ Add Packaging Item", addons_list_title: "Available Packaging",
                 chat_title: "Private Chats (WhatsApp style)", chat_sub: "Direct communication with persistent history", select_staff_chat: "Select staff to chat:", send_btn: "Send",
                 ai_screen_title: "Advanced AI Assistant (AI Chat)", ai_screen_sub: "Type any query or order and the assistant will reply instantly",
-                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Full control over data, emails, and statuses (leave, resignation, firing)",
+                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Full control over photos, data, emails, and statuses",
                 prof_title: "Profile & Account", prof_sub: "Manage your personal account details", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", save_btn: "Save Changes",
                 add_prod_modal: "Add Product with Image", p_name: "Product Name", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
                 add_addon_modal: "Add Packaging with Image", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
@@ -526,34 +521,57 @@
             cb.checked = !cb.checked;
         }
 
+        // تصميم جديد ومنسق لصفحة فريق العمل مع صور الموظفين
         function renderStaffManagement() {
             let html = '';
             staffList.forEach(staff => {
-                html += `<div class="panel-box" style="margin-bottom:8px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                        <input type="text" value="${staff.name}" onchange="updateStaffField(${staff.id}, 'name', this.value)" style="font-weight:bold; width:100px; padding:2px; font-size:11px;">
-                        <select onchange="updateStaffField(${staff.id}, 'role', this.value)" style="padding:2px; font-size:10px;">
-                            <option value="مسؤول" ${staff.role==='مسؤول'?'selected':''}>مسؤول</option>
-                            <option value="موظف" ${staff.role==='موظف'?'selected':''}>موظف</option>
-                        </select>
-                        <select onchange="updateStaffField(${staff.id}, 'status', this.value)" style="padding:2px; font-size:10px; color:var(--accent-gold);">
-                            <option value="نشط" ${staff.status==='نشط'?'selected':''}>نشط</option>
-                            <option value="إجازة" ${staff.status==='إجازة'?'selected':''}>إجازة</option>
-                            <option value="إيقاف مؤقت" ${staff.status==='إيقاف مؤقت'?'selected':''}>إيقاف مؤقت</option>
-                            <option value="مستقيل" ${staff.status==='مستقيل'?'selected':''}>استقالة</option>
-                            <option value="مفصول" ${staff.status==='مفصول'?'selected':''}>طرد</option>
-                        </select>
+                html += `<div class="panel-box" style="display:flex; gap:12px; align-items:center; margin-bottom:10px;">
+                    <div style="text-align:center; position:relative;">
+                        <img src="${staff.avatar}" class="staff-avatar" title="تغيير الصورة" onclick="document.getElementById('file-up-${staff.id}').click()">
+                        <input type="file" id="file-up-${staff.id}" accept="image/*" style="display:none;" onchange="updateStaffAvatar(${staff.id}, this)">
+                        <span style="font-size:9px; color:var(--accent-gold); display:block; margin-top:2px;">تغيير الصورة</span>
                     </div>
-                    <div style="font-size:11px; color:var(--text-muted); display:flex; flex-direction:column; gap:4px;">
-                        <div>Email: <input type="text" value="${staff.email}" onchange="updateStaffField(${staff.id}, 'email', this.value)" style="padding:2px; font-size:10px; width:180px; direction:ltr;"></div>
-                        <div>Pass: <input type="text" value="${staff.pass}" onchange="updateStaffField(${staff.id}, 'pass', this.value)" style="padding:2px; font-size:10px; width:90px; direction:ltr;"></div>
-                        <div>Phone: <input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" style="padding:2px; font-size:10px; width:100px; direction:ltr;"></div>
-                        <div>DOB: <input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="padding:2px; font-size:10px; direction:ltr;"></div>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                        <div style="display:flex; gap:6px;">
+                            <input type="text" value="${staff.name}" onchange="updateStaffField(${staff.id}, 'name', this.value)" style="font-weight:bold; flex:1; padding:6px; font-size:11px;">
+                            <select onchange="updateStaffField(${staff.id}, 'role', this.value)" style="padding:6px; font-size:10px; width:80px;">
+                                <option value="مسؤول" ${staff.role==='مسؤول'?'selected':''}>مسؤول</option>
+                                <option value="موظف" ${staff.role==='موظف'?'selected':''}>موظف</option>
+                            </select>
+                            <select onchange="updateStaffField(${staff.id}, 'status', this.value)" style="padding:6px; font-size:10px; color:var(--accent-gold); width:95px;">
+                                <option value="نشط" ${staff.status==='نشط'?'selected':''}>نشط</option>
+                                <option value="إجازة" ${staff.status==='إجازة'?'selected':''}>إجازة</option>
+                                <option value="إيقاف مؤقت" ${staff.status==='إيقاف مؤقت'?'selected':''}>إيقاف مؤقت</option>
+                                <option value="مستقيل" ${staff.status==='مستقيل'?'selected':''}>استقالة</option>
+                                <option value="مفصول" ${staff.status==='مفصول'?'selected':''}>طرد</option>
+                            </select>
+                        </div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                            <input type="text" value="${staff.email}" onchange="updateStaffField(${staff.id}, 'email', this.value)" placeholder="البريد الإلكتروني" style="padding:5px; font-size:10px; direction:ltr;">
+                            <input type="text" value="${staff.pass}" onchange="updateStaffField(${staff.id}, 'pass', this.value)" placeholder="كلمة المرور" style="padding:5px; font-size:10px; direction:ltr;">
+                            <input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" placeholder="الجوال" style="padding:5px; font-size:10px; direction:ltr;">
+                            <input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="padding:5px; font-size:10px; direction:ltr;">
+                        </div>
+                        <button class="btn" style="background:var(--danger); padding:4px; font-size:10px; margin-top:2px;" onclick="deleteStaff(${staff.id})">حذف حساب الموظف نهائياً</button>
                     </div>
-                    <button class="btn" style="background:var(--danger); padding:4px; font-size:10px; margin-top:6px;" onclick="deleteStaff(${staff.id})">حذف حساب الموظف نهائياً</button>
                 </div>`;
             });
             document.getElementById('staff-management-list').innerHTML = html;
+        }
+
+        function updateStaffAvatar(id, input) {
+            if(input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    let s = staffList.find(x => x.id === id);
+                    if(s) {
+                        s.avatar = e.target.result;
+                        showNotification("تم تحديث صورة الموظف بنجاح");
+                        refreshUI();
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
         }
 
         function updateStaffField(id, field, val) {
@@ -638,7 +656,10 @@
             let html = '';
             staffList.forEach(staff => {
                 html += `<div class="card-item" onclick="openPrivateChat(${staff.id}, '${staff.name}')" style="cursor:pointer;">
-                    <div><strong>${staff.name}</strong> <span class="badge">${staff.role}</span></div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="${staff.avatar}" style="width:28px; height:28px; border-radius:50%; object-fit:cover;">
+                        <div><strong>${staff.name}</strong> <span class="badge">${staff.role}</span></div>
+                    </div>
                     <span style="color:var(--accent-gold); font-size:11px;">مراسلة 💬</span>
                 </div>`;
             });
