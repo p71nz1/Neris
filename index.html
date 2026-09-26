@@ -152,6 +152,20 @@
         .staff-avatar-edit-badge { position: absolute; bottom: 0; right: 0; background: var(--accent-gold); color: #1c1815; font-size: 8px; padding: 2px 5px; border-radius: 6px; font-weight: bold; }
         .staff-grid-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
 
+        /* Floating AI Widget on bottom-left */
+        #floating-ai-widget {
+            position: absolute; bottom: 15px; left: 15px; z-index: 2000;
+            background: var(--bg-card); border: 1px solid var(--accent-gold);
+            border-radius: 50px; padding: 8px 14px; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; box-shadow: 0 5px 20px rgba(197,160,89,0.3);
+        }
+        body.en #floating-ai-widget { left: auto; right: 15px; }
+        .floating-ai-popup {
+            position: absolute; bottom: 65px; left: 10px; width: 300px;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px;
+            padding: 12px; z-index: 2100; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
         .addon-option-card {
             background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 8px;
             display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 6px;
@@ -163,6 +177,23 @@
     <div id="app-notification">Updated successfully</div>
 
     <div class="phone-frame">
+        <!-- Floating AI Widget -->
+        <div id="floating-ai-widget" onclick="toggleFloatingAIPopup()">
+            <span>✨</span> <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);" data-t="ai_widget_btn">Neris AI مساعد</span>
+        </div>
+
+        <div class="floating-ai-popup" id="floating-ai-popup">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:4px;">
+                <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);">Neris AI Assistant</span>
+                <button onclick="toggleFloatingAIPopup()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
+            </div>
+            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;">أهلاً بك يا فهد. هل تحتاج أي مساعدة أو استفسار بخصوص النظام الآن؟</div>
+            <div style="display:flex; gap:4px;">
+                <input type="text" id="floating-ai-input" placeholder="اسأل الـ AI..." style="flex:1; padding:6px; font-size:10px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:4px;">
+                <button class="btn" style="margin-top:0; padding:6px 10px; font-size:10px; width:auto;" onclick="sendFloatingAI()">إرسال</button>
+            </div>
+        </div>
+
         <div id="welcome-intro-screen">
             <div class="splash-logo">💎</div>
             <h1 style="color:var(--text-main); font-size:20px; font-weight:bold; margin-bottom:6px;">مرحباً بك في نظام نيرسي</h1>
@@ -199,7 +230,7 @@
             </div>
             <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 <span data-t="home">الواجهة الرئيسية</span></div>
             <div class="drawer-item" onclick="navTo('orders-screen')">🛒 <span data-t="orders">إدارة الطلبيات النشطة</span></div>
-            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span data-t="inventory">المخزن (فارغ)</span></div>
+            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span data-t="inventory">المخزن</span></div>
             <div class="drawer-item" onclick="navTo('addons-screen')">🎀 <span data-t="addons">التغليف والإضافات</span></div>
             <div class="drawer-item" onclick="navTo('chat-screen')">💬 <span data-t="chat">الرسائل والمحادثات</span></div>
             <div class="drawer-item" onclick="navTo('ai-chat-screen')">✨ <span data-t="ai_chat">مساعد الـ AI الذكي</span></div>
@@ -312,9 +343,10 @@
             </div>
         </div>
 
+        <!-- شاشة فريق العمل والصلاحيات مع المسمى الحر وحساب العمر والتعديل -->
         <div id="staff-screen" class="screen">
             <h2 data-t="staff_title">فريق العمل والصلاحيات الشاملة</h2>
-            <p class="subtitle" data-t="staff_sub">إدارة الموظفين، الصور، وحالات الإجازات واسترجاع المحذوفات</p>
+            <p class="subtitle" data-t="staff_sub">إدارة الموظفين، مسمى وظيفي حر، صلاحيات، وحساب العمر تلقائياً</p>
             <div id="staff-management-list"></div>
             
             <div class="panel-box" style="margin-top:15px; border-color:var(--warning);">
@@ -323,10 +355,10 @@
             </div>
         </div>
 
-        <!-- شاشة الملف الشخصي مع زر تغيير الصورة الشخصية -->
+        <!-- شاشة الملف الشخصي للمالك مع تغيير الصورة وتاريخ الميلاد وحساب العمر تلقائياً -->
         <div id="profile-screen" class="screen">
             <h2 data-t="prof_title">الملف الشخصي والحساب</h2>
-            <p class="subtitle" data-t="prof_sub">إدارة بيانات حسابك الشخصي وصورتك</p>
+            <p class="subtitle" data-t="prof_sub">إدارة بيانات حسابك الشخصي، صورتك، وتاريخ ميلادك</p>
             <div class="panel-box" style="text-align:center;">
                 <div style="position:relative; width:70px; height:70px; margin:0 auto 10px auto; cursor:pointer;" onclick="document.getElementById('admin-avatar-input').click()" title="تغيير صورتك الشخصية">
                     <img id="admin-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-gold);">
@@ -336,6 +368,8 @@
                 <div class="input-group"><label data-t="name_lbl">الاسم</label><input type="text" id="prof-name" value="فهد راشد الحسين"></div>
                 <div class="input-group"><label data-t="email_lbl">البريد الإلكتروني</label><input type="email" id="prof-email" value="fahadfhd47@gmail.com" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-t="phone_lbl">الجوال</label><input type="text" id="prof-phone" value="0549553395" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label data-t="dob_lbl">تاريخ الميلاد</label><input type="date" id="prof-dob" value="2006-07-31" style="direction:ltr; text-align:left;" onchange="calcAdminAge()"></div>
+                <div class="input-group"><label data-t="age_lbl">العمر المحسوب تلقائياً</label><input type="text" id="prof-age-calc" readonly style="color:var(--accent-gold); font-weight:bold; text-align:center;" value="0"></div>
                 <button class="btn" style="background:var(--success); color:#fff;" onclick="saveProfile()" data-t="save_btn">حفظ التعديلات</button>
             </div>
         </div>
@@ -378,9 +412,10 @@
             { id: 2, name: "كيس هدية بشريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
         ];
         
+        // الموظفين مع إيميلات فاطمة ومحمد الصحيحة
         let staffList = JSON.parse(localStorage.getItem('neris_staff')) || [
-            { id: 1, name: "محمد", role: "مسؤول", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", chat: [] },
-            { id: 2, name: "فاطمة", role: "موظف", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", chat: [] }
+            { id: 1, name: "محمد", role: "مسؤول (Manager)", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", chat: [] },
+            { id: 2, name: "فاطمة", role: "موظف (Staff)", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", chat: [] }
         ];
 
         let staffTrash = JSON.parse(localStorage.getItem('neris_staff_trash')) || [];
@@ -399,13 +434,13 @@
                 addons_title: "التغليف والإضافات الممتازة", addons_sub: "إدارة عناصر التغليف مع الصور والأسعار", add_addon_btn: "+ إضافة عنصر تغليف جديد", addons_list_title: "عناصر التغليف المتاحة",
                 chat_title: "المحادثات الخاصة (مثل واتساب)", chat_sub: "تواصل مباشر وسجل رسائل محفوظ مع الفريق", select_staff_chat: "اختر الموظف للمحادثة:", send_btn: "إرسال",
                 ai_screen_title: "مساعد الذكاء الاصطناعي المتطور (AI Chat)", ai_screen_sub: "اكتب أي استفسار أو أمر وسيجيبك المساعد فوراً",
-                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، الصور، وحالات الإجازات واسترجاع المحذوفات",
+                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، مسمى وظيفي حر، صلاحيات، وحساب العمر تلقائياً",
                 trash_title: "🗑️ سلة المحذوفات واسترجاع الموظفين",
-                prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي وصورتك", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", save_btn: "حفظ التعديلات",
+                prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي، صورتك، وتاريخ ميلادك", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", dob_lbl: "تاريخ الميلاد", age_lbl: "العمر المحسوب تلقائياً", save_btn: "حفظ التعديلات",
                 add_prod_modal: "إضافة منتج جديد مع صورة", p_name: "اسم المنتج", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
                 add_addon_modal: "إضافة عنصر تغليف مع صورة", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
                 new_order_title: "➕ تسجيل طلبية جديدة وإسنادها لموظف", sel_prod: "اختر المنتج الأساسي:", sel_addons: "اختر التغليف والإضافات المتعددة:", sel_staff: "إسناد الطلب لموظف:", submit_order_btn: "تسجيل وإرسال الطلب",
-                login_title: "تسجيل الدخول الآمن", login_sub: "أدخل بيانات الاعتماد الخاصة بك بدقة", login_btn: "تسجيل دخول"
+                login_title: "تسجيل الدخول الآمن", login_sub: "أدخل بيانات الاعتماد الخاصة بك بدقة", login_btn: "تسجيل دخول", ai_widget_btn: "Neris AI مساعد"
             },
             en: {
                 home: "Dashboard", orders: "Active Orders", inventory: "Inventory", addons: "Add-ons & Packaging",
@@ -417,13 +452,13 @@
                 addons_title: "Packaging & Add-ons", addons_sub: "Manage packaging with images & prices", add_addon_btn: "+ Add Packaging Item", addons_list_title: "Available Packaging",
                 chat_title: "Private Chats (WhatsApp style)", chat_sub: "Direct communication with persistent history", select_staff_chat: "Select staff to chat:", send_btn: "Send",
                 ai_screen_title: "Advanced AI Assistant (AI Chat)", ai_screen_sub: "Type any query or order and the assistant will reply instantly",
-                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, avatars, leaves and trash recovery",
+                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, custom job titles, permissions and auto-age",
                 trash_title: "🗑️ Trash & Staff Recovery",
-                prof_title: "Profile & Account", prof_sub: "Manage your personal account details & photo", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", save_btn: "Save Changes",
+                prof_title: "Profile & Account", prof_sub: "Manage your personal account details, photo and DOB", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", dob_lbl: "Date of Birth", age_lbl: "Calculated Age", save_btn: "Save Changes",
                 add_prod_modal: "Add Product with Image", p_name: "Product Name", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
                 add_addon_modal: "Add Packaging with Image", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
                 new_order_title: "➕ Register New Order & Assign Staff", sel_prod: "Select Main Product:", sel_addons: "Select Multiple Add-ons & Packaging:", sel_staff: "Assign to Staff:", submit_order_btn: "Register & Send Order",
-                login_title: "Secure Login", login_sub: "Enter your credentials carefully", login_btn: "Login"
+                login_title: "Secure Login", login_sub: "Enter your credentials carefully", login_btn: "Login", ai_widget_btn: "Neris AI Assistant"
             }
         };
 
@@ -434,8 +469,49 @@
             }, 2500);
             document.getElementById('header-avatar').src = adminAvatar;
             document.getElementById('admin-avatar-preview').src = adminAvatar;
+            calcAdminAge();
             refreshUI();
+            
+            // Floating AI periodic notification trigger (every 30 mins simulation / or prompt reminder)
+            setInterval(() => {
+                const popup = document.getElementById('floating-ai-popup');
+                popup.style.display = 'block';
+                document.getElementById('floating-ai-msg').innerText = currentLang === 'ar' ? 
+                    "مرحباً فهد، مرّ وقت قصير! هل تحتاج أي مساعدة أو استفسار بخصوص الطلبات والمخزن؟" :
+                    "Hello Fahad! Do you need any assistance with orders or inventory?";
+            }, 1800000); // 30 mins
         };
+
+        function toggleFloatingAIPopup() {
+            const p = document.getElementById('floating-ai-popup');
+            p.style.display = p.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function sendFloatingAI() {
+            const input = document.getElementById('floating-ai-input');
+            const msgBox = document.getElementById('floating-ai-msg');
+            const q = input.value.trim();
+            if(!q) return;
+            msgBox.innerHTML = `<b>أنت:</b> ${q}<br><b style="color:var(--accent-gold);">Neris AI:</b> تم تنفيذ طلبك وحفظه بنجاح يا فهد. المحل يعمل بأفضل حال!`;
+            input.value = '';
+        }
+
+        function calcAdminAge() {
+            const dob = document.getElementById('prof-dob').value;
+            if(!dob) { document.getElementById('prof-age-calc').value = "0"; return; }
+            const diff = Date.now() - new Date(dob).getTime();
+            const ageDate = new Date(diff);
+            const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+            document.getElementById('prof-age-calc').value = age + (currentLang === 'ar' ? " سنة" : " Years");
+        }
+
+        function calcStaffAge(dobStr) {
+            if(!dobStr) return "غير محدد";
+            const diff = Date.now() - new Date(dobStr).getTime();
+            const ageDate = new Date(diff);
+            const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+            return age + (currentLang === 'ar' ? " سنة" : " Years");
+        }
 
         function saveDataToStorage() {
             localStorage.setItem('neris_inventory', JSON.stringify(inventoryList));
@@ -488,6 +564,7 @@
                 const key = el.getAttribute('data-t');
                 if(translations[currentLang][key]) el.innerText = translations[currentLang][key];
             });
+            calcAdminAge();
             refreshUI();
         }
 
@@ -573,9 +650,11 @@
             cb.checked = !cb.checked;
         }
 
+        // شاشة فريق العمل مع المسمى الحر وحساب العمر تلقائياً وتعديل الصلاحيات
         function renderStaffManagement() {
             let html = '';
             staffList.forEach(staff => {
+                let ageText = calcStaffAge(staff.dob);
                 html += `<div class="staff-profile-card">
                     <div class="staff-header-flex">
                         <div class="staff-avatar-box" onclick="document.getElementById('file-up-${staff.id}').click()" title="تغيير الصورة الشخصية">
@@ -586,11 +665,8 @@
                         <div style="flex:1;">
                             <input type="text" value="${staff.name}" onchange="updateStaffField(${staff.id}, 'name', this.value)" style="font-weight:bold; font-size:13px; color:var(--accent-gold); border:none; background:none; width:100%; outline:none;" placeholder="اسم الموظف">
                             <div style="display:flex; gap:6px; margin-top:4px;">
-                                <select onchange="updateStaffField(${staff.id}, 'role', this.value)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--text-main); border:1px solid var(--border); border-radius:4px;">
-                                    <option value="مسؤول" ${staff.role==='مسؤول'?'selected':''}>مسؤول (Manager)</option>
-                                    <option value="موظف" ${staff.role==='موظف'?'selected':''}>موظف (Staff)</option>
-                                </select>
-                                <select onchange="updateStaffField(${staff.id}, 'status', this.value)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--accent-gold); border:1px solid var(--border); border-radius:4px; font-weight:bold;">
+                                <input type="text" value="${staff.role}" onchange="updateStaffField(${staff.id}, 'role', this.value)" placeholder="المسمى الوظيفي (اكتب بنفسك)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--accent-gold); border:1px solid var(--border); border-radius:4px; flex:1;">
+                                <select onchange="updateStaffField(${staff.id}, 'status', this.value)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--success); border:1px solid var(--border); border-radius:4px; font-weight:bold;">
                                     <option value="نشط" ${staff.status==='نشط'?'selected':''}>🟢 نشط</option>
                                     <option value="إجازة" ${staff.status==='إجازة'?'selected':''}>✈️ إجازة</option>
                                     <option value="إيقاف مؤقت" ${staff.status==='إيقاف مؤقت'?'selected':''}>⏸️ إيقاف مؤقت</option>
@@ -604,7 +680,7 @@
                         <div class="input-group" style="margin-bottom:0;"><label>البريد الإلكتروني</label><input type="text" value="${staff.email}" onchange="updateStaffField(${staff.id}, 'email', this.value)" style="direction:ltr; text-align:left;"></div>
                         <div class="input-group" style="margin-bottom:0;"><label>كلمة المرور</label><input type="text" value="${staff.pass}" onchange="updateStaffField(${staff.id}, 'pass', this.value)" style="direction:ltr; text-align:left;"></div>
                         <div class="input-group" style="margin-bottom:0;"><label>رقم الجوال</label><input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" style="direction:ltr; text-align:left;"></div>
-                        <div class="input-group" style="margin-bottom:0;"><label>تاريخ الميلاد</label><input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="direction:ltr; text-align:left;"></div>
+                        <div class="input-group" style="margin-bottom:0;"><label>تاريخ الميلاد (العمر: <b style="color:var(--accent-gold);">${ageText}</b>)</label><input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="direction:ltr; text-align:left;"></div>
                     </div>
                     <button class="btn" style="background:var(--danger); color:#fff; padding:6px; font-size:10px; margin-top:6px;" onclick="trashStaff(${staff.id})">حذف ونقل للسلة 🗑️</button>
                 </div>`;
@@ -859,7 +935,10 @@
         function deleteItem(id) { inventoryList = inventoryList.filter(x => x.id !== id); showNotification("تم الحذف والحفظ"); refreshUI(); }
         function deleteAddonItem(id) { addonsList = addonsList.filter(x => x.id !== id); showNotification("تم الحذف والحفظ"); refreshUI(); }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function saveProfile() { showNotification("تم حفظ بيانات الملف الشخصي بنجاح"); }
+        function saveProfile() { 
+            calcAdminAge();
+            showNotification("تم حفظ بيانات الملف الشخصي وتاريخ الميلاد بنجاح"); 
+        }
         function logout() {
             document.getElementById('app-header').style.display = 'none';
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
