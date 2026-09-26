@@ -152,11 +152,11 @@
         .staff-avatar-edit-badge { position: absolute; bottom: 0; right: 0; background: var(--accent-gold); color: #1c1815; font-size: 8px; padding: 2px 5px; border-radius: 6px; font-weight: bold; }
         .staff-grid-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
 
-        /* Floating AI Widget on bottom-left */
+        /* Floating AI Widget (hidden during login) */
         #floating-ai-widget {
             position: absolute; bottom: 15px; left: 15px; z-index: 2000;
             background: var(--bg-card); border: 1px solid var(--accent-gold);
-            border-radius: 50px; padding: 8px 14px; display: flex; align-items: center; gap: 8px;
+            border-radius: 50px; padding: 8px 14px; display: none; align-items: center; gap: 8px;
             cursor: pointer; box-shadow: 0 5px 20px rgba(197,160,89,0.3);
         }
         body.en #floating-ai-widget { left: auto; right: 15px; }
@@ -177,7 +177,7 @@
     <div id="app-notification">Updated successfully</div>
 
     <div class="phone-frame">
-        <!-- Floating AI Widget -->
+        <!-- Floating AI Widget (Only visible after login) -->
         <div id="floating-ai-widget" onclick="toggleFloatingAIPopup()">
             <span>✨</span> <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);" data-t="ai_widget_btn">Neris AI مساعد</span>
         </div>
@@ -234,7 +234,7 @@
             <div class="drawer-item" onclick="navTo('addons-screen')">🎀 <span data-t="addons">التغليف والإضافات</span></div>
             <div class="drawer-item" onclick="navTo('chat-screen')">💬 <span data-t="chat">الرسائل والمحادثات</span></div>
             <div class="drawer-item" onclick="navTo('ai-chat-screen')">✨ <span data-t="ai_chat">مساعد الـ AI الذكي</span></div>
-            <div class="drawer-item" onclick="navTo('staff-screen')">👥 <span data-t="staff">فريق العمل والصلاحيات</span></div>
+            <div class="drawer-item" id="drawer-staff-item" onclick="navTo('staff-screen')" style="display:none;">👥 <span data-t="staff">فريق العمل والصلاحيات</span></div>
             <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ <span data-t="profile">الملف الشخصي</span></div>
             <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(224,82,82,0.3); margin-top:10px;">🚪 <span data-t="logout">تسجيل الخروج</span></div>
         </div>
@@ -343,10 +343,11 @@
             </div>
         </div>
 
-        <!-- شاشة فريق العمل والصلاحيات مع المسمى الحر وحساب العمر والتعديل -->
+        <!-- شاشة فريق العمل والصلاحيات مع زر إضافة موظف -->
         <div id="staff-screen" class="screen">
             <h2 data-t="staff_title">فريق العمل والصلاحيات الشاملة</h2>
-            <p class="subtitle" data-t="staff_sub">إدارة الموظفين، مسمى وظيفي حر، صلاحيات، وحساب العمر تلقائياً</p>
+            <p class="subtitle" data-t="staff_sub">إدارة الموظفين، إضافة موظف جديد، وصلاحيات النظام</p>
+            <button class="btn" onclick="openAddStaffModal()" data-t="add_staff_btn" style="margin-bottom:12px;">+ إضافة موظف جديد</button>
             <div id="staff-management-list"></div>
             
             <div class="panel-box" style="margin-top:15px; border-color:var(--warning);">
@@ -355,7 +356,7 @@
             </div>
         </div>
 
-        <!-- شاشة الملف الشخصي للمالك مع تغيير الصورة وتاريخ الميلاد وحساب العمر تلقائياً -->
+        <!-- شاشة الملف الشخصي للمالك والموظفين -->
         <div id="profile-screen" class="screen">
             <h2 data-t="prof_title">الملف الشخصي والحساب</h2>
             <p class="subtitle" data-t="prof_sub">إدارة بيانات حسابك الشخصي، صورتك، وتاريخ ميلادك</p>
@@ -371,6 +372,23 @@
                 <div class="input-group"><label data-t="dob_lbl">تاريخ الميلاد</label><input type="date" id="prof-dob" value="2006-07-31" style="direction:ltr; text-align:left;" onchange="calcAdminAge()"></div>
                 <div class="input-group"><label data-t="age_lbl">العمر المحسوب تلقائياً</label><input type="text" id="prof-age-calc" readonly style="color:var(--accent-gold); font-weight:bold; text-align:center;" value="0"></div>
                 <button class="btn" style="background:var(--success); color:#fff;" onclick="saveProfile()" data-t="save_btn">حفظ التعديلات</button>
+            </div>
+        </div>
+
+        <!-- Modal: إضافة موظف جديد -->
+        <div class="modal" id="add-staff-modal">
+            <div class="modal-content">
+                <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_staff_modal_title">➕ إضافة موظف جديد للنظام</h3>
+                <div class="input-group"><label data-t="s_name">اسم الموظف</label><input type="text" id="new-s-name" placeholder="محمد / فاطمة"></div>
+                <div class="input-group"><label data-t="s_role">المسمى الوظيفي</label><input type="text" id="new-s-role" placeholder="مسؤول أو موظف مبيعات"></div>
+                <div class="input-group"><label data-t="s_email">البريد الإلكتروني</label><input type="email" id="new-s-email" placeholder="staff@domain.com" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label data-t="s_pass">كلمة المرور</label><input type="text" id="new-s-pass" placeholder="12345" style="direction:ltr; text-align:left;" value="12345"></div>
+                <div class="input-group"><label data-t="s_phone">رقم الجوال</label><input type="text" id="new-s-phone" placeholder="05xxxxxxxx" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label data-t="s_dob">تاريخ الميلاد</label><input type="date" id="new-s-dob" style="direction:ltr; text-align:left;"></div>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <button class="btn" style="background:var(--success); color:#fff;" onclick="saveNewStaff()" data-t="save_btn">حفظ وإضافة</button>
+                    <button class="btn" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('add-staff-modal')" data-t="cancel_btn">إلغاء</button>
+                </div>
             </div>
         </div>
 
@@ -406,14 +424,15 @@
 
     <script>
         let currentLang = 'ar';
+        let currentUserRole = 'admin'; // 'admin' (فهد المالك) أو 'staff'
         let inventoryList = JSON.parse(localStorage.getItem('neris_inventory')) || [];
         let addonsList = JSON.parse(localStorage.getItem('neris_addons')) || [
             { id: 1, name: "علبة مخمل فاخرة", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
             { id: 2, name: "كيس هدية بشريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
         ];
         
-        // الموظفين مع إيميلات فاطمة ومحمد الصحيحة
         let staffList = JSON.parse(localStorage.getItem('neris_staff')) || [
+            { id: 0, name: "فهد راشد الحسين (المالك)", role: "المالك (Owner / Admin)", email: "fahadfhd47@gmail.com", pass: "Fahad55003", phone: "0549553395", dob: "2006-07-31", status: "نشط", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", chat: [] },
             { id: 1, name: "محمد", role: "مسؤول (Manager)", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", chat: [] },
             { id: 2, name: "فاطمة", role: "موظف (Staff)", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", chat: [] }
         ];
@@ -434,9 +453,10 @@
                 addons_title: "التغليف والإضافات الممتازة", addons_sub: "إدارة عناصر التغليف مع الصور والأسعار", add_addon_btn: "+ إضافة عنصر تغليف جديد", addons_list_title: "عناصر التغليف المتاحة",
                 chat_title: "المحادثات الخاصة (مثل واتساب)", chat_sub: "تواصل مباشر وسجل رسائل محفوظ مع الفريق", select_staff_chat: "اختر الموظف للمحادثة:", send_btn: "إرسال",
                 ai_screen_title: "مساعد الذكاء الاصطناعي المتطور (AI Chat)", ai_screen_sub: "اكتب أي استفسار أو أمر وسيجيبك المساعد فوراً",
-                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، مسمى وظيفي حر، صلاحيات، وحساب العمر تلقائياً",
-                trash_title: "🗑️ سلة المحذوفات واسترجاع الموظفين",
+                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، إضافة موظف جديد، وصلاحيات النظام",
+                add_staff_btn: "+ إضافة موظف جديد", trash_title: "🗑️ سلة المحذوفات واسترجاع الموظفين",
                 prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي، صورتك، وتاريخ ميلادك", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", dob_lbl: "تاريخ الميلاد", age_lbl: "العمر المحسوب تلقائياً", save_btn: "حفظ التعديلات",
+                add_staff_modal_title: "➕ إضافة موظف جديد للنظام", s_name: "اسم الموظف", s_role: "المسمى الوظيفي", s_email: "البريد الإلكتروني", s_pass: "كلمة المرور", s_phone: "رقم الجوال", s_dob: "تاريخ الميلاد",
                 add_prod_modal: "إضافة منتج جديد مع صورة", p_name: "اسم المنتج", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
                 add_addon_modal: "إضافة عنصر تغليف مع صورة", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
                 new_order_title: "➕ تسجيل طلبية جديدة وإسنادها لموظف", sel_prod: "اختر المنتج الأساسي:", sel_addons: "اختر التغليف والإضافات المتعددة:", sel_staff: "إسناد الطلب لموظف:", submit_order_btn: "تسجيل وإرسال الطلب",
@@ -452,9 +472,10 @@
                 addons_title: "Packaging & Add-ons", addons_sub: "Manage packaging with images & prices", add_addon_btn: "+ Add Packaging Item", addons_list_title: "Available Packaging",
                 chat_title: "Private Chats (WhatsApp style)", chat_sub: "Direct communication with persistent history", select_staff_chat: "Select staff to chat:", send_btn: "Send",
                 ai_screen_title: "Advanced AI Assistant (AI Chat)", ai_screen_sub: "Type any query or order and the assistant will reply instantly",
-                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, custom job titles, permissions and auto-age",
-                trash_title: "🗑️ Trash & Staff Recovery",
+                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, add new members, and system permissions",
+                add_staff_btn: "+ Add New Staff", trash_title: "🗑️ Trash & Staff Recovery",
                 prof_title: "Profile & Account", prof_sub: "Manage your personal account details, photo and DOB", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", dob_lbl: "Date of Birth", age_lbl: "Calculated Age", save_btn: "Save Changes",
+                add_staff_modal_title: "➕ Add New Staff Member", s_name: "Staff Name", s_role: "Job Title", s_email: "Email", s_pass: "Password", s_phone: "Phone", s_dob: "Date of Birth",
                 add_prod_modal: "Add Product with Image", p_name: "Product Name", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
                 add_addon_modal: "Add Packaging with Image", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
                 new_order_title: "➕ Register New Order & Assign Staff", sel_prod: "Select Main Product:", sel_addons: "Select Multiple Add-ons & Packaging:", sel_staff: "Assign to Staff:", submit_order_btn: "Register & Send Order",
@@ -471,16 +492,35 @@
             document.getElementById('admin-avatar-preview').src = adminAvatar;
             calcAdminAge();
             refreshUI();
-            
-            // Floating AI periodic notification trigger (every 30 mins simulation / or prompt reminder)
-            setInterval(() => {
-                const popup = document.getElementById('floating-ai-popup');
-                popup.style.display = 'block';
-                document.getElementById('floating-ai-msg').innerText = currentLang === 'ar' ? 
-                    "مرحباً فهد، مرّ وقت قصير! هل تحتاج أي مساعدة أو استفسار بخصوص الطلبات والمخزن؟" :
-                    "Hello Fahad! Do you need any assistance with orders or inventory?";
-            }, 1800000); // 30 mins
         };
+
+        function handleLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+            
+            // التحقق من حساب المالك أو الموظفين
+            let matchedStaff = staffList.find(s => s.email === email && s.pass === pass);
+            
+            if(email === "fahadfhd47@gmail.com" && pass === "Fahad55003") {
+                currentUserRole = 'admin';
+                document.getElementById('drawer-staff-item').style.display = 'flex';
+                successLogin();
+            } else if(matchedStaff) {
+                currentUserRole = 'staff';
+                document.getElementById('drawer-staff-item').style.display = 'none'; // إخفاء فريق العمل عن الموظف
+                successLogin();
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+
+        function successLogin() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-header').style.display = 'flex';
+            document.getElementById('floating-ai-widget').style.display = 'flex'; // إظهار AI بعد الدخول فقط
+            navTo('home-main-screen');
+            showNotification(currentLang === 'ar' ? "تم تسجيل الدخول بنجاح" : "Logged in successfully");
+        }
 
         function toggleFloatingAIPopup() {
             const p = document.getElementById('floating-ai-popup');
@@ -533,19 +573,6 @@
                     saveDataToStorage();
                 }
                 reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function handleLogin() {
-            const email = document.getElementById('login-email').value.trim();
-            const pass = document.getElementById('login-password').value.trim();
-            if(email === "fahadfhd47@gmail.com" && pass === "Fahad55003") {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('app-header').style.display = 'flex';
-                navTo('home-main-screen');
-                showNotification(currentLang === 'ar' ? "تم تسجيل الدخول بنجاح" : "Logged in successfully");
-            } else {
-                document.getElementById('login-error').style.display = 'block';
             }
         }
 
@@ -650,7 +677,6 @@
             cb.checked = !cb.checked;
         }
 
-        // شاشة فريق العمل مع المسمى الحر وحساب العمر تلقائياً وتعديل الصلاحيات
         function renderStaffManagement() {
             let html = '';
             staffList.forEach(staff => {
@@ -665,7 +691,7 @@
                         <div style="flex:1;">
                             <input type="text" value="${staff.name}" onchange="updateStaffField(${staff.id}, 'name', this.value)" style="font-weight:bold; font-size:13px; color:var(--accent-gold); border:none; background:none; width:100%; outline:none;" placeholder="اسم الموظف">
                             <div style="display:flex; gap:6px; margin-top:4px;">
-                                <input type="text" value="${staff.role}" onchange="updateStaffField(${staff.id}, 'role', this.value)" placeholder="المسمى الوظيفي (اكتب بنفسك)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--accent-gold); border:1px solid var(--border); border-radius:4px; flex:1;">
+                                <input type="text" value="${staff.role}" onchange="updateStaffField(${staff.id}, 'role', this.value)" placeholder="المسمى الوظيفي" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--accent-gold); border:1px solid var(--border); border-radius:4px; flex:1;">
                                 <select onchange="updateStaffField(${staff.id}, 'status', this.value)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--success); border:1px solid var(--border); border-radius:4px; font-weight:bold;">
                                     <option value="نشط" ${staff.status==='نشط'?'selected':''}>🟢 نشط</option>
                                     <option value="إجازة" ${staff.status==='إجازة'?'selected':''}>✈️ إجازة</option>
@@ -682,10 +708,39 @@
                         <div class="input-group" style="margin-bottom:0;"><label>رقم الجوال</label><input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" style="direction:ltr; text-align:left;"></div>
                         <div class="input-group" style="margin-bottom:0;"><label>تاريخ الميلاد (العمر: <b style="color:var(--accent-gold);">${ageText}</b>)</label><input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="direction:ltr; text-align:left;"></div>
                     </div>
-                    <button class="btn" style="background:var(--danger); color:#fff; padding:6px; font-size:10px; margin-top:6px;" onclick="trashStaff(${staff.id})">حذف ونقل للسلة 🗑️</button>
+                    ${staff.id !== 0 ? `<button class="btn" style="background:var(--danger); color:#fff; padding:6px; font-size:10px; margin-top:6px;" onclick="trashStaff(${staff.id})">حذف ونقل للسلة 🗑️</button>` : ''}
                 </div>`;
             });
             document.getElementById('staff-management-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد حسابات نشطة حالياً.</p>';
+        }
+
+        function openAddStaffModal() {
+            document.getElementById('new-s-name').value = '';
+            document.getElementById('new-s-role').value = '';
+            document.getElementById('new-s-email').value = '';
+            document.getElementById('new-s-phone').value = '';
+            document.getElementById('new-s-dob').value = '';
+            document.getElementById('add-staff-modal').style.display = 'flex';
+        }
+
+        function saveNewStaff() {
+            let name = document.getElementById('new-s-name').value.trim();
+            let role = document.getElementById('new-s-role').value.trim() || 'موظف';
+            let email = document.getElementById('new-s-email').value.trim();
+            let pass = document.getElementById('new-s-pass').value.trim() || '12345';
+            let phone = document.getElementById('new-s-phone').value.trim();
+            let dob = document.getElementById('new-s-dob').value;
+
+            if(!name || !email) { alert("يرجى إدخال اسم الموظف والبريد الإلكتروني على الأقل!"); return; }
+
+            staffList.push({
+                id: Date.now(), name, role, email, pass, phone, dob, status: 'نشط',
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", chat: []
+            });
+
+            closeModal('add-staff-modal');
+            showNotification("تمت إضافة الموظف الجديد بنجاح");
+            refreshUI();
         }
 
         function renderStaffTrash() {
@@ -941,6 +996,8 @@
         }
         function logout() {
             document.getElementById('app-header').style.display = 'none';
+            document.getElementById('floating-ai-widget').style.display = 'none';
+            document.getElementById('floating-ai-popup').style.display = 'none';
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('main-drawer').classList.remove('open');
