@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-root">
 <head>
@@ -186,7 +187,7 @@
                 <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);">Neris AI Assistant</span>
                 <button onclick="toggleFloatingAIPopup()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
-            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;" data-t="ai_welcome_msg">أهلاً بك يا فهد. تم إضافة منتجاتك بنجاح للمخزن!</div>
+            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;" data-t="ai_welcome_msg">أهلاً بك يا فهد. تم تحديث النظام وصلاحيات الموظفين!</div>
             <div style="display:flex; gap:4px;">
                 <input type="text" id="floating-ai-input" data-t-ph="ai_input_ph" placeholder="اسأل الـ AI..." style="flex:1; padding:6px; font-size:10px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:4px;">
                 <button class="btn" style="margin-top:0; padding:6px 10px; font-size:10px; width:auto;" onclick="sendFloatingAI()" data-t="send_btn">إرسال</button>
@@ -323,6 +324,10 @@
                 <h4 data-t="addons_list_title">عناصر التغليف المتاحة</h4>
                 <div id="addons-list-container"></div>
             </div>
+            <div class="panel-box" style="margin-top:15px; border-color:var(--warning);">
+                <h4 style="color:var(--warning);" data-t="addon_trash_title">🗑️ سلة محذوفات التغليف</h4>
+                <div id="addons-trash-list"><p style="font-size:11px; color:var(--text-muted);" data-t="empty_addon_trash">سلة محذوفات التغليف فارغة.</p></div>
+            </div>
         </div>
 
         <div id="chat-screen" class="screen">
@@ -363,7 +368,7 @@
 
         <div id="staff-screen" class="screen">
             <h2 data-t="staff_title">فريق العمل والصلاحيات الشاملة</h2>
-            <p class="subtitle" data-t="staff_sub">إدارة الموظفين، إضافة موظف جديد، وصلاحيات النظام</p>
+            <p class="subtitle" data-t="staff_sub">إدارة الموظفين، الصلاحيات الفردية، وحالة الحسابات</p>
             <button class="btn" onclick="openAddStaffModal()" data-t="add_staff_btn" style="margin-bottom:12px;">+ إضافة موظف جديد</button>
             <div id="staff-management-list"></div>
             
@@ -407,9 +412,11 @@
             </div>
         </div>
 
-        <div class="modal" id="add-product-modal">
+        <!-- مودال إضافة/تعديل منتج -->
+        <div class="modal" id="product-modal">
             <div class="modal-content">
-                <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_prod_modal">إضافة منتج جديد مع صورة</h3>
+                <h3 id="product-modal-title" style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_prod_modal">إضافة منتج جديد مع صورة</h3>
+                <input type="hidden" id="edit-product-id" value="">
                 <div class="input-group"><label data-t="p_name">اسم المنتج</label><input type="text" id="p-name" data-t-ph="p_name_ph" placeholder="خاتم ألماس فاخر"></div>
                 <div class="input-group"><label data-t="p_qty_lbl">الكمية المتاحة (المخزون)</label><input type="number" id="p-qty" value="5" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-t="p_color">اللون</label><input type="text" id="p-color" data-t-ph="p_color_ph" placeholder="ذهبي وردي"></div>
@@ -418,27 +425,28 @@
                 <div class="input-group"><label data-t="p_cost">سعر التكلفة (SAR)</label><input type="number" id="p-cost" placeholder="100" style="direction:ltr; text-align:left;" oninput="calcAIBasedPrice()"></div>
                 <div class="input-group"><label data-t="p_suggested">سعر البيع التقريبي (حساب AI تلقائي)</label><input type="text" id="p-suggested" readonly style="color:var(--accent-gold); font-weight:bold; direction:ltr; text-align:left;" value="0 SAR"></div>
                 <div style="display:flex; gap:8px; margin-top:10px;">
-                    <button class="btn" style="background:var(--success); color:#fff;" onclick="saveProduct()" data-t="save_btn">حفظ</button>
-                    <button class="btn" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('add-product-modal')" data-t="cancel_btn">إلغاء</button>
+                    <button class="btn" style="background:var(--success); color:#fff;" onclick="saveProductData()" data-t="save_btn">حفظ</button>
+                    <button class="btn" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('product-modal')" data-t="cancel_btn">إلغاء</button>
                 </div>
             </div>
         </div>
 
-        <div class="modal" id="add-addon-modal">
+        <!-- مودال إضافة/تعديل تغليف -->
+        <div class="modal" id="addon-modal">
             <div class="modal-content">
-                <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_addon_modal">إضافة عنصر تغليف مع صورة</h3>
+                <h3 id="addon-modal-title" style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_addon_modal">إضافة عنصر تغليف مع صورة</h3>
+                <input type="hidden" id="edit-addon-id" value="">
                 <div class="input-group"><label data-t="a_name">اسم التغليف</label><input type="text" id="a-name" data-t-ph="a_name_ph" placeholder="علبة مخمل فاخرة"></div>
                 <div class="input-group"><label data-t="a_img">صورة التغليف</label><input type="file" id="a-img-file" accept="image/*" style="direction:ltr; text-align:left; font-size:10px;"></div>
                 <div class="input-group"><label data-t="a_price">السعر (SAR)</label><input type="number" id="a-price" placeholder="50" style="direction:ltr; text-align:left;"></div>
                 <div style="display:flex; gap:8px; margin-top:10px;">
-                    <button class="btn" style="background:var(--success); color:#fff;" onclick="saveAddon()" data-t="save_btn">حفظ</button>
-                    <button class="btn" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('add-addon-modal')" data-t="cancel_btn">إلغاء</button>
+                    <button class="btn" style="background:var(--success); color:#fff;" onclick="saveAddonData()" data-t="save_btn">حفظ</button>
+                    <button class="btn" style="background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border);" onclick="closeModal('addon-modal')" data-t="cancel_btn">إلغاء</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- سكربت الربط السحابي والتشغيل الشامل -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -488,10 +496,11 @@
             { id: 1, name: "علبة مخمل فاخرة", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
             { id: 2, name: "كيس هدية بشريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
         ];
+        window.addonsTrash = [];
         window.staffList = [
-            { id: 0, name: "فهد راشد الحسين (المالك)", role: "المالك (Owner / Admin)", email: "fahadfhd47@gmail.com", pass: "Fahad55003", phone: "0549553395", dob: "2006-07-31", status: "نشط", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", chat: [] },
-            { id: 1, name: "محمد", role: "مسؤول (Manager)", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", chat: [] },
-            { id: 2, name: "فاطمة", role: "موظف (Staff)", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", chat: [] }
+            { id: 0, name: "فهد راشد الحسين (المالك)", role: "المالك (Owner / Admin)", email: "fahadfhd47@gmail.com", pass: "Fahad55003", phone: "0549553395", dob: "2006-07-31", status: "نشط", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", permissions: { inventory: true, orders: true, chat: true, staff: true }, chat: [] },
+            { id: 1, name: "محمد", role: "مسؤول (Manager)", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", permissions: { inventory: true, orders: true, chat: true, staff: false }, chat: [] },
+            { id: 2, name: "فاطمة", role: "موظف (Staff)", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", permissions: { inventory: false, orders: true, chat: true, staff: false }, chat: [] }
         ];
         window.staffTrash = [];
         window.ordersList = [];
@@ -509,20 +518,22 @@
                 inv_title: "المخزن والمنتجات", inv_sub: "إضافة وتعديل المنتجات مع حساب AI للأسعار وتنبيهات المخزون", add_prod_btn: "+ إضافة منتج جديد مع صورة", inv_list_title: "قائمة منتجات المخزن",
                 inv_trash_title: "🗑️ سلة مهملات المخزن (تسترجع خلال 30 يوم أو تحذف نهائياً)", empty_trash: "سلة محذوفات المخزن فارغة.",
                 addons_title: "التغليف والإضافات الممتازة", addons_sub: "إدارة عناصر التغليف مع الصور والأسعار", add_addon_btn: "+ إضافة عنصر تغليف جديد", addons_list_title: "عناصر التغليف المتاحة",
+                addon_trash_title: "🗑️ سلة محذوفات التغليف", empty_addon_trash: "سلة محذوفات التغليف فارغة.",
                 chat_title: "المحادثات الخاصة (مثل واتساب)", chat_sub: "تواصل مباشر وسجل رسائل محفوظ مع الفريق", select_staff_chat: "اختر الموظف للمحادثة:", send_btn: "إرسال",
                 ai_screen_title: "مساعد الذكاء الاصطناعي المتطور (AI Chat)", ai_screen_sub: "اكتب أي استفسار أو أمر وسيجيبك المساعد فوراً",
-                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، إضافة موظف جديد، وصلاحيات النظام",
+                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، الصلاحيات الفردية، وحالة الحسابات",
                 add_staff_btn: "+ إضافة موظف جديد", staff_trash_title: "🗑️ سلة محذوفات فريق العمل", empty_staff_trash: "سلة المحذوفات فارغة تماماً.",
                 prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي، صورتك، وتاريخ ميلادك", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", dob_lbl: "تاريخ الميلاد", age_lbl: "العمر المحسوب تلقائياً", save_btn: "حفظ التعديلات", photo_lbl: "صورة",
                 add_staff_modal_title: "➕ إضافة موظف جديد للنظام", s_name: "اسم الموظف", s_role: "المسمى الوظيفي", s_email: "البريد الإلكتروني", s_pass: "كلمة المرور", s_phone: "رقم الجوال", s_dob: "تاريخ الميلاد",
-                add_prod_modal: "إضافة منتج جديد مع صورة", p_name: "اسم المنتج", p_qty_lbl: "الكمية المتاحة (المخزون)", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
-                add_addon_modal: "إضافة عنصر تغليف مع صورة", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
+                add_prod_modal: "إضافة / تعديل منتج", p_name: "اسم المنتج", p_qty_lbl: "الكمية المتاحة (المخزون)", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
+                add_addon_modal: "إضافة / تعديل تغليف", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
                 new_order_heading: "➕ تسجيل طلبية جديدة", sel_prod: "اختر المنتج الأساسي:", sel_addons: "اختر التغليف والإضافات المتعددة:", submit_order_btn: "تسجيل الطلبية وإضافتها للمخزن",
                 login_title: "تسجيل الدخول الآمن", login_sub: "أدخل بيانات الاعتماد الخاصة بك بدقة", login_err: "البريد أو كلمة المرور غير صحيحة", login_btn: "تسجيل دخول", ai_widget_btn: "Neris AI مساعد", menu_title: "قائمة التنقل",
                 intro_h1: "مرحباً بك في نظام نيرسي", intro_p: "NERIS CLOUD OS - متصل بالسحابة لحظياً",
                 my_orders_title: "🔔 الطلبيات المسندة إليك للتجهيز الآن", ai_init_msg: "أهلاً بك يا فهد. أنا مستعد لإجابتك على أي استفسار بخصوص المخزن، الطلبات، أو إدارة المحل.",
                 c_name_ph: "اسم العميل", c_phone_ph: "رقم الجوال", msg_ph: "اكتب رسالة...", ai_input_ph: "اسأل الـ AI...",
-                email_ph: "البريد الإلكتروني", pass_ph: "كلمة المرور", s_name_ph: "محمد / فاطمة", s_role_ph: "مسؤول أو موظف مبيعات", p_name_ph: "خاتم ألماس فاخر", p_color_ph: "ذهبي وردي", p_size_ph: "مقاس 7", a_name_ph: "علبة مخمل فاخرة"
+                email_ph: "البريد الإلكتروني", pass_ph: "كلمة المرور", s_name_ph: "محمد / فاطمة", s_role_ph: "مسؤول أو موظف مبيعات", p_name_ph: "خاتم ألماس فاخر", p_color_ph: "ذهبي وردي", p_size_ph: "مقاس 7", a_name_ph: "علبة مخمل فاخرة",
+                perm_inv: "إدارة المخزن", perm_orders: "إدارة الطلبات", perm_chat: "المحادثات", perm_staff: "إدارة الموظفين"
             },
             en: {
                 home: "Dashboard", orders: "Active Orders", inventory: "Inventory", addons: "Packaging & Add-ons",
@@ -534,20 +545,22 @@
                 inv_title: "Inventory & Products", inv_sub: "Add/edit products with AI pricing & stock alerts", add_prod_btn: "+ Add New Product with Image", inv_list_title: "Inventory Products",
                 inv_trash_title: "🗑️ Inventory Trash (Restorable for 30 days)", empty_trash: "Inventory trash is empty.",
                 addons_title: "Premium Packaging & Add-ons", addons_sub: "Manage packaging with images & prices", add_addon_btn: "+ Add Packaging Item", addons_list_title: "Available Packaging",
+                addon_trash_title: "🗑️ Packaging Trash", empty_addon_trash: "Packaging trash is empty.",
                 chat_title: "Private Chats (WhatsApp style)", chat_sub: "Direct communication with persistent history", select_staff_chat: "Select staff to chat:", send_btn: "Send",
                 ai_screen_title: "Advanced AI Assistant (AI Chat)", ai_screen_sub: "Type any query or order and the assistant will reply instantly",
-                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, add new members, and system permissions",
+                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, individual permissions, and account status",
                 add_staff_btn: "+ Add New Staff", staff_trash_title: "🗑️ Staff Trash", empty_staff_trash: "Staff trash is empty.",
                 prof_title: "Profile & Account", prof_sub: "Manage your personal account details, photo and DOB", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", dob_lbl: "Date of Birth", age_lbl: "Calculated Age", save_btn: "Save Changes", photo_lbl: "Photo",
                 add_staff_modal_title: "➕ Add New Staff Member", s_name: "Staff Name", s_role: "Job Title", s_email: "Email", s_pass: "Password", s_phone: "Phone", s_dob: "Date of Birth",
-                add_prod_modal: "Add Product with Image", p_name: "Product Name", p_qty_lbl: "Available Quantity (Stock)", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
-                add_addon_modal: "Add Packaging with Image", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
+                add_prod_modal: "Add / Edit Product", p_name: "Product Name", p_qty_lbl: "Available Quantity (Stock)", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
+                add_addon_modal: "Add / Edit Packaging", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
                 new_order_heading: "➕ Register New Order", sel_prod: "Select Main Product:", sel_addons: "Select Multiple Add-ons & Packaging:", submit_order_btn: "Register Order & Add to Inventory",
                 login_title: "Secure Login", login_sub: "Enter your credentials carefully", login_err: "Incorrect email or password", login_btn: "Login", ai_widget_btn: "Neris AI Assistant", menu_title: "Navigation Menu",
                 intro_h1: "Welcome to Neris OS", intro_p: "NERIS CLOUD OS - Realtime Cloud Connected",
                 my_orders_title: "🔔 Orders Assigned to You for Processing", ai_init_msg: "Welcome Fahad. I am ready to answer any inquiries regarding inventory, orders, or store management.",
                 c_name_ph: "Client Name", c_phone_ph: "Phone Number", msg_ph: "Type a message...", ai_input_ph: "Ask AI...",
-                email_ph: "Email", pass_ph: "Password", s_name_ph: "Mohammed / Fatima", s_role_ph: "Manager or Sales Staff", p_name_ph: "Luxury Diamond Ring", p_color_ph: "Rose Gold", p_size_ph: "Size 7", a_name_ph: "Luxury Velvet Box"
+                email_ph: "Email", pass_ph: "Password", s_name_ph: "Mohammed / Fatima", s_role_ph: "Manager or Sales Staff", p_name_ph: "Luxury Diamond Ring", p_color_ph: "Rose Gold", p_size_ph: "Size 7", a_name_ph: "Luxury Velvet Box",
+                perm_inv: "Inventory", perm_orders: "Orders", perm_chat: "Chat", perm_staff: "Staff"
             }
         };
 
@@ -557,6 +570,7 @@
                 if (data.inventory) window.inventoryList = data.inventory;
                 if (data.inventoryTrash) window.inventoryTrash = data.inventoryTrash;
                 if (data.addons) window.addonsList = data.addons;
+                if (data.addonsTrash) window.addonsTrash = data.addonsTrash;
                 if (data.staff) window.staffList = data.staff;
                 if (data.staffTrash) window.staffTrash = data.staffTrash;
                 if (data.orders) window.ordersList = data.orders;
@@ -575,6 +589,7 @@
                 inventory: window.inventoryList,
                 inventoryTrash: window.inventoryTrash,
                 addons: window.addonsList,
+                addonsTrash: window.addonsTrash,
                 staff: window.staffList,
                 staffTrash: window.staffTrash,
                 orders: window.ordersList,
@@ -603,7 +618,7 @@
             } else if(matchedStaff) {
                 window.currentUserRole = 'staff';
                 window.currentLoggedInUserEmail = email;
-                document.getElementById('drawer-staff-item').style.display = 'none';
+                document.getElementById('drawer-staff-item').style.display = matchedStaff.permissions && matchedStaff.permissions.staff ? 'flex' : 'none';
                 successLogin();
             } else {
                 document.getElementById('login-error').style.display = 'block';
@@ -727,6 +742,7 @@
             renderInventory();
             renderInventoryTrash();
             renderAddons();
+            renderAddonsTrash();
             renderAddonsCheckboxes();
             renderStaffManagement();
             renderStaffTrash();
@@ -774,9 +790,7 @@
                 let qty = item.qty !== undefined ? item.qty : 5;
                 let alertBadge = '';
                 if(qty < 2) {
-                    alertBadge = `<br><span style="color:var(--danger); font-size:9px; font-weight:bold;">🚨 ${window.currentLang==='ar'?'انتهى تقريباً - اطلب الآن!':'Almost out - Order now!'} (${qty})</span>`;
-                } else if(qty <= 3) {
-                    alertBadge = `<br><span style="color:var(--warning); font-size:9px;">⚠️ ${window.currentLang==='ar'?'مخزون قليل':'Low stock'} (${qty})</span>`;
+                    alertBadge = `<br><span style="color:var(--danger); font-size:9px; font-weight:bold;">🚨 ${window.currentLang==='ar'?'انتهى تقريباً':'Almost out'} (${qty})</span>`;
                 } else {
                     alertBadge = `<br><span style="color:var(--success); font-size:9px;">🟢 ${window.currentLang==='ar'?'متوفر':'Available'} (${qty})</span>`;
                 }
@@ -786,19 +800,24 @@
                         <img src="${item.image || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100'}" class="product-thumb">
                         <div><strong>${item.name}</strong> (${item.color} - ${item.size})<br><small style="color:var(--accent-gold);">AI Price: ${item.suggestedPrice} SAR</small>${alertBadge}</div>
                     </div>
-                    <div><span class="badge">${item.cost} SAR</span> <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto;" onclick="trashInventoryItem(${item.id})">${window.currentLang==='ar'?'حذف 🗑️':'Delete 🗑️'}</button></div>
+                    <div style="display:flex; gap:4px;">
+                        <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--accent-gold); color:#1c1815; width:auto; margin-top:0;" onclick="openEditProductModal(${item.id})">${window.currentLang==='ar'?'تعديل ✏️':'Edit ✏️'}</button>
+                        <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto; margin-top:0;" onclick="trashInventoryItem(${item.id})">${window.currentLang==='ar'?'حذف 🗑️':'Delete 🗑️'}</button>
+                    </div>
                 </div>`;
             });
             document.getElementById('real-inventory-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang === 'ar' ? 'لا توجد منتجات في المخزن حالياً.' : 'No products in inventory.'}</p>`;
         }
 
         window.trashInventoryItem = function(id) {
-            let idx = window.inventoryList.findIndex(x => x.id === id);
-            if(idx !== -1) {
-                let removed = window.inventoryList.splice(idx, 1)[0];
-                window.inventoryTrash.push(removed);
-                showNotification(window.currentLang === 'ar' ? "تم نقل المنتج إلى سلة المحذوفات" : "Product moved to trash");
-                syncToCloud();
+            if(confirm(window.currentLang === 'ar' ? "هل أنت متأكد من رغبتك في حذف هذا المنتج ونقله لسلة المحذوفات؟" : "Are you sure you want to delete and move this product to trash?")) {
+                let idx = window.inventoryList.findIndex(x => x.id === id);
+                if(idx !== -1) {
+                    let removed = window.inventoryList.splice(idx, 1)[0];
+                    window.inventoryTrash.push(removed);
+                    showNotification(window.currentLang === 'ar' ? "تم نقل المنتج إلى سلة المحذوفات" : "Product moved to trash");
+                    syncToCloud();
+                }
             }
         }
 
@@ -830,9 +849,11 @@
         }
 
         window.deleteInventoryForever = function(id) {
-            window.inventoryTrash = window.inventoryTrash.filter(x => x.id !== id);
-            showNotification(window.currentLang === 'ar' ? "تم حذف المنتج نهائياً من النظام" : "Product deleted permanently");
-            syncToCloud();
+            if(confirm(window.currentLang === 'ar' ? "هل تريد حذف هذا المنتج نهائياً وبشكل قطعي؟" : "Permanently delete this product?")) {
+                window.inventoryTrash = window.inventoryTrash.filter(x => x.id !== id);
+                showNotification(window.currentLang === 'ar' ? "تم حذف المنتج نهائياً من النظام" : "Product deleted permanently");
+                syncToCloud();
+            }
         }
 
         function renderAddons() {
@@ -843,10 +864,61 @@
                         <img src="${item.image || 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100'}" class="product-thumb">
                         <div><strong>${item.name}</strong></div>
                     </div>
-                    <div><span class="badge">${item.price} SAR</span> <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto;" onclick="deleteAddonItem(${item.id})">${window.currentLang==='ar'?'حذف':'Delete'}</button></div>
+                    <div style="display:flex; gap:4px;">
+                        <span class="badge">${item.price} SAR</span>
+                        <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--accent-gold); color:#1c1815; width:auto; margin-top:0;" onclick="openEditAddonModal(${item.id})">${window.currentLang==='ar'?'تعديل ✏️':'Edit ✏️'}</button>
+                        <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto; margin-top:0;" onclick="trashAddonItem(${item.id})">${window.currentLang==='ar'?'حذف 🗑️':'Delete 🗑️'}</button>
+                    </div>
                 </div>`;
             });
             document.getElementById('addons-list-container').innerHTML = html;
+        }
+
+        window.trashAddonItem = function(id) {
+            if(confirm(window.currentLang === 'ar' ? "هل أنت متأكد من رغبتك في حذف عنصر التغليف هذا ونقله للسلة؟" : "Move this packaging item to trash?")) {
+                let idx = window.addonsList.findIndex(x => x.id === id);
+                if(idx !== -1) {
+                    let removed = window.addonsList.splice(idx, 1)[0];
+                    window.addonsTrash.push(removed);
+                    showNotification(window.currentLang === 'ar' ? "تم نقل عنصر التغليف لسلة المحذوفات" : "Packaging moved to trash");
+                    syncToCloud();
+                }
+            }
+        }
+
+        function renderAddonsTrash() {
+            let html = '';
+            window.addonsTrash.forEach(item => {
+                html += `<div class="card-item" style="border-color:var(--warning);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="${item.image || 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100'}" style="width:30px; height:30px; border-radius:4px; object-fit:cover;">
+                        <div><strong>${item.name}</strong></div>
+                    </div>
+                    <div style="display:flex; gap:4px;">
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="restoreAddonItem(${item.id})">${window.currentLang==='ar'?'استرجاع ↺':'Restore ↺'}</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--danger); color:#fff; width:auto; margin-top:0;" onclick="deleteAddonForever(${item.id})">${window.currentLang==='ar'?'حذف نهائي ❌':'Delete ❌'}</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('addons-trash-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang==='ar'?'سلة محذوفات التغليف فارغة.':'Packaging trash is empty.'}</p>`;
+        }
+
+        window.restoreAddonItem = function(id) {
+            let idx = window.addonsTrash.findIndex(x => x.id === id);
+            if(idx !== -1) {
+                let restored = window.addonsTrash.splice(idx, 1)[0];
+                window.addonsList.push(restored);
+                showNotification(window.currentLang === 'ar' ? "تم استرجاع التغليف بنجاح" : "Packaging restored");
+                syncToCloud();
+            }
+        }
+
+        window.deleteAddonForever = function(id) {
+            if(confirm(window.currentLang === 'ar' ? "هل تريد حذف عنصر التغليف هذا نهائياً؟" : "Permanently delete this packaging?")) {
+                window.addonsTrash = window.addonsTrash.filter(x => x.id !== id);
+                showNotification(window.currentLang === 'ar' ? "تم الحذف نهائياً" : "Deleted permanently");
+                syncToCloud();
+            }
         }
 
         function renderAddonsCheckboxes() {
@@ -871,6 +943,7 @@
             let html = '';
             window.staffList.forEach(staff => {
                 let ageText = calcStaffAge(staff.dob);
+                let p = staff.permissions || { inventory: true, orders: true, chat: true, staff: false };
                 html += `<div class="staff-profile-card">
                     <div class="staff-header-flex">
                         <div class="staff-avatar-box" onclick="document.getElementById('file-up-${staff.id}').click()" title="تغيير الصورة الشخصية">
@@ -901,6 +974,15 @@
                         <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'رقم الجوال':'Phone'}</label><input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" style="direction:ltr; text-align:left;"></div>
                         <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'تاريخ الميلاد (العمر: ':'DOB (Age: '}<b style="color:var(--accent-gold);">${ageText}</b>)</label><input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="direction:ltr; text-align:left;"></div>
                     </div>
+                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border); margin-top:8px; font-size:10px;">
+                        <div style="font-weight:bold; color:var(--accent-gold); margin-bottom:4px;">🔐 الصلاحيات المخصصة:</div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px;">
+                            <label style="cursor:pointer;"><input type="checkbox" ${p.inventory?'checked':''} onchange="updateStaffPerm(${staff.id}, 'inventory', this.checked)"> ${window.currentLang==='ar'?'إدارة المخزن':'Inventory'}</label>
+                            <label style="cursor:pointer;"><input type="checkbox" ${p.orders?'checked':''} onchange="updateStaffPerm(${staff.id}, 'orders', this.checked)"> ${window.currentLang==='ar'?'إدارة الطلبات':'Orders'}</label>
+                            <label style="cursor:pointer;"><input type="checkbox" ${p.chat?'checked':''} onchange="updateStaffPerm(${staff.id}, 'chat', this.checked)"> ${window.currentLang==='ar'?'المحادثات':'Chat'}</label>
+                            <label style="cursor:pointer;"><input type="checkbox" ${p.staff?'checked':''} onchange="updateStaffPerm(${staff.id}, 'staff', this.checked)"> ${window.currentLang==='ar'?'إدارة الموظفين':'Staff'}</label>
+                        </div>
+                    </div>
                     ${staff.id !== 0 ? `<button class="btn" style="background:var(--danger); color:#fff; padding:6px; font-size:10px; margin-top:6px;" onclick="trashStaff(${staff.id})">${window.currentLang==='ar'?'حذف ونقل للسلة 🗑️':'Delete & Trash 🗑️'}</button>` : ''}
                 </div>`;
             });
@@ -928,7 +1010,8 @@
 
             window.staffList.push({
                 id: Date.now(), name, role, email, pass, phone, dob, status: 'نشط',
-                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", chat: []
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100",
+                permissions: { inventory: true, orders: true, chat: true, staff: false }, chat: []
             });
 
             closeModal('add-staff-modal');
@@ -954,12 +1037,14 @@
         }
 
         window.trashStaff = function(id) {
-            let idx = window.staffList.findIndex(x => x.id === id);
-            if(idx !== -1) {
-                let removed = window.staffList.splice(idx, 1)[0];
-                window.staffTrash.push(removed);
-                showNotification(window.currentLang==='ar'?"تم نقل الحساب إلى سلة المحذوفات":"Staff moved to trash");
-                syncToCloud();
+            if(confirm(window.currentLang === 'ar' ? "هل أنت متأكد من رغبتك في حذف هذا الموظف ونقله للسلة؟" : "Move this staff to trash?")) {
+                let idx = window.staffList.findIndex(x => x.id === id);
+                if(idx !== -1) {
+                    let removed = window.staffList.splice(idx, 1)[0];
+                    window.staffTrash.push(removed);
+                    showNotification(window.currentLang==='ar'?"تم نقل الحساب إلى سلة المحذوفات":"Staff moved to trash");
+                    syncToCloud();
+                }
             }
         }
 
@@ -974,9 +1059,11 @@
         }
 
         window.deleteStaffForever = function(id) {
-            window.staffTrash = window.staffTrash.filter(x => x.id !== id);
-            showNotification(window.currentLang==='ar'?"تم حذف الموظف نهائياً من النظام":"Staff deleted permanently");
-            syncToCloud();
+            if(confirm(window.currentLang === 'ar' ? "هل تريد حذف حساب الموظف نهائياً؟" : "Permanently delete staff?")) {
+                window.staffTrash = window.staffTrash.filter(x => x.id !== id);
+                showNotification(window.currentLang==='ar'?"تم حذف الموظف نهائياً من النظام":"Staff deleted permanently");
+                syncToCloud();
+            }
         }
 
         window.updateStaffAvatar = function(id, input) {
@@ -997,6 +1084,16 @@
         window.updateStaffField = function(id, field, val) {
             let s = window.staffList.find(x => x.id === id);
             if(s) { s[field] = val; showNotification(window.currentLang==='ar'?"تم حفظ التعديلات سحابياً ✓":"Changes saved ✓"); syncToCloud(); }
+        }
+
+        window.updateStaffPerm = function(id, permKey, val) {
+            let s = window.staffList.find(x => x.id === id);
+            if(s) {
+                if(!s.permissions) s.permissions = {};
+                s.permissions[permKey] = val;
+                showNotification(window.currentLang==='ar'?"تم تحديث الصلاحيات سحابياً ✓":"Permissions updated ✓");
+                syncToCloud();
+            }
         }
 
         function renderOrderDropdowns() {
@@ -1162,21 +1259,38 @@
 
             setTimeout(() => {
                 let reply = window.currentLang === 'ar' ? 
-                    `تحليل الـ AI لطلبك "${q}": النظام متصل بالسحابة وتوزيع الطلبات والمنتجات تعمل بكفاءة.` :
-                    `AI Analysis for "${q}": System is operating smoothly via cloud sync.`;
+                    `تحليل الـ AI لطلبك "${q}": النظام متصل بالسحابة وصلاحيات الموظفين والتعديلات تعمل بأعلى كفاءة.` :
+                    `AI Analysis for "${q}": System is operating smoothly via cloud sync with updated permissions.`;
                 history.innerHTML += `<div style="background:rgba(197,160,89,0.15); padding:6px 8px; border-radius:6px; color:var(--accent-gold);"><b>Neris AI:</b> ${reply}</div>`;
                 history.scrollTop = history.scrollHeight;
             }, 700);
         }
 
+        // إدارة المنتجات (إضافة وتعديل)
         window.openAddProductModal = function() {
+            document.getElementById('edit-product-id').value = '';
+            document.getElementById('product-modal-title').innerText = window.currentLang === 'ar' ? '➕ إضافة منتج جديد مع صورة' : '➕ Add New Product';
             document.getElementById('p-name').value = '';
             document.getElementById('p-qty').value = '5';
             document.getElementById('p-color').value = '';
             document.getElementById('p-size').value = '';
             document.getElementById('p-cost').value = '';
             document.getElementById('p-suggested').value = '0 SAR';
-            document.getElementById('add-product-modal').style.display = 'flex';
+            document.getElementById('product-modal').style.display = 'flex';
+        }
+
+        window.openEditProductModal = function(id) {
+            let item = window.inventoryList.find(x => x.id === id);
+            if(!item) return;
+            document.getElementById('edit-product-id').value = item.id;
+            document.getElementById('product-modal-title').innerText = window.currentLang === 'ar' ? '✏️ تعديل المنتج' : '✏️ Edit Product';
+            document.getElementById('p-name').value = item.name;
+            document.getElementById('p-qty').value = item.qty !== undefined ? item.qty : 5;
+            document.getElementById('p-color').value = item.color || '';
+            document.getElementById('p-size').value = item.size || '';
+            document.getElementById('p-cost').value = item.cost || '';
+            document.getElementById('p-suggested').value = (item.suggestedPrice || 0) + ' SAR';
+            document.getElementById('product-modal').style.display = 'flex';
         }
 
         window.calcAIBasedPrice = function() {
@@ -1185,7 +1299,8 @@
             document.getElementById('p-suggested').value = suggested;
         }
 
-        window.saveProduct = function() {
+        window.saveProductData = function() {
+            let editId = document.getElementById('edit-product-id').value;
             let name = document.getElementById('p-name').value.trim();
             let qty = parseInt(document.getElementById('p-qty').value) || 5;
             let color = document.getElementById('p-color').value.trim();
@@ -1196,40 +1311,73 @@
 
             if(!name || cost <= 0) { alert(window.currentLang==='ar'?"أدخل اسم المنتج وسعر التكلفة صحيحاً":"Enter product name and valid cost"); return; }
 
-            let imgUrl = "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100";
-            if(imgFile) imgUrl = URL.createObjectURL(imgFile);
+            if(editId) {
+                let item = window.inventoryList.find(x => x.id == editId);
+                if(item) {
+                    item.name = name;
+                    item.qty = qty;
+                    item.color = color;
+                    item.size = size;
+                    item.cost = cost;
+                    item.suggestedPrice = suggestedPrice.toFixed(2);
+                    if(imgFile) item.image = URL.createObjectURL(imgFile);
+                }
+                showNotification(window.currentLang==='ar'?"تم تعديل وحفظ المنتج بنجاح":"Product updated successfully");
+            } else {
+                let imgUrl = "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100";
+                if(imgFile) imgUrl = URL.createObjectURL(imgFile);
+                window.inventoryList.push({ id: Date.now(), name, qty, color, size, cost, suggestedPrice: suggestedPrice.toFixed(2), image: imgUrl });
+                showNotification(window.currentLang==='ar'?"تمت إضافة المنتج وحفظه سحابياً":"Product added successfully");
+            }
 
-            window.inventoryList.push({ id: Date.now(), name, qty, color, size, cost, suggestedPrice: suggestedPrice.toFixed(2), image: imgUrl });
-            closeModal('add-product-modal');
-            showNotification(window.currentLang==='ar'?"تمت إضافة المنتج وحفظه سحابياً":"Product added successfully");
+            closeModal('product-modal');
             syncToCloud();
         }
 
+        // إدارة التغليف (إضافة وتعديل)
         window.openAddAddonModal = function() {
+            document.getElementById('edit-addon-id').value = '';
+            document.getElementById('addon-modal-title').innerText = window.currentLang === 'ar' ? '➕ إضافة عنصر تغليف جديد' : '➕ Add Packaging';
             document.getElementById('a-name').value = '';
             document.getElementById('a-price').value = '';
-            document.getElementById('add-addon-modal').style.display = 'flex';
+            document.getElementById('addon-modal').style.display = 'flex';
         }
 
-        window.saveAddon = function() {
+        window.openEditAddonModal = function(id) {
+            let item = window.addonsList.find(x => x.id === id);
+            if(!item) return;
+            document.getElementById('edit-addon-id').value = item.id;
+            document.getElementById('addon-modal-title').innerText = window.currentLang === 'ar' ? '✏️ تعديل عنصر التغليف' : '✏️ Edit Packaging';
+            document.getElementById('a-name').value = item.name;
+            document.getElementById('a-price').value = item.price;
+            document.getElementById('addon-modal').style.display = 'flex';
+        }
+
+        window.saveAddonData = function() {
+            let editId = document.getElementById('edit-addon-id').value;
             let name = document.getElementById('a-name').value.trim();
             let price = parseFloat(document.getElementById('a-price').value) || 0;
             let imgFile = document.getElementById('a-img-file').files[0];
+
             if(!name || price <= 0) { alert(window.currentLang==='ar'?"أدخل اسم التغليف والسعر":"Enter packaging name and price"); return; }
 
-            let imgUrl = "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100";
-            if(imgFile) imgUrl = URL.createObjectURL(imgFile);
+            if(editId) {
+                let item = window.addonsList.find(x => x.id == editId);
+                if(item) {
+                    item.name = name;
+                    item.price = price;
+                    if(imgFile) item.image = URL.createObjectURL(imgFile);
+                }
+                showNotification(window.currentLang==='ar'?"تم تعديل التغليف بنجاح":"Packaging updated successfully");
+            } else {
+                let imgUrl = "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100";
+                if(imgFile) imgUrl = URL.createObjectURL(imgFile);
+                window.addonsList.push({ id: Date.now(), name, price, image: imgUrl });
+                showNotification(window.currentLang==='ar'?"تمت إضافة التغليف سحابياً":"Packaging added successfully");
+            }
 
-            window.addonsList.push({ id: Date.now(), name, price, image: imgUrl });
-            closeModal('add-addon-modal');
-            showNotification(window.currentLang==='ar'?"تمت إضافة عنصر التغليف سحابياً":"Packaging added successfully");
+            closeModal('addon-modal');
             syncToCloud();
-        }
-
-        window.deleteAddonItem = function(id) { 
-            window.addonsList = window.addonsList.filter(x => x.id !== id); 
-            showNotification(window.currentLang==='ar'?"تم الحذف والتحديث سحابياً":"Deleted & synced"); 
-            syncToCloud(); 
         }
 
         window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; }
