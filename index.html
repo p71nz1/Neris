@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-root">
 <head>
@@ -63,7 +62,6 @@
             position: relative;
         }
 
-        /* شاشة الترحيب المؤقتة (تختفي بعد 3 ثوانٍ) */
         #welcome-intro-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -266,14 +264,12 @@
     </div>
 
     <div class="phone-frame">
-        <!-- شاشة الترحيب المؤقتة (تختفي تلقائياً بعد 3 ثوانٍ) -->
         <div id="welcome-intro-screen">
-            <div class="splash-logo">💎</div>
+            <div class="splash-logo"><img src="https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcQzkkrJ4rXd4jB9R6bcjQmRNNU8f5EcklyQLk71fwHjY03Ww5xb-g8QAw3Iq54tcIuCLM4pu9dCosyh_aw" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="Neris"></div>
             <h1 style="color:var(--text-main); font-size:20px; font-weight:bold; margin-bottom:6px; letter-spacing:1px;">مرحباً بك في نظام نيرسي</h1>
             <p style="color:var(--accent-gold); font-size:12px;">NERIS ELITE OS - نظام إدارة المجوهرات</p>
         </div>
 
-        <!-- شاشة تسجيل الدخول -->
         <div id="login-screen" style="display:none;">
             <div class="splash-logo" title="شعار Neris الفاخر">💎</div>
             <div style="color:var(--text-main); font-weight:bold; font-size:18px; letter-spacing: 1px; margin-bottom:4px;">تسجيل الدخول</div>
@@ -366,7 +362,7 @@
                         <div style="font-size:9px; color:var(--text-muted);">منتج بالمخزن</div>
                     </div>
                     <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="metric-staff-count" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">3</span>
+                        <span id="metric-staff-count" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">2</span>
                         <div style="font-size:9px; color:var(--text-muted);">فريق الإدارة</div>
                     </div>
                 </div>
@@ -503,9 +499,9 @@
 
         <div id="staff-screen" class="screen">
             <h2>إدارة المسؤولين والصلاحيات</h2>
-            <p class="subtitle">التحكم بالحسابات، الصلاحيات، الإجازات، والفصل</p>
+            <p class="subtitle">التحكم بالحسابات، الصلاحيات، الإجازات، والفصل مع خيارات الاسترجاع</p>
             <div class="panel-box">
-                <h4>قائمة مسؤولي النظام (<span id="staff-count-badge" style="direction:ltr; display:inline-block;">3</span>)</h4>
+                <h4>قائمة مسؤولي النظام (<span id="staff-count-badge" style="direction:ltr; display:inline-block;">2</span>)</h4>
                 <div id="staff-management-list"></div>
             </div>
         </div>
@@ -532,613 +528,555 @@
                 <span style="font-size:12px; font-weight:bold; color:var(--accent-gold);">✨ Neris Elite AI Assistant</span>
                 <button onclick="toggleAIChat()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
-            <div id="ai-messages-list" style="max-height:140px; overflow-y:auto; font-size:11px; margin-bottom:8px; color:var(--text-muted); line-height:1.5;">
-                أهلاً بك يا فهد. أنا مساعدك الذكي المطور لإدارة متجرك ومخزونك.
+            <div id="ai-chat-messages" style="max-height:100px; overflow-y:auto; font-size:11px; margin-bottom:8px; display:flex; flex-direction:column; gap:4px;">
+                <div style="color:var(--text-muted);">مرحباً فهد، كيف يمكنني مساعدتك في إدارة نظام نيرسي اليوم؟</div>
             </div>
             <div style="display:flex; gap:6px;">
-                <input type="text" id="ai-input" placeholder="اكتب أمرك للمساعد الذكي..." style="flex:1; padding:6px; font-size:11px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:6px; outline:none;">
-                <button class="btn" style="margin-top:0; padding:6px 12px; font-size:11px; width:auto;" onclick="sendAIMessage()">إرسال</button>
+                <input type="text" id="ai-chat-input" placeholder="اسأل الذكاء الاصطناعي..." style="flex:1; padding:6px; font-size:11px;">
+                <button class="btn" style="margin-top:0; padding:6px 12px; font-size:11px; width:auto;" onclick="sendAIChatMsg()">إرسال</button>
             </div>
         </div>
-
     </div>
 
     <script>
-        let staffRegistry = JSON.parse(localStorage.getItem('neris_staff')) || [
-            { id: 1, name: "فهد راشد الحسين", email: "fhd47@gmail.com", pass: "Fahad55003", role: "مالك", status: "نشط", phone: "0549553395", dob: "2006-07-31", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", completedOrdersCount: 0 },
-            { id: 2, name: "محمد راشد الحسين", email: "walhan_3003@hotmail.com", pass: "Walhan#2026M", role: "مسؤول", status: "نشط", phone: "0511111111", dob: "2005-01-01", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", completedOrdersCount: 0 },
-            { id: 3, name: "فاطمة", email: "fa6oom.2014@gmail.com", pass: "Fatima#2014F", role: "مسؤول", status: "نشط", phone: "0522222222", dob: "2005-05-05", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", completedOrdersCount: 0 }
-        ];
-
-        let currentUser = JSON.parse(localStorage.getItem('neris_current_user')) || null;
-        let inventory = JSON.parse(localStorage.getItem('neris_inventory')) || [
-            { id: 1, name: "خاتم الماس كلاسيكي", color: "ذهبي أبيض", size: "مقاس 7", qty: 15, finalPrice: 1200, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
-            { id: 2, name: "سلسال ذهب عيار 18", color: "أصفر براق", size: "45 سم", qty: 8, finalPrice: 850, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100" }
-        ];
-        let addons = JSON.parse(localStorage.getItem('neris_addons')) || [
-            { id: 1, name: "علبة مخمل فاخرة مع كيس هدية", price: 45, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
-        ];
-        let orders = JSON.parse(localStorage.getItem('neris_orders')) || [];
-        let chatMessages = JSON.parse(localStorage.getItem('neris_chat')) || [];
-        let broadcastNotices = JSON.parse(localStorage.getItem('neris_broadcasts')) || [];
-
-        let currentLang = 'ar';
-        let currentTheme = 'dark';
-        let activeChatStaffId = null;
-
-        function saveDataToStorage() {
-            localStorage.setItem('neris_staff', JSON.stringify(staffRegistry));
-            localStorage.setItem('neris_inventory', JSON.stringify(inventory));
-            localStorage.setItem('neris_addons', JSON.stringify(addons));
-            localStorage.setItem('neris_orders', JSON.stringify(orders));
-            localStorage.setItem('neris_chat', JSON.stringify(chatMessages));
-            localStorage.setItem('neris_broadcasts', JSON.stringify(broadcastNotices));
-            if(currentUser) localStorage.setItem('neris_current_user', JSON.stringify(currentUser));
-        }
-
-        function showNotification(msg) {
-            const notif = document.getElementById("app-notification");
-            notif.innerText = msg;
-            notif.classList.add("show");
-            setTimeout(() => { notif.classList.remove("show"); }, 3000);
-        }
-
-        function toggleTheme() {
-            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.getElementById("html-root").setAttribute("data-theme", currentTheme);
-            document.getElementById("theme-icon").innerText = currentTheme === 'dark' ? '☀️' : '🌙';
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            document.getElementById("html-root").setAttribute("dir", currentLang === 'ar' ? 'rtl' : 'ltr');
-            document.getElementById("html-root").setAttribute("lang", currentLang);
-            document.getElementById("lang-indicator").innerText = currentLang === 'ar' ? 'EN' : 'AR';
-        }
-
-        function toggleDrawer() { document.getElementById("main-drawer").classList.toggle("open"); }
-
-        function navTo(screenId) {
-            document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-            document.getElementById(screenId).classList.add("active");
-            toggleDrawer();
-            if(screenId === 'staff-screen') renderStaffManagement();
-            if(screenId === 'profile-screen') loadProfileData();
-            if(screenId === 'inventory-screen') renderInventoryList();
-            if(screenId === 'addons-screen') renderAddonsList();
-            if(screenId === 'orders-screen') renderOrdersList();
-            if(screenId === 'chat-screen') renderChatContacts();
-        }
-
-        // تشغيل شاشة الترحيب لمدة 3 ثوانٍ ثم الانتقال تلقائياً لشاشة تسجيل الدخول
-        window.onload = function() {
-            setTimeout(() => {
-                const intro = document.getElementById("welcome-intro-screen");
-                if(intro) {
-                    intro.style.transition = "opacity 0.5s ease";
-                    intro.style.opacity = "0";
-                    setTimeout(() => {
-                        intro.style.display = "none";
-                        document.getElementById("login-screen").style.display = "flex";
-                    }, 500);
-                }
-            }, 3000);
-            updateMetrics();
+        let currentUser = {
+            name: "فهد راشد الحسين",
+            email: "fhd47@gmail.com",
+            phone: "0549553395",
+            dob: "2006-07-31",
+            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50"
         };
 
-        function openForgotPasswordModal() {
-            document.getElementById("fp-email").value = "";
-            document.getElementById("fp-phone").value = "";
-            document.getElementById("fp-newpass").value = "";
-            document.getElementById("new-pass-group").style.display = "none";
-            document.getElementById("fp-action-btn").innerText = "تحقق من الرقم";
-            document.getElementById("forgot-password-modal").style.display = "flex";
-        }
+        let staffList = [
+            { id: 1, name: "محمد العتيبي", role: "مسؤول", status: "نشط" },
+            { id: 2, name: "سلطان خالد", role: "موظف", status: "نشط" }
+        ];
 
-        let verifiedStaffForReset = null;
-        function verifyAndResetPassword() {
-            const email = document.getElementById("fp-email").value.trim().toLowerCase();
-            const phone = document.getElementById("fp-phone").value.trim();
-            const newPassGroup = document.getElementById("new-pass-group");
-            const btn = document.getElementById("fp-action-btn");
+        let inventoryList = [
+            { id: 1, name: "خاتم ألماس فاخر", color: "ذهبي أصفر", size: "مقاس 7", qty: 12, cost: 800, margin: 30, final: 1040, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 2, name: "قلادة الذهب الخالص", color: "ذهبي وردي", size: "45 سم", qty: 8, cost: 1500, margin: 25, final: 1875, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100" }
+        ];
 
-            if(!verifiedStaffForReset) {
-                const staff = staffRegistry.find(s => s.email.toLowerCase() === email && s.phone === phone);
-                if(!staff) {
-                    alert("البريد أو رقم الجوال غير متطابق مع بياناتنا!");
-                    return;
-                }
-                verifiedStaffForReset = staff;
-                newPassGroup.style.display = "block";
-                btn.innerText = "حفظ كلمة المرور الجديدة";
-                showNotification("تم التحقق من رقم الجوال بنجاح. أضف كلمة المرور الجديدة");
-            } else {
-                const newPass = document.getElementById("fp-newpass").value.trim();
-                if(!newPass) { alert("أدخل كلمة المرور الجديدة"); return; }
-                verifiedStaffForReset.pass = newPass;
-                saveDataToStorage();
-                closeModal('forgot-password-modal');
-                verifiedStaffForReset = null;
-                showNotification("تم تغيير كلمة المرور بنجاح، يمكنك تسجيل الدخول بها الآن");
-            }
-        }
+        let addonsList = [
+            { id: 1, name: "علبة مخمل فاخرة", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
+            { id: 2, name: "كيس هدية مع شريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
+        ];
+
+        let ordersList = [];
+        let activeChatStaffId = null;
+
+        window.onload = function() {
+            setTimeout(() => {
+                document.getElementById('welcome-intro-screen').style.display = 'none';
+                document.getElementById('login-screen').style.display = 'flex';
+            }, 3000);
+            initAppData();
+        };
 
         function handleLogin() {
-            const email = document.getElementById("login-email").value.trim().toLowerCase();
-            const pass = document.getElementById("login-password").value.trim();
-            const errBox = document.getElementById("login-error");
-
-            const found = staffRegistry.find(s => s.email.toLowerCase() === email && s.pass === pass);
-            if (!found) {
-                errBox.innerText = "البريد أو كلمة المرور غير صحيحة";
-                errBox.style.display = "block";
-                return;
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+            if(email === currentUser.email && pass === "Fahad55003") {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-header').style.display = 'flex';
+                navTo('home-main-screen');
+                showNotification("تم تسجيل الدخول بنجاح يا فهد");
+                checkMandatoryProfile();
+            } else {
+                document.getElementById('login-error').style.display = 'block';
             }
+        }
 
-            if (found.status === 'مفصول' || found.status === 'مستقيل') {
-                errBox.innerText = "عذراً، هذا الحساب موقوف حالياً من الإدارة.";
-                errBox.style.display = "block";
-                return;
+        function checkMandatoryProfile() {
+            if(!currentUser.phone || !currentUser.dob) {
+                document.getElementById('mandatory-profile-modal').style.display = 'flex';
             }
-
-            errBox.style.display = "none";
-            currentUser = found;
-            saveDataToStorage();
-
-            if (currentUser.role !== "مالك" && (!currentUser.phone || !currentUser.dob)) {
-                document.getElementById("mandatory-profile-modal").style.display = "flex";
-                return;
-            }
-
-            completeLoginProcess();
         }
 
         function saveMandatoryProfile() {
-            const phone = document.getElementById("mand-phone").value.trim();
-            const dob = document.getElementById("mand-dob").value;
-            if(!phone || !dob) { alert("يرجى إدخال البيانات!"); return; }
+            const phone = document.getElementById('mand-phone').value.trim();
+            const dob = document.getElementById('mand-dob').value.trim();
+            if(!phone || !dob) {
+                alert("يرجى إدخال الجوال وتاريخ الميلاد");
+                return;
+            }
             currentUser.phone = phone;
             currentUser.dob = dob;
-            document.getElementById("mandatory-profile-modal").style.display = "none";
-            saveDataToStorage();
-            completeLoginProcess();
+            document.getElementById('mandatory-profile-modal').style.display = 'none';
+            showNotification("تم حفظ بياناتك بنجاح");
+            initAppData();
         }
 
-        function completeLoginProcess() {
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("app-header").style.display = "flex";
-            document.getElementById("header-avatar").src = currentUser.avatar;
-            document.getElementById("home-welcome-sub").innerText = "مرحباً بك يا " + currentUser.name + " في لوحة تحكم Neris";
-
-            if (currentUser.role !== "مالك") {
-                document.getElementById("drawer-staff-item").style.display = "none";
-            } else {
-                document.getElementById("drawer-staff-item").style.display = "flex";
-            }
-
-            navTo('home-main-screen');
-            showNotification("تم تسجيل الدخول بنجاح");
-            updateMetrics();
-            renderInventoryDropdowns();
-            checkAndShowBroadcastPopup();
+        function toggleDrawer() {
+            document.getElementById('main-drawer').classList.toggle('open');
         }
 
-        function checkAndShowBroadcastPopup() {
-            if(currentUser.role !== 'مالك' && currentUser.status === 'نشط' && broadcastNotices.length > 0) {
-                const latest = broadcastNotices[broadcastNotices.length - 1];
-                document.getElementById("broadcast-popup-text").innerText = latest.text;
-                document.getElementById("broadcast-popup-modal").style.display = "flex";
-            }
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            document.getElementById('main-drawer').classList.remove('open');
+            refreshUI();
         }
 
-        function closeBroadcastPopup() {
-            document.getElementById("broadcast-popup-modal").style.display = "none";
+        function refreshUI() {
+            document.getElementById('metric-active-orders').innerText = ordersList.filter(o => o.status !== 'ملغي' && o.status !== 'مكتمل').length;
+            document.getElementById('metric-inventory-count').innerText = inventoryList.length;
+            document.getElementById('metric-staff-count').innerText = staffList.filter(s => s.status !== 'مفصول' && s.status !== 'مستقيل').length;
+            
+            document.getElementById('inv-count-badge').innerText = inventoryList.length;
+            document.getElementById('addons-count-badge').innerText = addonsList.length;
+            document.getElementById('staff-count-badge').innerText = staffList.length;
+
+            renderInventory();
+            renderAddons();
+            renderStaffManagement();
+            renderOrderDropdowns();
+            renderOrdersList();
+            renderStaffChatContacts();
+            loadProfileData();
         }
 
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('neris_current_user');
-            document.getElementById("login-screen").style.display = "flex";
-            document.getElementById("app-header").style.display = "none";
-            document.getElementById("login-email").value = "fhd47@gmail.com";
-            document.getElementById("login-password").value = "Fahad55003";
-            showNotification("تم تسجيل الخروج بنجاح");
-        }
-
-        function updateMetrics() {
-            document.getElementById("metric-active-orders").innerText = orders.filter(o => o.status === 'نشط').length;
-            document.getElementById("metric-inventory-count").innerText = inventory.length;
-            document.getElementById("metric-staff-count").innerText = staffRegistry.filter(s => s.status !== 'مفصول').length;
-            saveDataToStorage();
-        }
-
-        function openAddProductModal() {
-            document.getElementById("product-modal-title").innerText = "إضافة منتج جديد للمخزن";
-            document.getElementById("p-edit-id").value = "";
-            document.getElementById("p-name").value = "";
-            document.getElementById("p-color").value = "";
-            document.getElementById("p-size").value = "";
-            document.getElementById("p-qty").value = "10";
-            document.getElementById("p-cost").value = "";
-            document.getElementById("p-margin").value = "25";
-            document.getElementById("p-final").value = "";
-            document.getElementById("add-product-modal").style.display = "flex";
-        }
-
-        function editProduct(id) {
-            const product = inventory.find(i => i.id === id);
-            if(!product) return;
-            document.getElementById("product-modal-title").innerText = "تعديل بيانات المنتج";
-            document.getElementById("p-edit-id").value = product.id;
-            document.getElementById("p-name").value = product.name;
-            document.getElementById("p-color").value = product.color || '';
-            document.getElementById("p-size").value = product.size || '';
-            document.getElementById("p-qty").value = product.qty;
-            document.getElementById("p-cost").value = product.cost || (product.finalPrice / 1.25).toFixed(2);
-            document.getElementById("p-margin").value = product.margin || 25;
-            document.getElementById("p-final").value = product.finalPrice + " SAR";
-            document.getElementById("add-product-modal").style.display = "flex";
-        }
-
-        function openAddAddonModal() { document.getElementById("add-addon-modal").style.display = "flex"; }
-        function closeModal(id) { document.getElementById(id).style.display = "none"; }
-
-        function calcPriceEnglish() {
-            const cost = parseFloat(document.getElementById("p-cost").value) || 0;
-            const margin = parseFloat(document.getElementById("p-margin").value) || 0;
-            const final = cost + (cost * margin / 100);
-            document.getElementById("p-final").value = final.toFixed(2) + " SAR";
-        }
-
-        function suggestAIMargin() {
-            const cost = parseFloat(document.getElementById("p-cost").value) || 0;
-            if(cost <= 0) { alert("أدخل التكلفة أولاً!"); return; }
-            document.getElementById("p-margin").value = 35;
-            calcPriceEnglish();
-            showNotification("✨ اقترح الذكاء الاصطناعي هامش ربح 35%");
-        }
-
-        function saveRealProductData() {
-            const editId = document.getElementById("p-edit-id").value;
-            const name = document.getElementById("p-name").value.trim();
-            const color = document.getElementById("p-color").value.trim();
-            const size = document.getElementById("p-size").value.trim();
-            const qty = parseInt(document.getElementById("p-qty").value) || 0;
-            const cost = parseFloat(document.getElementById("p-cost").value) || 0;
-            const margin = parseFloat(document.getElementById("p-margin").value) || 25;
-            const finalPrice = parseFloat(document.getElementById("p-final").value) || 0;
-            const fileInput = document.getElementById("p-image-file");
-
-            if(!name) { alert("أدخل اسم المنتج"); return; }
-            let imageURL = "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100";
-            if (fileInput.files && fileInput.files[0]) imageURL = URL.createObjectURL(fileInput.files[0]);
-
-            if(editId) {
-                const item = inventory.find(i => i.id == editId);
-                if(item) {
-                    item.name = name; item.color = color; item.size = size; item.qty = qty; item.cost = cost; item.margin = margin; item.finalPrice = finalPrice;
-                    if(fileInput.files && fileInput.files[0]) item.image = imageURL;
-                }
-                showNotification("تم تحديث المنتج بنجاح");
-            } else {
-                inventory.push({ id: Date.now(), name, color, size, qty, cost, margin, finalPrice, image: imageURL });
-                showNotification("تم إضافة المنتج بنجاح");
-            }
-
-            closeModal('add-product-modal');
-            updateMetrics();
-            renderInventoryDropdowns();
-            renderInventoryList();
-        }
-
-        function renderInventoryList() {
-            const container = document.getElementById("real-inventory-list");
-            document.getElementById("inv-count-badge").innerText = inventory.length;
-            if(inventory.length === 0) { container.innerHTML = '<p style="font-size:11px; color:var(--text-muted); text-align:center;">لا توجد منتجات</p>'; return; }
-            container.innerHTML = inventory.map(item => `
-                <div class="card-item">
+        function renderInventory() {
+            let html = '';
+            inventoryList.forEach(item => {
+                html += `<div class="card-item">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img src="${item.image}" class="product-thumb">
                         <div>
-                            <div style="font-weight:bold;">${item.name} (${item.color || 'عام'} - ${item.size || 'بدون مقاس'})</div>
-                            <div style="color:var(--accent-gold); font-size:10px; direction:ltr; text-align:right;">الكمية: ${item.qty} | السعر: ${item.finalPrice} SAR</div>
+                            <strong>${item.name}</strong><br>
+                            <span style="color:var(--text-muted);">${item.color} | ${item.size} | الكمية: ${item.qty}</span>
                         </div>
                     </div>
-                    <div style="display:flex; gap:4px;">
-                        <button class="btn" style="width:auto; padding:4px 8px; font-size:10px; background:var(--accent-gold); color:#1c1815; margin-top:0;" onclick="editProduct(${item.id})">تعديل</button>
-                        <button class="btn" style="width:auto; padding:4px 8px; font-size:10px; background:var(--danger); color:#fff; margin-top:0;" onclick="deleteProduct(${item.id})">حذف</button>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span class="badge" style="direction:ltr;">${item.final} SAR</span>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; width:auto; background:var(--danger);" onclick="deleteInventoryItem(${item.id})">حذف</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            });
+            document.getElementById('real-inventory-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد منتجات في المخزن حالياً.</p>';
         }
 
-        function deleteProduct(id) {
-            inventory = inventory.filter(i => i.id !== id);
-            renderInventoryList(); renderInventoryDropdowns(); updateMetrics();
-            showNotification("تم الحذف");
-        }
-
-        function saveAddonData() {
-            const name = document.getElementById("a-name").value.trim();
-            const price = parseFloat(document.getElementById("a-price").value) || 0;
-            const fileInput = document.getElementById("a-image-file");
-            if(!name) { alert("أدخل اسم التغليف"); return; }
-            let imageURL = "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100";
-            if (fileInput.files && fileInput.files[0]) imageURL = URL.createObjectURL(fileInput.files[0]);
-            addons.push({ id: Date.now(), name, price, image: imageURL });
-            closeModal('add-addon-modal');
-            showNotification("تم حفظ التغليف");
-            renderInventoryDropdowns(); renderAddonsList();
-        }
-
-        function renderAddonsList() {
-            const container = document.getElementById("addons-list-container");
-            document.getElementById("addons-count-badge").innerText = addons.length;
-            container.innerHTML = addons.map(a => `
-                <div class="card-item">
+        function renderAddons() {
+            let html = '';
+            addonsList.forEach(item => {
+                html += `<div class="card-item">
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <img src="${a.image}" class="product-thumb">
+                        <img src="${item.image}" class="product-thumb">
                         <div>
-                            <div style="font-weight:bold;">${a.name}</div>
-                            <div style="color:var(--accent-gold); font-size:10px; direction:ltr; text-align:right;">السعر: ${a.price} SAR</div>
+                            <strong>${item.name}</strong>
                         </div>
                     </div>
-                    <button class="btn" style="width:auto; padding:4px 8px; font-size:10px; background:var(--danger); color:#fff; margin-top:0;" onclick="deleteAddon(${a.id})">حذف</button>
-                </div>
-            `).join('');
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span class="badge" style="direction:ltr;">${item.price} SAR</span>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; width:auto; background:var(--danger);" onclick="deleteAddonItem(${item.id})">حذف</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('addons-list-container').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد إضافات تغليف حالياً.</p>';
         }
 
-        function deleteAddon(id) {
-            addons = addons.filter(a => a.id !== id);
-            renderAddonsList(); renderInventoryDropdowns();
-            showNotification("تم الحذف");
+        function renderStaffManagement() {
+            let html = '';
+            staffList.forEach(staff => {
+                let statusBadgeColor = staff.status === 'نشط' ? 'var(--success)' : (staff.status === 'إجازة' ? 'var(--warning)' : 'var(--danger)');
+                html += `<div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <div>
+                            <strong>${staff.name}</strong> <span class="badge">${staff.role}</span>
+                        </div>
+                        <span style="color:${statusBadgeColor}; font-weight:bold; font-size:10px;">الحالة: ${staff.status}</span>
+                    </div>
+                    <div style="display:flex; gap:4px; flex-wrap:wrap; width:100%; border-top:1px solid var(--border); pt-2; margin-top:4px;">
+                        <button class="btn" style="padding:3px 6px; font-size:9px; width:auto; background:var(--warning); color:#fff;" onclick="setStaffStatus(${staff.id}, 'إجازة')">إجازة</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; width:auto; background:var(--danger); color:#fff;" onclick="setStaffStatus(${staff.id}, 'استقاله')">استقالة</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; width:auto; background:#333; color:#fff;" onclick="setStaffStatus(${staff.id}, 'مفصول')">طرد</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; width:auto; background:var(--success); color:#fff;" onclick="setStaffStatus(${staff.id}, 'نشط')">إرجاع نشط</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; width:auto; background:var(--danger); color:#fff;" onclick="deleteStaff(${staff.id})">حذف الحساب</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('staff-management-list').innerHTML = html;
         }
 
-        function renderInventoryDropdowns() {
-            const pSelect = document.getElementById("order-product-select");
-            const aSelect = document.getElementById("order-addon-select");
-            const sSelect = document.getElementById("order-assigned-staff");
-            pSelect.innerHTML = '<option value="">-- اختر المنتج --</option>' + inventory.map(i => `<option value="${i.id}">${i.name} (${i.finalPrice} SAR) - متوفر: ${i.qty}</option>`).join('');
-            aSelect.innerHTML = '<option value="">-- بدون تغليف إضافي --</option>' + addons.map(a => `<option value="${a.id}">${a.name} (+${a.price} SAR)</option>`).join('');
-            sSelect.innerHTML = '<option value="">-- اختر موظف لإسناد الطلب --</option>' + staffRegistry.filter(s => s.status === 'نشط').map(s => `<option value="${s.id}">${s.name} (${s.role})</option>`).join('');
-            calcTotalOrderPreview();
+        function setStaffStatus(id, newStatus) {
+            let staff = staffList.find(s => s.id === id);
+            if(staff) {
+                staff.status = newStatus;
+                showNotification(`تم تحديث حالة الموظف ${staff.name} إلى: ${newStatus}`);
+                refreshUI();
+            }
+        }
+
+        function deleteStaff(id) {
+            staffList = staffList.filter(s => s.id !== id);
+            showNotification("تم حذف حساب الموظف بنجاح");
+            refreshUI();
+        }
+
+        function renderOrderDropdowns() {
+            let pHtml = '<option value="">اختر منتجاً أساسياً...</option>';
+            inventoryList.forEach(i => {
+                pHtml += `<option value="${i.id}">${i.name} - ${i.final} SAR</option>`;
+            });
+            document.getElementById('order-product-select').innerHTML = pHtml;
+
+            let aHtml = '<option value="">بدون تغليف إضافي</option>';
+            addonsList.forEach(a => {
+                aHtml += `<option value="${a.id}">${a.name} (+${a.price} SAR)</option>`;
+            });
+            document.getElementById('order-addon-select').innerHTML = aHtml;
+
+            let sHtml = '<option value="">اختر الموظف المسؤول...</option>';
+            staffList.filter(s => s.status === 'نشط').forEach(s => {
+                sHtml += `<option value="${s.name}">${s.name} (${s.role})</option>`;
+            });
+            document.getElementById('order-assigned-staff').innerHTML = sHtml;
         }
 
         function calcTotalOrderPreview() {
-            const pId = document.getElementById("order-product-select").value;
-            const aId = document.getElementById("order-addon-select").value;
-            const previewBox = document.getElementById("order-product-preview");
-            const product = inventory.find(i => i.id == pId);
-            const addon = addons.find(a => a.id == aId);
-            if (!product) { previewBox.style.display = "none"; return; }
-            previewBox.style.display = "flex";
-            document.getElementById("prev-img").src = product.image;
-            document.getElementById("prev-title").innerText = product.name;
-            document.getElementById("prev-price").innerText = `سعر المنتج: ${product.finalPrice} SAR`;
-            let total = product.finalPrice;
-            const addonInfo = document.getElementById("prev-addon-info");
-            if (addon) {
-                addonInfo.style.display = "block";
-                addonInfo.innerText = `التغليف: ${addon.name} (+${addon.price} SAR)`;
+            const pId = document.getElementById('order-product-select').value;
+            const aId = document.getElementById('order-addon-select').value;
+            const previewBox = document.getElementById('order-product-preview');
+
+            if(!pId) {
+                previewBox.style.display = 'none';
+                return;
+            }
+
+            const product = inventoryList.find(i => i.id == pId);
+            const addon = addonsList.find(a => a.id == aId);
+
+            let total = product.final;
+            document.getElementById('prev-img').src = product.image;
+            document.getElementById('prev-title').innerText = product.name;
+            document.getElementById('prev-price').innerText = `سعر المنتج: ${product.final} SAR`;
+
+            if(addon) {
                 total += addon.price;
-            } else { addonInfo.style.display = "none"; }
-            document.getElementById("prev-total-price").innerText = `الإجمالي الكلي: ${total.toFixed(2)} SAR`;
+                document.getElementById('prev-addon-info').style.display = 'block';
+                document.getElementById('prev-addon-info').innerText = `+ إضافة: ${addon.name} (+${addon.price} SAR)`;
+            } else {
+                document.getElementById('prev-addon-info').style.display = 'none';
+            }
+
+            document.getElementById('prev-total-price').innerText = `الإجمالي الكلي: ${total} SAR`;
+            previewBox.style.display = 'flex';
         }
 
         function addNewRealOrder() {
-            const clientName = document.getElementById("order-client-name").value.trim();
-            const clientPhone = document.getElementById("order-client-phone").value.trim();
-            const pId = document.getElementById("order-product-select").value;
-            const aId = document.getElementById("order-addon-select").value;
-            const assignedStaffId = document.getElementById("order-assigned-staff").value;
-            const notes = document.getElementById("order-notes").value.trim();
+            const clientName = document.getElementById('order-client-name').value.trim();
+            const clientPhone = document.getElementById('order-client-phone').value.trim();
+            const pId = document.getElementById('order-product-select').value;
+            const aId = document.getElementById('order-addon-select').value;
+            const assignedStaff = document.getElementById('order-assigned-staff').value;
+            const notes = document.getElementById('order-notes').value.trim();
 
-            if(!clientName || !pId) { alert("أدخل اسم العميل والمنتج!"); return; }
-            const product = inventory.find(i => i.id == pId);
-            if(product.qty <= 0) { alert("المنتج نفد!"); return; }
-            const addon = addons.find(a => a.id == aId);
-            let total = product.finalPrice + (addon ? addon.price : 0);
-            const assignedStaff = staffRegistry.find(s => s.id == assignedStaffId);
-            product.qty -= 1;
+            if(!clientName || !pId || !assignedStaff) {
+                alert("يرجى إدخال اسم العميل، واختيار المنتج والموظف المسؤول");
+                return;
+            }
 
-            orders.push({
-                id: Date.now(), clientName, clientPhone: clientPhone || 'غير متوفر',
-                productName: product.name, addonName: addon ? addon.name : 'بدون',
-                assignedStaffId: assignedStaff ? assignedStaff.id : null,
-                assignedStaffName: assignedStaff ? assignedStaff.name : 'غير مسند',
-                total, notes: notes || 'بدون', status: 'نشط'
-            });
+            const product = inventoryList.find(i => i.id == pId);
+            const addon = addonsList.find(a => a.id == aId);
+            let total = product.final + (addon ? addon.price : 0);
 
-            document.getElementById("order-client-name").value = "";
-            document.getElementById("order-client-phone").value = "";
-            document.getElementById("order-notes").value = "";
-            showNotification("تم تسجيل الطلب وإسناده للموظف");
-            updateMetrics(); renderInventoryDropdowns(); renderInventoryList();
+            const newOrder = {
+                id: Date.now(),
+                clientName,
+                clientPhone,
+                productName: product.name,
+                addonName: addon ? addon.name : 'بدون',
+                totalPrice: total,
+                assignedStaff,
+                notes,
+                status: 'قيد التنفيذ'
+            };
+
+            ordersList.unshift(newOrder);
+            showNotification(`تم إرسال الطلب بنجاح إلى الموظف: ${assignedStaff}`);
             navTo('orders-screen');
         }
 
         function renderOrdersList() {
-            const container = document.getElementById("real-orders-list");
-            if(orders.length === 0) { container.innerHTML = '<p style="font-size:11px; color:var(--text-muted); text-align:center;">لا توجد طلبيات</p>'; return; }
-            container.innerHTML = orders.map(o => `
-                <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
-                    <div style="display:flex; justify-content:space-between; width:100%;">
-                        <span style="font-weight:bold; color:var(--accent-gold);">${o.clientName}</span>
-                        <span class="badge">${o.status}</span>
+            let html = '';
+            ordersList.forEach(order => {
+                html += `<div class="panel-box" style="border-color:var(--accent-gold);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <strong>العميل: ${order.clientName}</strong>
+                        <span class="badge">${order.status}</span>
                     </div>
-                    <div style="font-size:10px; color:var(--text-muted);">
-                        <div>الجوال: ${o.clientPhone}</div>
-                        <div>القطعة: ${o.productName} | التغليف: ${o.addonName}</div>
-                        <div>المسؤول: <b style="color:var(--accent-gold);">${o.assignedStaffName}</b></div>
+                    <div style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">
+                        المنتج: ${order.productName} | الإضافة: ${order.addonName}<br>
+                        الإجمالي: <span style="color:var(--success); font-weight:bold; direction:ltr; display:inline-block;">${order.totalPrice} SAR</span><br>
+                        المسؤول: <strong style="color:var(--accent-gold);">${order.assignedStaff}</strong>
                     </div>
-                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; border-top:1px solid var(--border); padding-top:4px;">
-                        <span style="color:var(--success); font-weight:bold; direction:ltr;">${o.total} SAR</span>
-                        ${(currentUser.role === 'مالك' || currentUser.id == o.assignedStaffId) && o.status === 'نشط' ? `
-                            <button class="btn" style="width:auto; padding:4px 10px; font-size:10px; background:var(--success); color:#fff; margin-top:0;" onclick="completeOrder(${o.id})">تم إنجاز الطلب ✓</button>
-                        ` : `<span style="font-size:10px; color:var(--text-muted);">${o.status === 'منجز' ? 'منجز' : 'قيد التنفيذ'}</span>`}
-                    </div>
-                </div>
-            `).join('');
+                    <button class="btn" style="padding:4px; font-size:10px; background:var(--success); color:#fff;" onclick="completeOrder(${order.id})">تحديد كمكتمل</button>
+                </div>`;
+            });
+            document.getElementById('real-orders-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد طلبات نشطة حالياً.</p>';
         }
 
         function completeOrder(id) {
-            const order = orders.find(o => o.id === id);
+            let order = ordersList.find(o => o.id === id);
             if(order) {
-                order.status = 'منجز';
-                if(order.assignedStaffId) {
-                    const st = staffRegistry.find(s => s.id === order.assignedStaffId);
-                    if(st) st.completedOrdersCount = (st.completedOrdersCount || 0) + 1;
-                }
-                saveDataToStorage(); renderOrdersList(); updateMetrics();
-                showNotification("تم إنجاز الطلب بنجاح");
+                order.status = 'مكتمل';
+                showNotification("تم إتمام الطلب بنجاح");
+                refreshUI();
             }
-        }
-
-        function renderStaffManagement() {
-            const container = document.getElementById("staff-management-list");
-            document.getElementById("staff-count-badge").innerText = staffRegistry.length;
-            container.innerHTML = staffRegistry.map(s => `
-                <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
-                    <div style="display:flex; justify-content:space-between; width:100%;">
-                        <span style="font-weight:bold;">${s.name} (${s.role})</span>
-                        <span class="badge">${s.status} (منجز: ${s.completedOrdersCount || 0})</span>
-                    </div>
-                    <div style="font-size:10px; color:var(--text-muted); direction:ltr; text-align:right; width:100%;">
-                        البريد: ${s.email} | الجوال: ${s.phone || 'غير مسجل'}
-                    </div>
-                    ${s.role !== 'مالك' ? `
-                        <div style="display:flex; gap:4px; width:100%; margin-top:4px; flex-wrap:wrap;">
-                            <button class="btn" style="flex:1; margin-top:0; padding:4px; font-size:9px; background:var(--warning); color:#fff;" onclick="confirmActionPrompt('إجازة', ${s.id})">إجازة</button>
-                            <button class="btn" style="flex:1; margin-top:0; padding:4px; font-size:9px; background:var(--danger); color:#fff;" onclick="confirmActionPrompt('مفصول', ${s.id})">فصل</button>
-                            <button class="btn" style="flex:1; margin-top:0; padding:4px; font-size:9px; background:#555; color:#fff;" onclick="confirmActionPrompt('مستقيل', ${s.id})">استقالة</button>
-                            <button class="btn" style="flex:1; margin-top:0; padding:4px; font-size:9px; background:var(--success); color:#fff;" onclick="updateStaffStatus(${s.id}, 'نشط')">استعادة</button>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
-        }
-
-        let pendingAction = null;
-        let pendingStaffId = null;
-        function confirmActionPrompt(type, id) {
-            pendingAction = type; pendingStaffId = id;
-            const st = staffRegistry.find(s => s.id === id);
-            document.getElementById("confirm-modal-title").innerText = `تأكيد ${type}`;
-            document.getElementById("confirm-modal-text").innerText = `هل أنت متأكد من تغيير حالة "${st.name}" إلى ${type}؟`;
-            document.getElementById("confirm-yes-btn").onclick = () => {
-                closeModal('confirm-modal');
-                st.status = pendingAction;
-                saveDataToStorage(); renderStaffManagement(); updateMetrics();
-                showNotification(`تم التحديث إلى: ${pendingAction}`);
-            };
-            document.getElementById("confirm-modal").style.display = "flex";
-        }
-
-        function updateStaffStatus(id, st) {
-            const staff = staffRegistry.find(s => s.id === id);
-            if(staff) { staff.status = st; saveDataToStorage(); renderStaffManagement(); updateMetrics(); showNotification("تم التحديث"); }
         }
 
         function sendBroadcastMessage() {
-            const text = document.getElementById("broadcast-msg-text").value.trim();
-            if(!text) return;
-            broadcastNotices.push({ id: Date.now(), text, time: new Date().toLocaleTimeString() });
-            document.getElementById("broadcast-msg-text").value = "";
-            saveDataToStorage();
-            showNotification("تم إرسال التعميم العام ليظهر في منتصف الشاشة للموظفين النشطين");
+            const msg = document.getElementById('broadcast-msg-text').value.trim();
+            if(!msg) {
+                alert("يرجى كتابة نص الإشعار");
+                return;
+            }
+            document.getElementById('broadcast-popup-text').innerText = msg;
+            document.getElementById('broadcast-popup-modal').style.display = 'flex';
+            document.getElementById('broadcast-msg-text').value = '';
         }
 
-        function renderChatContacts() {
-            const container = document.getElementById("staff-chat-contacts");
-            container.innerHTML = staffRegistry.map(s => `
-                <div class="card-item" style="cursor:pointer;" onclick="openPrivateChat(${s.id})">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <img src="${s.avatar}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid var(--accent-gold);">
-                        <div>
-                            <div style="font-weight:bold;">${s.name}</div>
-                            <div style="font-size:10px; color:var(--text-muted);">${s.role} - محادثة خاصة 💬</div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+        function closeBroadcastPopup() {
+            document.getElementById('broadcast-popup-modal').style.display = 'none';
         }
 
-        function openPrivateChat(id) {
-            const st = staffRegistry.find(s => s.id === id);
-            if(!st) return;
-            activeChatStaffId = id;
-            document.getElementById("private-chat-box").style.display = "block";
-            document.getElementById("active-chat-title").innerText = `محادثة خاصة مع: ${st.name}`;
-            renderPrivateMessages();
+        function renderStaffChatContacts() {
+            let html = '';
+            staffList.forEach(staff => {
+                html += `<div class="card-item" onclick="openPrivateChat(${staff.id}, '${staff.name}')" style="cursor:pointer;">
+                    <div><strong>${staff.name}</strong> <span class="badge">${staff.role}</span></div>
+                    <span style="color:var(--accent-gold); font-size:11px;">مراسلة 💬</span>
+                </div>`;
+            });
+            document.getElementById('staff-chat-contacts').innerHTML = html;
         }
 
-        function closePrivateChat() { activeChatStaffId = null; document.getElementById("private-chat-box").style.display = "none"; }
+        function openPrivateChat(staffId, staffName) {
+            activeChatStaffId = staffId;
+            document.getElementById('active-chat-title').innerText = `المحادثة مع: ${staffName}`;
+            document.getElementById('private-chat-box').style.display = 'block';
+            document.getElementById('private-messages-list').innerHTML = `<div style="color:var(--text-muted);">بداية المحادثة المشفرة مع ${staffName}...</div>`;
+        }
+
+        function closePrivateChat() {
+            document.getElementById('private-chat-box').style.display = 'none';
+            activeChatStaffId = null;
+        }
 
         function sendPrivateMessage() {
-            const input = document.getElementById("private-msg-input");
-            const text = input.value.trim();
-            if(!text || !activeChatStaffId) return;
-            chatMessages.push({ id: Date.now(), type: 'private', senderId: currentUser.id, senderName: currentUser.name, receiverId: activeChatStaffId, text, time: new Date().toLocaleTimeString() });
-            input.value = ""; saveDataToStorage(); renderPrivateMessages();
+            const input = document.getElementById('private-msg-input');
+            const val = input.value.trim();
+            if(!val) return;
+            const list = document.getElementById('private-messages-list');
+            list.innerHTML += `<div style="text-align:right; background:var(--bg-dark); padding:4px 8px; border-radius:6px;">أنت: ${val}</div>`;
+            input.value = '';
+            setTimeout(() => {
+                list.innerHTML += `<div style="text-align:left; background:rgba(197,160,89,0.1); padding:4px 8px; border-radius:6px; color:var(--accent-gold);">تم الاستلام ✅</div>`;
+                list.scrollTop = list.scrollHeight;
+            }, 800);
         }
 
-        function renderPrivateMessages() {
-            const list = document.getElementById("private-messages-list");
-            const msgs = chatMessages.filter(m => m.type === 'private' && ((m.senderId === currentUser.id && m.receiverId === activeChatStaffId) || (m.senderId === activeChatStaffId && m.receiverId === currentUser.id)));
-            if(msgs.length === 0) { list.innerHTML = '<div style="color:var(--text-muted); text-align:center; font-size:10px;">لا توجد رسائل سابقة</div>'; return; }
-            list.innerHTML = msgs.map(m => `
-                <div style="background:${m.senderId === currentUser.id ? 'rgba(197,160,89,0.15)' : 'var(--bg-dark)'}; padding:6px 8px; border-radius:6px; font-size:11px;">
-                    <b>${m.senderName}:</b> ${m.text} <span style="font-size:8px; color:var(--text-muted); float:left;">${m.time}</span>
-                </div>
-            `).join('');
-            list.scrollTop = list.scrollHeight;
+        function openAddProductModal() {
+            document.getElementById('p-edit-id').value = '';
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-color').value = '';
+            document.getElementById('p-size').value = '';
+            document.getElementById('p-cost').value = '';
+            document.getElementById('p-final').value = '';
+            document.getElementById('add-product-modal').style.display = 'flex';
+        }
+
+        function calcPriceEnglish() {
+            const cost = parseFloat(document.getElementById('p-cost').value) || 0;
+            const margin = parseFloat(document.getElementById('p-margin').value) || 0;
+            const final = cost + (cost * (margin / 100));
+            document.getElementById('p-final').value = final.toFixed(2) + ' SAR';
+        }
+
+        function suggestAIMargin() {
+            document.getElementById('p-margin').value = '35';
+            calcPriceEnglish();
+            showNotification("اقترح الذكاء الاصطناعي هامش ربح 35% بناءً على السوق");
+        }
+
+        function saveRealProductData() {
+            const name = document.getElementById('p-name').value.trim();
+            const color = document.getElementById('p-color').value.trim();
+            const size = document.getElementById('p-size').value.trim();
+            const qty = parseInt(document.getElementById('p-qty').value) || 10;
+            const cost = parseFloat(document.getElementById('p-cost').value) || 0;
+            const margin = parseFloat(document.getElementById('p-margin').value) || 25;
+            const final = cost + (cost * (margin / 100));
+
+            if(!name || !cost) {
+                alert("يرجى إدخال اسم المنتج وسعر التكلفة");
+                return;
+            }
+
+            inventoryList.push({
+                id: Date.now(),
+                name, color, size, qty, cost, margin, final,
+                image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=100"
+            });
+
+            closeModal('add-product-modal');
+            showNotification("تمت إضافة المنتج بنجاح للمخزن");
+            refreshUI();
+        }
+
+        function deleteInventoryItem(id) {
+            inventoryList = inventoryList.filter(i => i.id !== id);
+            showNotification("تم حذف المنتج");
+            refreshUI();
+        }
+
+        function openAddAddonModal() {
+            document.getElementById('a-name').value = '';
+            document.getElementById('a-price').value = '';
+            document.getElementById('add-addon-modal').style.display = 'flex';
+        }
+
+        function saveAddonData() {
+            const name = document.getElementById('a-name').value.trim();
+            const price = parseFloat(document.getElementById('a-price').value) || 0;
+            if(!name || !price) {
+                alert("يرجى تعبئة كافة الحقول");
+                return;
+            }
+            addonsList.push({
+                id: Date.now(),
+                name, price,
+                image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100"
+            });
+            closeModal('add-addon-modal');
+            showNotification("تمت إضافة عنصر التغليف بنجاح");
+            refreshUI();
+        }
+
+        function deleteAddonItem(id) {
+            addonsList = addonsList.filter(a => a.id !== id);
+            showNotification("تم حذف الإضافة");
+            refreshUI();
         }
 
         function loadProfileData() {
-            if(!currentUser) return;
-            document.getElementById("prof-name").value = currentUser.name;
-            document.getElementById("prof-email").value = currentUser.email;
-            document.getElementById("prof-phone").value = currentUser.phone || '';
-            document.getElementById("prof-dob").value = currentUser.dob || '';
-            document.getElementById("profile-view-img").src = currentUser.avatar;
-        }
-
-        function updateProfileAvatar(input) {
-            if (input.files && input.files[0]) {
-                const url = URL.createObjectURL(input.files[0]);
-                currentUser.avatar = url;
-                document.getElementById("profile-view-img").src = url;
-                document.getElementById("header-avatar").src = url;
-                saveDataToStorage();
-                showNotification("تم تحديث الصورة الشخصية");
-            }
+            document.getElementById('prof-name').value = currentUser.name;
+            document.getElementById('prof-email').value = currentUser.email;
+            document.getElementById('prof-phone').value = currentUser.phone;
+            document.getElementById('prof-dob').value = currentUser.dob;
+            document.getElementById('profile-view-img').src = currentUser.avatar;
+            document.getElementById('header-avatar').src = currentUser.avatar;
         }
 
         function saveProfileChanges() {
-            currentUser.name = document.getElementById("prof-name").value.trim();
-            currentUser.email = document.getElementById("prof-email").value.trim();
-            currentUser.phone = document.getElementById("prof-phone").value.trim();
-            currentUser.dob = document.getElementById("prof-dob").value;
-            saveDataToStorage();
-            showNotification("تم حفظ التعديلات");
+            currentUser.name = document.getElementById('prof-name').value.trim();
+            currentUser.email = document.getElementById('prof-email').value.trim();
+            currentUser.phone = document.getElementById('prof-phone').value.trim();
+            currentUser.dob = document.getElementById('prof-dob').value.trim();
+            showNotification("تم حفظ التعديلات الشخصية بنجاح");
+            loadProfileData();
+        }
+
+        function updateProfileAvatar(input) {
+            if(input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentUser.avatar = e.target.result;
+                    loadProfileData();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function toggleTheme() {
+            const root = document.getElementById('html-root');
+            const themeIcon = document.getElementById('theme-icon');
+            if(root.getAttribute('data-theme') === 'light') {
+                root.removeAttribute('data-theme');
+                themeIcon.innerText = '☀️';
+            } else {
+                root.setAttribute('data-theme', 'light');
+                themeIcon.innerText = '🌙';
+            }
+        }
+
+        function toggleLanguage() {
+            const ind = document.getElementById('lang-indicator');
+            if(ind.innerText === 'EN') {
+                ind.innerText = 'AR';
+                showNotification("تم التحويل للغة الإنجليزية (تجريبي)");
+            } else {
+                ind.innerText = 'EN';
+                showNotification("تم التحويل للغة العربية");
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showNotification(msg) {
+            const n = document.getElementById('app-notification');
+            n.innerText = msg;
+            n.classList.add('show');
+            setTimeout(() => {
+                n.classList.remove('show');
+            }, 3000);
         }
 
         function toggleAIChat() {
-            const box = document.getElementById("ai-chat-box");
-            box.style.display = box.style.display === "block" ? "none" : "block";
+            const box = document.getElementById('ai-chat-box');
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
         }
 
-        function sendAIMessage() {
-            const input = document.getElementById("ai-input");
-            const list = document.getElementById("ai-messages-list");
-            const text = input.value.trim();
-            if(!text) return;
-            list.innerHTML += `<div style="margin-top:6px; color:var(--text-main);"><b>أنت:</b> ${text}</div>`;
-            input.value = "";
+        function sendAIChatMsg() {
+            const input = document.getElementById('ai-chat-input');
+            const val = input.value.trim();
+            if(!val) return;
+            const list = document.getElementById('ai-chat-messages');
+            list.innerHTML += `<div style="text-align:right; color:var(--text-main);">أنت: ${val}</div>`;
+            input.value = '';
             setTimeout(() => {
-                list.innerHTML += `<div style="margin-top:6px; color:var(--accent-gold);"><b>Neris AI:</b> تم ضبط بريدك الإلكتروني fhd47@gmail.com وتفعيل الدخول بنجاح يا فهد.</div>`;
+                list.innerHTML += `<div style="text-align:left; color:var(--accent-gold);">AI: أهلاً بك يا فهد، النظام يعمل بكفاءة تامة وتحديثات الموظفين والمخزن مطبقة بالكامل.</div>`;
                 list.scrollTop = list.scrollHeight;
-            }, 500);
+            }, 600);
+        }
+
+        function openForgotPasswordModal() {
+            document.getElementById('forgot-password-modal').style.display = 'flex';
+        }
+
+        function verifyAndResetPassword() {
+            const email = document.getElementById('fp-email').value.trim();
+            const phone = document.getElementById('fp-phone').value.trim();
+            const newPassGroup = document.getElementById('new-pass-group');
+            const actionBtn = document.getElementById('fp-action-btn');
+
+            if(email === currentUser.email && phone === currentUser.phone) {
+                if(newPassGroup.style.display === 'none') {
+                    newPassGroup.style.display = 'block';
+                    actionBtn.innerText = "تأكيد كلمة المرور الجديدة";
+                    showNotification("تم التحقق بنجاح، أدخل كلمة المرور الجديدة");
+                } else {
+                    const newPass = document.getElementById('fp-newpass').value.trim();
+                    if(newPass) {
+                        showNotification("تم تغيير كلمة المرور بنجاح");
+                        closeModal('forgot-password-modal');
+                    } else {
+                        alert("يرجى إدخال كلمة المرور الجديدة");
+                    }
+                }
+            } else {
+                alert("البريد أو رقم الجوال غير متطابق مع بيانات الحساب");
+            }
+        }
+
+        function logout() {
+            document.getElementById('app-header').style.display = 'none';
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('main-drawer').classList.remove('open');
+            showNotification("تم تسجيل الخروج بنجاح");
         }
     </script>
 </body>
