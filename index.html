@@ -239,16 +239,16 @@
     <div id="app-notification">تم التحديث بنجاح</div>
 
     <div class="phone-frame">
-        <!-- شاشة تسجيل الدخول والترحيب -->
+        <!-- شاشة تسجيل الدخول والترحيب نظيفة وخالية من الإيميلات الافتراضية -->
         <div id="splash-screen">
             <div class="splash-jewelry-icon">💎</div>
             <div style="color:var(--text-main); font-weight:bold; font-size:22px; letter-spacing: 1px;">NERIS STORE</div>
             <p style="color: var(--text-muted); font-size: 11px; margin-top: 6px; margin-bottom: 20px;" data-i18n="splash_sub">نظام إدارة المخزن والمجوهرات الذكي</p>
             
             <div style="width: 100%; max-width: 300px;">
-                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;" data-i18n="login_error">البريد أو كلمة المرور غير صحيحة</div>
-                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="البريد الإلكتروني" value="admin@neris.store" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="كلمة المرور" value="123456" style="direction:ltr; text-align:left;"></div>
+                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;" data-i18n="login_error">يرجى إدخال البريد الإلكتروني وكلمة المرور للمتابعة</div>
+                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="البريد الإلكتروني (أدخل بريدك)" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="كلمة المرور" style="direction:ltr; text-align:left;"></div>
                 <button class="btn" onclick="handleLogin()" data-i18n="btn_login">تسجيل دخول</button>
             </div>
         </div>
@@ -444,7 +444,7 @@
             </div>
         </div>
 
-        <!-- 6. إدارة الموظفين الحالية (مع خيارات الإجازة، الاستقالة مع إرجاعها، والطرد والحذف النهائي) -->
+        <!-- 6. إدارة الموظفين الحالية -->
         <div id="staff-screen" class="screen">
             <h2 data-i18n="h_staff">إدارة الموظفين الصارمة</h2>
             <p class="subtitle" data-i18n="sub_staff">تحكم كامل بحالة الموظفين، الإجازات، الاستقالات، والطرد</p>
@@ -541,7 +541,7 @@
         const translations = {
             ar: {
                 splash_sub: "نظام إدارة المخزن والمجوهرات الذكي",
-                login_error: "البريد أو كلمة المرور غير صحيحة",
+                login_error: "يرجى إدخال البريد الإلكتروني وكلمة المرور للمتابعة",
                 btn_login: "تسجيل دخول",
                 nav_title: "قائمة التنقل",
                 m_home: "الواجهة الرئيسية",
@@ -625,7 +625,7 @@
             },
             en: {
                 splash_sub: "Smart Inventory & Jewelry Management OS",
-                login_error: "Invalid email or password",
+                login_error: "Please enter your email and password to continue",
                 btn_login: "Login",
                 nav_title: "Navigation",
                 m_home: "Dashboard",
@@ -740,9 +740,11 @@
         }
 
         function handleLogin() {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-password').value;
-            if (email && pass) {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+            
+            // تم إصلاح مشكلة الدخول: السماح بأي إيميل وباسورد يتم إدخالهما فوراً
+            if (email !== "" && pass !== "") {
                 currentUser = {
                     name: "فهد راشد الحسين",
                     email: email,
@@ -908,7 +910,6 @@
                 addonName = addon.name;
             }
 
-            // خصم آلي من المخزن
             prod.qty -= 1;
 
             const newOrd = {
@@ -947,7 +948,7 @@
             orders.forEach(o => {
                 container.innerHTML += `
                     <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
-                        <div style="display:flex; justify-content:space-width; width:100%; justify-content:space-between;">
+                        <div style="display:flex; justify-content:space-between; width:100%;">
                             <strong>👤 ${o.clientName} (${o.clientPhone})</strong>
                             <span class="badge">${o.totalPrice} SAR</span>
                         </div>
@@ -1206,7 +1207,7 @@
                 let statusBadge = `<span class="badge" style="background:rgba(34,197,94,0.15); color:var(--success); border-color:var(--success);">${s.status}</span>`;
                 if (s.status === 'في إجازة') statusBadge = `<span class="badge" style="background:rgba(245,158,11,0.15); color:var(--warning); border-color:var(--warning);">في إجازة</span>`;
                 if (s.status === 'مستقيل') statusBadge = `<span class="badge" style="background:rgba(239,68,68,0.15); color:var(--danger); border-color:var(--danger);">مستقيل</span>`;
-                if (s.status ===ض 'مطرود') statusBadge = `<span class="badge" style="background:rgba(239,68,68,0.2); color:var(--danger); border-color:var(--danger);">مطرود</span>`;
+                if (s.status === 'مطرود') statusBadge = `<span class="badge" style="background:rgba(239,68,68,0.2); color:var(--danger); border-color:var(--danger);">مطرود</span>`;
 
                 container.innerHTML += `
                     <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
