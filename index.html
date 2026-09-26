@@ -169,6 +169,8 @@
             background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 8px;
             display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 6px;
         }
+
+        .online-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block; margin-left: 5px; box-shadow: 0 0 6px var(--success); }
     </style>
 </head>
 <body>
@@ -185,7 +187,7 @@
                 <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);">Neris AI Assistant</span>
                 <button onclick="toggleFloatingAIPopup()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
-            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;">أهلاً بك يا فهد. السحابية متصلة وتعمل بنجاح تام!</div>
+            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;">أهلاً بك يا فهد. نظام الطلبات وتوزيعها متصل بالسحابة!</div>
             <div style="display:flex; gap:4px;">
                 <input type="text" id="floating-ai-input" placeholder="اسأل الـ AI..." style="flex:1; padding:6px; font-size:10px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:4px;">
                 <button class="btn" style="margin-top:0; padding:6px 10px; font-size:10px; width:auto;" onclick="sendFloatingAI()">إرسال</button>
@@ -217,7 +219,10 @@
             <div class="header-btns">
                 <button class="lang-btn" onclick="toggleLanguage()" id="lang-indicator">EN</button>
                 <button class="theme-btn" onclick="toggleTheme()" id="theme-icon">☀️</button>
-                <img id="header-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:1px solid var(--accent-gold);">
+                <div style="display:flex; align-items:center; position:relative;">
+                    <img id="header-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:1px solid var(--accent-gold);">
+                    <span class="online-dot" title="متصل الآن"></span>
+                </div>
             </div>
         </div>
 
@@ -227,8 +232,8 @@
                 <button onclick="toggleDrawer()" style="background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;">✕</button>
             </div>
             <div class="drawer-item" onclick="navTo('home-main-screen')">🏠 <span data-t="home">الواجهة الرئيسية</span></div>
-            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 <span data-t="orders">إدارة الطلبيات النشطة</span></div>
-            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span data-t="inventory">المخزن</span></div>
+            <div class="drawer-item" onclick="navTo('orders-screen')">🛒 <span data-t="orders">إدارة الطلبيات النشطة والتوزيع</span></div>
+            <div class="drawer-item" onclick="navTo('inventory-screen')">📦 <span data-t="inventory">المخزن والمنتجات</span></div>
             <div class="drawer-item" onclick="navTo('addons-screen')">🎀 <span data-t="addons">التغليف والإضافات</span></div>
             <div class="drawer-item" onclick="navTo('chat-screen')">💬 <span data-t="chat">الرسائل والمحادثات</span></div>
             <div class="drawer-item" onclick="navTo('ai-chat-screen')">✨ <span data-t="ai_chat">مساعد الـ AI الذكي</span></div>
@@ -243,24 +248,34 @@
 
             <div class="panel-box" style="background:linear-gradient(135deg, rgba(197,160,89,0.08), var(--bg-card)); border-color:var(--accent-gold);">
                 <div style="font-size:12px; font-weight:bold; color:var(--accent-gold); margin-bottom:8px;" data-t="metrics_title">مؤشرات الأداء الفعلي للمحل</div>
+                <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:6px; text-align:center; margin-bottom:6px;">
+                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
+                        <span id="metric-unassigned-orders" style="font-size:14px; font-weight:bold; color:var(--warning); direction:ltr; display:inline-block;">0</span>
+                        <div style="font-size:9px; color:var(--text-muted);">بانتظار التوزيع</div>
+                    </div>
+                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
+                        <span id="metric-active-orders" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">0</span>
+                        <div style="font-size:9px; color:var(--text-muted);">قيد التجهيز والتنفيذ</div>
+                    </div>
+                </div>
                 <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; text-align:center;">
-                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="metric-active-orders" style="font-size:14px; font-weight:bold; direction:ltr; display:inline-block;">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);" data-t="active_orders_lbl">طلبات نشطة</div>
+                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
+                        <span id="metric-completed-orders" style="font-size:12px; font-weight:bold; color:var(--success); direction:ltr; display:inline-block;">0</span>
+                        <div style="font-size:8px; color:var(--text-muted);">طلبات منجزة</div>
                     </div>
-                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="metric-inventory-count" style="font-size:14px; font-weight:bold; color:var(--success); direction:ltr; display:inline-block;">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);" data-t="inv_count_lbl">منتج بالمخزن</div>
+                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
+                        <span id="metric-inventory-count" style="font-size:12px; font-weight:bold; color:var(--success); direction:ltr; display:inline-block;">0</span>
+                        <div style="font-size:8px; color:var(--text-muted);">منتج بالمخزن</div>
                     </div>
-                    <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="metric-staff-count" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);" data-t="staff_count_lbl">فريق الإدارة</div>
+                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
+                        <span id="metric-staff-count" style="font-size:12px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">0</span>
+                        <div style="font-size:8px; color:var(--text-muted);">فريق العمل (متصل)</div>
                     </div>
                 </div>
             </div>
 
             <div class="panel-box">
-                <h4 style="color:var(--accent-gold);" data-t="new_order_title">➕ تسجيل طلبية جديدة وإسنادها لموظف</h4>
+                <h4 style="color:var(--accent-gold);">➕ تسجيل طلبية جديدة (عامة للمخزن بدون تعيين مسبق)</h4>
                 <div class="input-group"><input type="text" id="order-client-name" placeholder="اسم العميل"></div>
                 <div class="input-group"><input type="text" id="order-client-phone" placeholder="رقم الجوال" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group">
@@ -271,27 +286,28 @@
                     <label data-t="sel_addons">اختر التغليف والإضافات المتعددة:</label>
                     <div id="order-addons-container" style="max-height:120px; overflow-y:auto; display:flex; flex-direction:column; gap:4px;"></div>
                 </div>
-                <div class="input-group">
-                    <label data-t="sel_staff">إسناد الطلب لموظف:</label>
-                    <select id="order-assigned-staff"></select>
-                </div>
-                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewOrder()" data-t="submit_order_btn">تسجيل وإرسال الطلب</button>
+                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewOrder()">تسجيل الطلبية وإضافتها للمخزن</button>
             </div>
         </div>
 
         <div id="orders-screen" class="screen">
-            <h2 data-t="orders_title">إدارة الطلبيات النشطة</h2>
-            <p class="subtitle" data-t="orders_sub">متابعة الطلبات المسندة للموظفين</p>
+            <h2 data-t="orders_title">إدارة الطلبيات النشطة وتوزيعها</h2>
+            <p class="subtitle">توزيع الطلبات على الموظفين ومتابعة حالة التجهيز لحظياً</p>
             <div id="real-orders-list"></div>
         </div>
 
         <div id="inventory-screen" class="screen">
             <h2 data-t="inv_title">المخزن والمنتجات</h2>
-            <p class="subtitle" data-t="inv_sub">إضافة وتعديل المنتجات مع حساب AI للأسعار والوصف</p>
+            <p class="subtitle" data-t="inv_sub">إضافة وتعديل المنتجات مع حساب AI للأسعار وتنبيهات المخزون</p>
             <button class="btn" onclick="openAddProductModal()" data-t="add_prod_btn">+ إضافة منتج جديد مع صورة</button>
             <div class="panel-box" style="margin-top:10px;">
                 <h4 data-t="inv_list_title">قائمة منتجات المخزن</h4>
                 <div id="real-inventory-list"></div>
+            </div>
+            
+            <div class="panel-box" style="margin-top:15px; border-color:var(--warning);">
+                <h4 style="color:var(--warning);">🗑️ سلة مهملات المخزن (تسترجع خلال 30 يوم أو تحذف نهائياً)</h4>
+                <div id="inventory-trash-list"><p style="font-size:11px; color:var(--text-muted);">سلة محذوفات المخزن فارغة.</p></div>
             </div>
         </div>
 
@@ -348,8 +364,8 @@
             <div id="staff-management-list"></div>
             
             <div class="panel-box" style="margin-top:15px; border-color:var(--warning);">
-                <h4 style="color:var(--warning);" data-t="trash_title">🗑️ سلة المحذوفات واسترجاع الموظفين</h4>
-                <div id="staff-trash-list"><p style="font-size:11px; color:var(--text-muted);">لا توجد حسابات محذوفة.</p></div>
+                <h4 style="color:var(--warning);">🗑️ سلة محذوفات فريق العمل</h4>
+                <div id="staff-trash-list"><p style="font-size:11px; color:var(--text-muted);">سلة المحذوفات فارغة تماماً.</p></div>
             </div>
         </div>
 
@@ -391,6 +407,7 @@
             <div class="modal-content">
                 <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_prod_modal">إضافة منتج جديد مع صورة</h3>
                 <div class="input-group"><label data-t="p_name">اسم المنتج</label><input type="text" id="p-name" placeholder="خاتم ألماس فاخر"></div>
+                <div class="input-group"><label>الكمية المتاحة (المخزون)</label><input type="number" id="p-qty" value="5" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-t="p_color">اللون</label><input type="text" id="p-color" placeholder="ذهبي وردي"></div>
                 <div class="input-group"><label data-t="p_size">المقاس</label><input type="text" id="p-size" placeholder="مقاس 7"></div>
                 <div class="input-group"><label data-t="p_img">صورة المنتج</label><input type="file" id="p-img-file" accept="image/*" style="direction:ltr; text-align:left; font-size:10px;"></div>
@@ -439,6 +456,7 @@
         window.currentLang = 'ar';
         window.currentUserRole = 'admin';
         window.inventoryList = [];
+        window.inventoryTrash = [];
         window.addonsList = [
             { id: 1, name: "علبة مخمل فاخرة", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
             { id: 2, name: "كيس هدية بشريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
@@ -459,7 +477,7 @@
                 chat: "الرسائل والمحادثات", ai_chat: "مساعد الـ AI الذكي", staff: "فريق العمل والصلاحيات", profile: "الملف الشخصي", logout: "تسجيل الخروج",
                 home_title: "الواجهة الرئيسية ومؤشرات الأداء", home_sub: "مرحباً بك في لوحة تحكم Neris الفاخرة",
                 metrics_title: "مؤشرات الأداء الفعلي للمحل", active_orders_lbl: "طلبات نشطة", inv_count_lbl: "منتج بالمخزن", staff_count_lbl: "فريق الإدارة",
-                orders_title: "إدارة الطلبيات النشطة", orders_sub: "متابعة الطلبات المسندة للموظفين",
+                orders_title: "إدارة الطلبيات النشطة والتوزيع", orders_sub: "متابعة الطلبات المسندة للموظفين",
                 inv_title: "المخزن والمنتجات", inv_sub: "إضافة وتعديل المنتجات مع حساب AI للأسعار", add_prod_btn: "+ إضافة منتج جديد مع صورة", inv_list_title: "قائمة منتجات المخزن",
                 addons_title: "التغليف والإضافات الممتازة", addons_sub: "إدارة عناصر التغليف مع الصور والأسعار", add_addon_btn: "+ إضافة عنصر تغليف جديد", addons_list_title: "عناصر التغليف المتاحة",
                 chat_title: "المحادثات الخاصة (مثل واتساب)", chat_sub: "تواصل مباشر وسجل رسائل محفوظ مع الفريق", select_staff_chat: "اختر الموظف للمحادثة:", send_btn: "إرسال",
@@ -494,18 +512,17 @@
             }
         };
 
-        // الاستماع للتحديثات السحابية لحظياً (Realtime Sync)
         onValue(ref(db, 'neris_store'), (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 if (data.inventory) window.inventoryList = data.inventory;
+                if (data.inventoryTrash) window.inventoryTrash = data.inventoryTrash;
                 if (data.addons) window.addonsList = data.addons;
                 if (data.staff) window.staffList = data.staff;
                 if (data.staffTrash) window.staffTrash = data.staffTrash;
                 if (data.orders) window.ordersList = data.orders;
                 if (data.adminAvatar) window.adminAvatar = data.adminAvatar;
             } else {
-                // حفظ البيانات الافتراضية لأول مرة
                 syncToCloud();
             }
             document.getElementById('header-avatar').src = window.adminAvatar;
@@ -517,6 +534,7 @@
         window.syncToCloud = function() {
             set(ref(db, 'neris_store'), {
                 inventory: window.inventoryList,
+                inventoryTrash: window.inventoryTrash,
                 addons: window.addonsList,
                 staff: window.staffList,
                 staffTrash: window.staffTrash,
@@ -645,10 +663,18 @@
         }
 
         window.refreshUI = function() {
-            document.getElementById('metric-active-orders').innerText = window.ordersList.filter(o => o.status !== 'مكتمل').length;
+            let unassigned = window.ordersList.filter(o => !o.assignedStaff || o.assignedStaff === '' || o.assignedStaff === 'غير مسند').length;
+            let active = window.ordersList.filter(o => o.assignedStaff && o.assignedStaff !== '' && o.assignedStaff !== 'غير مسند' && o.status !== 'مكتمل').length;
+            let completed = window.ordersList.filter(o => o.status === 'مكتمل').length;
+
+            document.getElementById('metric-unassigned-orders').innerText = unassigned;
+            document.getElementById('metric-active-orders').innerText = active;
+            document.getElementById('metric-completed-orders').innerText = completed;
             document.getElementById('metric-inventory-count').innerText = window.inventoryList.length;
-            document.getElementById('metric-staff-count').innerText = window.staffList.length;
+            document.getElementById('metric-staff-count').innerText = window.staffList.filter(s => s.status === 'نشط').length;
+
             renderInventory();
+            renderInventoryTrash();
             renderAddons();
             renderAddonsCheckboxes();
             renderStaffManagement();
@@ -661,15 +687,68 @@
         function renderInventory() {
             let html = '';
             window.inventoryList.forEach(item => {
+                let qty = item.qty !== undefined ? item.qty : 5;
+                let alertBadge = '';
+                if(qty < 2) {
+                    alertBadge = `<br><span style="color:var(--danger); font-size:9px; font-weight:bold;">🚨 انتهى تقريباً - اطلب الآن! (المتبقي: ${qty})</span>`;
+                } else if(qty <= 3) {
+                    alertBadge = `<br><span style="color:var(--warning); font-size:9px;">⚠️ مخزون قليل (المتبقي: ${qty})</span>`;
+                } else {
+                    alertBadge = `<br><span style="color:var(--success); font-size:9px;">🟢 متوفر (المتبقي: ${qty})</span>`;
+                }
+
                 html += `<div class="card-item">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img src="${item.image || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100'}" class="product-thumb">
-                        <div><strong>${item.name}</strong> (${item.color} - ${item.size})<br><small style="color:var(--accent-gold);">سعر البيع AI: ${item.suggestedPrice} SAR</small></div>
+                        <div><strong>${item.name}</strong> (${item.color} - ${item.size})<br><small style="color:var(--accent-gold);">سعر البيع AI: ${item.suggestedPrice} SAR</small>${alertBadge}</div>
                     </div>
-                    <div><span class="badge">${item.cost} SAR</span> <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto;" onclick="deleteItem(${item.id})">حذف</button></div>
+                    <div><span class="badge">${item.cost} SAR</span> <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto;" onclick="trashInventoryItem(${item.id})">حذف 🗑️</button></div>
                 </div>`;
             });
             document.getElementById('real-inventory-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang === 'ar' ? 'لا توجد منتجات في المخزن حالياً.' : 'No products in inventory.'}</p>`;
+        }
+
+        window.trashInventoryItem = function(id) {
+            let idx = window.inventoryList.findIndex(x => x.id === id);
+            if(idx !== -1) {
+                let removed = window.inventoryList.splice(idx, 1)[0];
+                window.inventoryTrash.push(removed);
+                showNotification("تم نقل المنتج إلى سلة المحذوفات");
+                syncToCloud();
+            }
+        }
+
+        function renderInventoryTrash() {
+            let html = '';
+            window.inventoryTrash.forEach(item => {
+                html += `<div class="card-item" style="border-color:var(--warning);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="${item.image || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100'}" style="width:30px; height:30px; border-radius:4px; object-fit:cover;">
+                        <div><strong>${item.name}</strong> (${item.color})</div>
+                    </div>
+                    <div style="display:flex; gap:4px;">
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="restoreInventoryItem(${item.id})">استرجاع ↺</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--danger); color:#fff; width:auto; margin-top:0;" onclick="deleteInventoryForever(${item.id})">حذف نهائي ❌</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('inventory-trash-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">سلة محذوفات المخزن فارغة.</p>';
+        }
+
+        window.restoreInventoryItem = function(id) {
+            let idx = window.inventoryTrash.findIndex(x => x.id === id);
+            if(idx !== -1) {
+                let restored = window.inventoryTrash.splice(idx, 1)[0];
+                window.inventoryList.push(restored);
+                showNotification("تم استرجاع المنتج بنجاح للمخزن");
+                syncToCloud();
+            }
+        }
+
+        window.deleteInventoryForever = function(id) {
+            window.inventoryTrash = window.inventoryTrash.filter(x => x.id !== id);
+            showNotification("تم حذف المنتج نهائياً من النظام");
+            syncToCloud();
         }
 
         function renderAddons() {
@@ -716,7 +795,10 @@
                             <input type="file" id="file-up-${staff.id}" accept="image/*" style="display:none;" onchange="updateStaffAvatar(${staff.id}, this)">
                         </div>
                         <div style="flex:1;">
-                            <input type="text" value="${staff.name}" onchange="updateStaffField(${staff.id}, 'name', this.value)" style="font-weight:bold; font-size:13px; color:var(--accent-gold); border:none; background:none; width:100%; outline:none;" placeholder="اسم الموظف">
+                            <div style="display:flex; align-items:center; justify-content:space-between;">
+                                <input type="text" value="${staff.name}" onchange="updateStaffField(${staff.id}, 'name', this.value)" style="font-weight:bold; font-size:13px; color:var(--accent-gold); border:none; background:none; width:100%; outline:none;" placeholder="اسم الموظف">
+                                <span class="online-dot" title="متصل الآن"></span>
+                            </div>
                             <div style="display:flex; gap:6px; margin-top:4px;">
                                 <input type="text" value="${staff.role}" onchange="updateStaffField(${staff.id}, 'role', this.value)" placeholder="المسمى الوظيفي" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--accent-gold); border:1px solid var(--border); border-radius:4px; flex:1;">
                                 <select onchange="updateStaffField(${staff.id}, 'status', this.value)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--success); border:1px solid var(--border); border-radius:4px; font-weight:bold;">
@@ -778,7 +860,10 @@
                         <img src="${staff.avatar}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
                         <div><strong>${staff.name}</strong> (${staff.email})</div>
                     </div>
-                    <button class="btn" style="padding:3px 8px; font-size:10px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="restoreStaff(${staff.id})">استرجاع الحساب ↺</button>
+                    <div style="display:flex; gap:4px;">
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="restoreStaff(${staff.id})">استرجاع ↺</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--danger); color:#fff; width:auto; margin-top:0;" onclick="deleteStaffForever(${staff.id})">حذف نهائي ❌</button>
+                    </div>
                 </div>`;
             });
             document.getElementById('staff-trash-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">سلة المحذوفات فارغة تماماً.</p>';
@@ -789,7 +874,7 @@
             if(idx !== -1) {
                 let removed = window.staffList.splice(idx, 1)[0];
                 window.staffTrash.push(removed);
-                showNotification("تم نقل الحساب إلى سلة المحذوفات سحابياً");
+                showNotification("تم نقل الحساب إلى سلة المحذوفات");
                 syncToCloud();
             }
         }
@@ -799,9 +884,15 @@
             if(idx !== -1) {
                 let restored = window.staffTrash.splice(idx, 1)[0];
                 window.staffList.push(restored);
-                showNotification("تم استرجاع حساب الموظف سحابياً ↺");
+                showNotification("تم استرجاع حساب الموظف بنجاح ↺");
                 syncToCloud();
             }
+        }
+
+        window.deleteStaffForever = function(id) {
+            window.staffTrash = window.staffTrash.filter(x => x.id !== id);
+            showNotification("تم حذف الموظف نهائياً من النظام");
+            syncToCloud();
         }
 
         window.updateStaffAvatar = function(id, input) {
@@ -825,23 +916,18 @@
         }
 
         function renderOrderDropdowns() {
-            let pHtml = '<option value="">-- اختر المنتج --</option>';
+            let pHtml = '<option value="">-- اختر المنتج الأساسي --</option>';
             window.inventoryList.forEach(i => { pHtml += `<option value="${i.id}">${i.name} (سعر البيع AI: ${i.suggestedPrice} SAR)</option>`; });
             document.getElementById('order-product-select').innerHTML = pHtml;
-
-            let sHtml = '<option value="">-- اختر الموظف --</option>';
-            window.staffList.filter(s => s.status === 'نشط').forEach(s => { sHtml += `<option value="${s.name}">${s.name} (${s.role})</option>`; });
-            document.getElementById('order-assigned-staff').innerHTML = sHtml;
         }
 
         window.addNewOrder = function() {
             const clientName = document.getElementById('order-client-name').value.trim();
             const clientPhone = document.getElementById('order-client-phone').value.trim();
             const pId = document.getElementById('order-product-select').value;
-            const staffName = document.getElementById('order-assigned-staff').value;
 
-            if(!clientName || !pId || !staffName) {
-                alert("يرجى إدخال اسم العميل، اختيار المنتج، وتعيين الموظف المسؤول!");
+            if(!clientName || !pId) {
+                alert("يرجى إدخال اسم العميل واختيار المنتج الأساسي على الأقل!");
                 return;
             }
 
@@ -860,31 +946,57 @@
             window.ordersList.unshift({
                 id: Date.now(), clientName, clientPhone: clientPhone || 'غير متوفر',
                 productName: product.name, addons: selectedAddonsText.length > 0 ? selectedAddonsText.join(' + ') : 'بدون تغليف',
-                total, assignedStaff: staffName, status: 'قيد التنفيذ'
+                total, assignedStaff: 'غير مسند', status: 'بانتظار التوزيع'
             });
 
             document.getElementById('order-client-name').value = '';
             document.getElementById('order-client-phone').value = '';
-            showNotification("تم تسجيل الطلبية وحفظها سحابياً");
+            showNotification("تم تسجيل الطلبية وإضافتها للمخزن العام بانتظار التوزيع");
             syncToCloud();
             navTo('orders-screen');
         }
 
         function renderOrdersList() {
             let html = '';
+            let staffOptions = '<option value="">-- اختر موظف لإسناد الطلب --</option>';
+            window.staffList.filter(s => s.status === 'نشط').forEach(s => {
+                staffOptions += `<option value="${s.name}">${s.name} (${s.role})</option>`;
+            });
+
             window.ordersList.forEach(o => {
-                html += `<div class="panel-box" style="border-color:var(--accent-gold);">
+                let isUnassigned = !o.assignedStaff || o.assignedStaff === 'غير مسند';
+                html += `<div class="panel-box" style="border-color:${isUnassigned ? 'var(--warning)' : 'var(--accent-gold)'};">
                     <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                         <strong>العميل: ${o.clientName}</strong> <span class="badge">${o.status}</span>
                     </div>
                     <div style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">
                         القطعة: ${o.productName} | الإضافات: ${o.addons}<br>
-                        الإجمالي النهائي: <b style="color:var(--success);">${o.total} SAR</b> | المسؤول: <b style="color:var(--accent-gold);">${o.assignedStaff}</b>
+                        الإجمالي النهائي: <b style="color:var(--success);">${o.total} SAR</b> | المسؤول الحالي: <b style="color:var(--accent-gold);">${o.assignedStaff || 'غير مسند'}</b>
                     </div>
-                    <button class="btn" style="padding:4px; font-size:10px; background:var(--success); color:#fff; width:auto;" onclick="completeOrder(${o.id})">إنجاز الطلب ✓</button>
+                    <div style="display:flex; gap:6px; align-items:center; margin-top:6px;">
+                        <select id="assign-select-${o.id}" style="padding:4px; font-size:10px; background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border); border-radius:4px; flex:1;">
+                            ${staffOptions}
+                        </select>
+                        <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--accent-gold); color:#1c1815; width:auto; margin-top:0;" onclick="assignOrderToStaff(${o.id})">إسناد وتجهيز ➔</button>
+                        ${o.status !== 'مكتمل' ? `<button class="btn" style="padding:4px 8px; font-size:10px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="completeOrder(${o.id})">إنجاز ✓</button>` : ''}
+                    </div>
                 </div>`;
             });
-            document.getElementById('real-orders-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد طلبيات نشطة حالياً.</p>';
+            document.getElementById('real-orders-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد طلبيات مسجلة حالياً.</p>';
+        }
+
+        window.assignOrderToStaff = function(orderId) {
+            let selectEl = document.getElementById(`assign-select-${orderId}`);
+            let staffName = selectEl.value;
+            if(!staffName) { alert("يرجى اختيار موظف أولاً لإسناد الطلب إليه!"); return; }
+
+            let o = window.ordersList.find(x => x.id === orderId);
+            if(o) {
+                o.assignedStaff = staffName;
+                o.status = 'قيد التجهيز';
+                showNotification(`تم إسناد الطلب للموظف (${staffName}) وابدأ التجهيز`);
+                syncToCloud();
+            }
         }
 
         window.completeOrder = function(id) {
@@ -898,7 +1010,7 @@
                 html += `<div class="card-item" onclick="openPrivateChat(${staff.id}, '${staff.name}')" style="cursor:pointer;">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img src="${staff.avatar}" style="width:28px; height:28px; border-radius:50%; object-fit:cover;">
-                        <div><strong>${staff.name}</strong> <span class="badge">${staff.role}</span></div>
+                        <div><strong>${staff.name}</strong> <span class="online-dot"></span> <span class="badge">${staff.role}</span></div>
                     </div>
                     <span style="color:var(--accent-gold); font-size:11px;">مراسلة 💬</span>
                 </div>`;
@@ -953,7 +1065,7 @@
 
             setTimeout(() => {
                 let reply = window.currentLang === 'ar' ? 
-                    `تحليل الـ AI لطلبك "${q}": النظام متصل بالسحابة بكفاءة، المخزن يحتوي على ${window.inventoryList.length} منتجات، وعدد الطلبات النشطة ${window.ordersList.length}.` :
+                    `تحليل الـ AI لطلبك "${q}": النظام متصل بالسحابة وتوزيع الطلبات يعمل بكفاءة تامة.` :
                     `AI Analysis for "${q}": System is operating smoothly via cloud sync.`;
                 history.innerHTML += `<div style="background:rgba(197,160,89,0.15); padding:6px 8px; border-radius:6px; color:var(--accent-gold);"><b>Neris AI:</b> ${reply}</div>`;
                 history.scrollTop = history.scrollHeight;
@@ -962,6 +1074,7 @@
 
         window.openAddProductModal = function() {
             document.getElementById('p-name').value = '';
+            document.getElementById('p-qty').value = '5';
             document.getElementById('p-color').value = '';
             document.getElementById('p-size').value = '';
             document.getElementById('p-cost').value = '';
@@ -977,6 +1090,7 @@
 
         window.saveProduct = function() {
             let name = document.getElementById('p-name').value.trim();
+            let qty = parseInt(document.getElementById('p-qty').value) || 5;
             let color = document.getElementById('p-color').value.trim();
             let size = document.getElementById('p-size').value.trim();
             let cost = parseFloat(document.getElementById('p-cost').value) || 0;
@@ -988,7 +1102,7 @@
             let imgUrl = "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100";
             if(imgFile) imgUrl = URL.createObjectURL(imgFile);
 
-            window.inventoryList.push({ id: Date.now(), name, color, size, cost, suggestedPrice: suggestedPrice.toFixed(2), image: imgUrl });
+            window.inventoryList.push({ id: Date.now(), name, qty, color, size, cost, suggestedPrice: suggestedPrice.toFixed(2), image: imgUrl });
             closeModal('add-product-modal');
             showNotification("تمت إضافة المنتج وحفظه سحابياً");
             syncToCloud();
@@ -1013,12 +1127,6 @@
             closeModal('add-addon-modal');
             showNotification("تمت إضافة عنصر التغليف سحابياً");
             syncToCloud();
-        }
-
-        window.deleteItem = function(id) { 
-            window.inventoryList = window.inventoryList.filter(x => x.id !== id); 
-            showNotification("تم الحذف والتحديث سحابياً"); 
-            syncToCloud(); 
         }
 
         window.deleteAddonItem = function(id) { 
