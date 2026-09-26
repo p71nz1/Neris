@@ -63,6 +63,7 @@
             position: relative;
         }
 
+        /* شاشة الترحيب المؤقتة (تختفي بعد 3 ثوانٍ) */
         #welcome-intro-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -107,12 +108,6 @@
             font-size: 36px;
             margin-bottom: 16px;
             box-shadow: 0 0 25px rgba(197, 160, 89, 0.25);
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .splash-logo:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 35px rgba(197, 160, 89, 0.5);
         }
 
         .header-bar {
@@ -271,13 +266,14 @@
     </div>
 
     <div class="phone-frame">
+        <!-- شاشة الترحيب المؤقتة (تختفي تلقائياً بعد 3 ثوانٍ) -->
         <div id="welcome-intro-screen">
             <div class="splash-logo">💎</div>
-            <h1 style="color:var(--text-main); font-size:22px; font-weight:bold; margin-bottom:6px; letter-spacing:1px;">NERIS ELITE OS</h1>
-            <p style="color:var(--accent-gold); font-size:12px; margin-bottom:24px;">نظام إدارة المخزن والمجوهرات الفاخر</p>
-            <button class="btn" style="max-width:220px;" onclick="proceedToLogin()">دخول للنظام</button>
+            <h1 style="color:var(--text-main); font-size:20px; font-weight:bold; margin-bottom:6px; letter-spacing:1px;">مرحباً بك في نظام نيرسي</h1>
+            <p style="color:var(--accent-gold); font-size:12px;">NERIS ELITE OS - نظام إدارة المجوهرات</p>
         </div>
 
+        <!-- شاشة تسجيل الدخول -->
         <div id="login-screen" style="display:none;">
             <div class="splash-logo" title="شعار Neris الفاخر">💎</div>
             <div style="color:var(--text-main); font-weight:bold; font-size:18px; letter-spacing: 1px; margin-bottom:4px;">تسجيل الدخول</div>
@@ -614,10 +610,21 @@
             if(screenId === 'chat-screen') renderChatContacts();
         }
 
-        function proceedToLogin() {
-            document.getElementById("welcome-intro-screen").style.display = "none";
-            document.getElementById("login-screen").style.display = "flex";
-        }
+        // تشغيل شاشة الترحيب لمدة 3 ثوانٍ ثم الانتقال تلقائياً لشاشة تسجيل الدخول
+        window.onload = function() {
+            setTimeout(() => {
+                const intro = document.getElementById("welcome-intro-screen");
+                if(intro) {
+                    intro.style.transition = "opacity 0.5s ease";
+                    intro.style.opacity = "0";
+                    setTimeout(() => {
+                        intro.style.display = "none";
+                        document.getElementById("login-screen").style.display = "flex";
+                    }, 500);
+                }
+            }, 3000);
+            updateMetrics();
+        };
 
         function openForgotPasswordModal() {
             document.getElementById("fp-email").value = "";
@@ -731,8 +738,7 @@
         function logout() {
             currentUser = null;
             localStorage.removeItem('neris_current_user');
-            document.getElementById("welcome-intro-screen").style.display = "flex";
-            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("login-screen").style.display = "flex";
             document.getElementById("app-header").style.display = "none";
             document.getElementById("login-email").value = "fhd47@gmail.com";
             document.getElementById("login-password").value = "Fahad55003";
@@ -1130,12 +1136,10 @@
             list.innerHTML += `<div style="margin-top:6px; color:var(--text-main);"><b>أنت:</b> ${text}</div>`;
             input.value = "";
             setTimeout(() => {
-                list.innerHTML += `<div style="margin-top:6px; color:var(--accent-gold);"><b>Neris AI:</b> تم تحديث بريدك ورقم جوالك بنجاح يا فهد. تسجيل الدخول يعمل الآن بكامل كفاءته.</div>`;
+                list.innerHTML += `<div style="margin-top:6px; color:var(--accent-gold);"><b>Neris AI:</b> تم ضبط بريدك الإلكتروني fhd47@gmail.com وتفعيل الدخول بنجاح يا فهد.</div>`;
                 list.scrollTop = list.scrollHeight;
             }, 500);
         }
-
-        window.onload = function() { updateMetrics(); };
     </script>
 </body>
 </html>
