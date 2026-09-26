@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-root">
 <head>
@@ -275,7 +274,7 @@
             </div>
         </div>
 
-        <!-- نافذة تأكيد الطرد داخل الموقع -->
+        <!-- نافذة التأكيد داخل الموقع -->
         <div class="modal" id="confirm-modal">
             <div class="modal-content" style="text-align: center;">
                 <h3 id="confirm-title" style="margin-bottom:8px; font-size:14px; color:var(--danger);">تأكيد إجراء</h3>
@@ -407,7 +406,7 @@
         <!-- 5. إدارة المسؤولين -->
         <div id="staff-screen" class="screen">
             <h2>إدارة المسؤولين والصلاحيات</h2>
-            <p class="subtitle">إدارة طاقم العمل مع تنبيهات تأكيد داخل الموقع</p>
+            <p class="subtitle">إدارة طاقم العمل مع خيارات إجازة، فصل، واستقالة واستعادة الحسابات</p>
             <div class="panel-box">
                 <h4>قائمة المسؤولين الحاليين (<span id="staff-count-badge" style="direction:ltr; display:inline-block;">3</span>)</h4>
                 <div id="staff-management-list"></div>
@@ -457,8 +456,13 @@
         ];
 
         let currentUser = null;
-        let inventory = [];
-        let addons = [];
+        let inventory = [
+            { id: 1, name: "خاتم الماس كلاسيكي", color: "ذهبي أبيض", qty: 15, finalPrice: 1200, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 2, name: "سلسال ذهب عيار 18", color: "أصفر براق", qty: 8, finalPrice: 850, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100" }
+        ];
+        let addons = [
+            { id: 1, name: "علبة مخمل فاخرة مع كيس هدية", price: 45, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
+        ];
         let orders = [];
         let currentLang = 'ar';
         let currentTheme = 'dark';
@@ -493,6 +497,9 @@
             toggleDrawer();
             if(screenId === 'staff-screen') renderStaffManagement();
             if(screenId === 'profile-screen') loadProfileData();
+            if(screenId === 'inventory-screen') renderInventoryList();
+            if(screenId === 'addons-screen') renderAddonsList();
+            if(screenId === 'orders-screen') renderOrdersList();
         }
 
         function handleLogin() {
@@ -502,6 +509,12 @@
 
             const found = staffRegistry.find(s => s.email.toLowerCase() === email && s.pass === pass);
             if (!found) {
+                errBox.style.display = "block";
+                return;
+            }
+
+            if (found.status === 'مفصول' || found.status === 'مستقيل') {
+                errBox.innerText = "عذراً، هذا الحساب متوقف حالياً.";
                 errBox.style.display = "block";
                 return;
             }
@@ -553,10 +566,11 @@
         function updateMetrics() {
             document.getElementById("metric-active-orders").innerText = orders.filter(o => o.status === 'نشط').length;
             document.getElementById("metric-inventory-count").innerText = inventory.length;
-            document.getElementById("metric-staff-count").innerText = staffRegistry.length;
+            document.getElementById("metric-staff-count").innerText = staffRegistry.filter(s => s.status !== 'مفصول').length;
         }
 
         function openAddProductModal() { document.getElementById("add-product-modal").style.display = "flex"; }
+        function openAddAddonModal() { document.getElementById("add-addon-modal").style.display = "flex"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
 
         function calcPriceEnglish() {
@@ -570,65 +584,52 @@
             const name = document.getElementById("p-name").value.trim();
             const color = document.getElementById("p-color").value.trim();
             const qty = parseInt(document.getElementById("p-qty").value) || 0;
-            const cost = parseFloat(document.getElementById("p-cost").value) || 0;
-            const margin = parseFloat(document.getElementById("p-margin").value) || 0;
-            const final = cost + (cost * margin / 100);
+            const finalPrice = parseFloat(document.getElementById("p-final").value) || 0;
             const fileInput = document.getElementById("p-image-file");
 
-            if(!name) { alert("يرجى إدخال اسم المنتج"); return; }
+            if(!name) { alert("الرجاء إدخال اسم المنتج"); return; }
 
-            let imgSrc = "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=100";
-            if(fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) { addProductToList(name, color, qty, final, e.target.result); };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else { addProductToList(name, color, qty, final, imgSrc); }
-        }
-
-        function addProductToList(name, color, qty, final, img) {
-            inventory.push({ id: Date.now(), name, color, qty, final, img });
-            closeModal('add-product-modal');
-            renderInventory();
-            renderInventoryDropdowns();
-            updateMetrics();
-            showNotification("تم حفظ المنتج بنجاح");
-        }
-
-        function renderInventory() {
-            const list = document.getElementById("real-inventory-list");
-            list.innerHTML = "";
-            document.getElementById("inv-count-badge").innerText = inventory.length;
-
-            if(inventory.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد منتجات بالمخزن</div>`;
-                return;
+            let imageURL = "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100";
+            if (fileInput.files && fileInput.files[0]) {
+                imageURL = URL.createObjectURL(fileInput.files[0]);
             }
 
-            inventory.forEach(p => {
-                list.innerHTML += `
-                    <div class="card-item">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <img src="${p.img}" class="product-thumb">
-                            <div>
-                                <div style="font-weight:bold;">${p.name} (${p.color})</div>
-                                <div style="color:var(--accent-gold); direction:ltr; text-align:right;">${p.final.toFixed(2)} SAR | Qty: ${p.qty}</div>
-                            </div>
+            inventory.push({ id: Date.now(), name, color, qty, finalPrice, image: imageURL });
+            closeModal('add-product-modal');
+            showNotification("تم إضافة المنتج بنجاح وخصم التخزين");
+            updateMetrics();
+            renderInventoryDropdowns();
+            renderInventoryList();
+        }
+
+        function renderInventoryList() {
+            const container = document.getElementById("real-inventory-list");
+            document.getElementById("inv-count-badge").innerText = inventory.length;
+            if(inventory.length === 0) {
+                container.innerHTML = '<p style="font-size:11px; color:var(--text-muted); text-align:center;">لا توجد منتجات حالياً</p>';
+                return;
+            }
+            container.innerHTML = inventory.map(item => `
+                <div class="card-item">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="${item.image}" class="product-thumb">
+                        <div>
+                            <div style="font-weight:bold;">${item.name} (${item.color || 'عام'})</div>
+                            <div style="color:var(--accent-gold); font-size:10px; direction:ltr; text-align:right;">الكمية: ${item.qty} | السعر: ${item.finalPrice} SAR</div>
                         </div>
-                        <button class="btn" style="background:var(--danger); width:auto; padding:5px 8px; font-size:10px; margin-top:0; color:#fff;" onclick="deleteProduct(${p.id})">حذف</button>
                     </div>
-                `;
-            });
+                    <button class="btn" style="width:auto; padding:4px 8px; font-size:10px; background:var(--danger); color:#fff; margin-top:0;" onclick="deleteProduct(${item.id})">حذف</button>
+                </div>
+            `).join('');
         }
 
         function deleteProduct(id) {
-            inventory = inventory.filter(p => p.id !== id);
-            renderInventory();
+            inventory = inventory.filter(i => i.id !== id);
+            renderInventoryList();
             renderInventoryDropdowns();
             updateMetrics();
             showNotification("تم حذف المنتج");
         }
-
-        function openAddAddonModal() { document.getElementById("add-addon-modal").style.display = "flex"; }
 
         function saveAddonData() {
             const name = document.getElementById("a-name").value.trim();
@@ -637,234 +638,222 @@
 
             if(!name) { alert("يرجى إدخال اسم الإضافة"); return; }
 
-            let imgSrc = "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=100";
-            if(fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) { addAddonToList(name, price, e.target.result); };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else { addAddonToList(name, price, imgSrc); }
-        }
-
-        function addAddonToList(name, price, img) {
-            addons.push({ id: Date.now(), name, price, img });
-            closeModal('add-addon-modal');
-            renderAddons();
-            renderInventoryDropdowns();
-            showNotification("تم حفظ الإضافة الحرّة بنجاح");
-        }
-
-        function renderAddons() {
-            const list = document.getElementById("addons-list-container");
-            list.innerHTML = "";
-            document.getElementById("addons-count-badge").innerText = addons.length;
-
-            if(addons.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد إضافات مخصصة</div>`;
-                return;
+            let imageURL = "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100";
+            if (fileInput.files && fileInput.files[0]) {
+                imageURL = URL.createObjectURL(fileInput.files[0]);
             }
 
-            addons.forEach(a => {
-                list.innerHTML += `
-                    <div class="card-item">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <img src="${a.img}" class="product-thumb">
-                            <div>
-                                <div style="font-weight:bold;">${a.name}</div>
-                                <div style="color:var(--accent-gold); direction:ltr; text-align:right;">${a.price.toFixed(2)} SAR</div>
-                            </div>
+            addons.push({ id: Date.now(), name, price, image: imageURL });
+            closeModal('add-addon-modal');
+            showNotification("تم حفظ الإضافة بنجاح");
+            renderInventoryDropdowns();
+            renderAddonsList();
+        }
+
+        function renderAddonsList() {
+            const container = document.getElementById("addons-list-container");
+            document.getElementById("addons-count-badge").innerText = addons.length;
+            if(addons.length === 0) {
+                container.innerHTML = '<p style="font-size:11px; color:var(--text-muted); text-align:center;">لا توجد إضافات مضافة</p>';
+                return;
+            }
+            container.innerHTML = addons.map(a => `
+                <div class="card-item">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="${a.image}" class="product-thumb">
+                        <div>
+                            <div style="font-weight:bold;">${a.name}</div>
+                            <div style="color:var(--accent-gold); font-size:10px; direction:ltr; text-align:right;">السعر: ${a.price} SAR</div>
                         </div>
-                        <button class="btn" style="background:var(--danger); width:auto; padding:5px 8px; font-size:10px; margin-top:0; color:#fff;" onclick="deleteAddon(${a.id})">حذف</button>
                     </div>
-                `;
-            });
+                    <button class="btn" style="width:auto; padding:4px 8px; font-size:10px; background:var(--danger); color:#fff; margin-top:0;" onclick="deleteAddon(${a.id})">حذف</button>
+                </div>
+            `).join('');
         }
 
         function deleteAddon(id) {
             addons = addons.filter(a => a.id !== id);
-            renderAddons();
+            renderAddonsList();
             renderInventoryDropdowns();
             showNotification("تم حذف الإضافة");
         }
 
         function renderInventoryDropdowns() {
-            const prodSel = document.getElementById("order-product-select");
-            prodSel.innerHTML = `<option value="">-- اختر منتج --</option>`;
-            inventory.forEach(p => {
-                if(p.qty > 0) {
-                    prodSel.innerHTML += `<option value="${p.id}">${p.name} - ${p.final.toFixed(2)} SAR (Stock: ${p.qty})</option>`;
-                }
-            });
+            const pSelect = document.getElementById("order-product-select");
+            const aSelect = document.getElementById("order-addon-select");
 
-            const addonSel = document.getElementById("order-addon-select");
-            addonSel.innerHTML = `<option value="">-- بدون إضافة --</option>`;
-            addons.forEach(a => {
-                addonSel.innerHTML += `<option value="${a.id}">${a.name} - ${a.price.toFixed(2)} SAR</option>`;
-            });
+            pSelect.innerHTML = '<option value="">-- اختر المنتج --</option>' + inventory.map(i => `<option value="${i.id}">${i.name} (${i.finalPrice} SAR) - متوفر: ${i.qty}</option>`).join('');
+            aSelect.innerHTML = '<option value="">-- بدون إضافة حرة --</option>' + addons.map(a => `<option value="${a.id}">${a.name} (+${a.price} SAR)</option>`).join('');
+            calcTotalOrderPreview();
         }
 
         function calcTotalOrderPreview() {
-            const prodId = document.getElementById("order-product-select").value;
-            const addonId = document.getElementById("order-addon-select").value;
+            const pId = document.getElementById("order-product-select").value;
+            const aId = document.getElementById("order-addon-select").value;
             const previewBox = document.getElementById("order-product-preview");
 
-            if(!prodId) { previewBox.style.display = "none"; return; }
+            const product = inventory.find(i => i.id == pId);
+            const addon = addons.find(a => a.id == aId);
 
-            const prod = inventory.find(p => p.id == prodId);
-            const addon = addons.find(a => a.id == addonId);
+            if (!product) {
+                previewBox.style.display = "none";
+                return;
+            }
 
             previewBox.style.display = "flex";
-            document.getElementById("prev-img").src = prod.img;
-            document.getElementById("prev-title").innerText = prod.name;
-            document.getElementById("prev-price").innerText = `Product Price: ${prod.final.toFixed(2)} SAR`;
+            document.getElementById("prev-img").src = product.image;
+            document.getElementById("prev-title").innerText = product.name;
+            document.getElementById("prev-price").innerText = `سعر المنتج: ${product.finalPrice} SAR`;
 
-            let total = prod.final;
+            let total = product.finalPrice;
             const addonInfo = document.getElementById("prev-addon-info");
-            if(addon) {
+            if (addon) {
                 addonInfo.style.display = "block";
-                addonInfo.innerText = `Addon: ${addon.name} (+${addon.price.toFixed(2)} SAR)`;
+                addonInfo.innerText = `الإضافة: ${addon.name} (+${addon.price} SAR)`;
                 total += addon.price;
-            } else { addonInfo.style.display = "none"; }
+            } else {
+                addonInfo.style.display = "none";
+            }
 
-            document.getElementById("prev-total-price").innerText = `Total: ${total.toFixed(2)} SAR`;
+            document.getElementById("prev-total-price").innerText = `الإجمالي الكلي: ${total.toFixed(2)} SAR`;
         }
 
         function addNewRealOrder() {
             const clientName = document.getElementById("order-client-name").value.trim();
             const clientPhone = document.getElementById("order-client-phone").value.trim();
-            const prodId = document.getElementById("order-product-select").value;
-            const addonId = document.getElementById("order-addon-select").value;
+            const pId = document.getElementById("order-product-select").value;
+            const aId = document.getElementById("order-addon-select").value;
             const notes = document.getElementById("order-notes").value.trim();
 
-            if(!clientName || !prodId) { alert("يرجى إدخال اسم العميل واختيار المنتج الأساسي"); return; }
+            if(!clientName || !pId) {
+                alert("يرجى إدخال اسم العميل واختيار المنتج الأساسي على الأقل!");
+                return;
+            }
 
-            const prod = inventory.find(p => p.id == prodId);
-            if(prod.qty <= 0) { alert("عذراً، المنتج نفذ من المخزن!"); return; }
+            const product = inventory.find(i => i.id == pId);
+            if(product.qty <= 0) {
+                alert("عذراً، المنتج نفد من المخزن ولا يمكن تسجيل الطلبية!");
+                return;
+            }
 
-            prod.qty -= 1;
-            renderInventory();
-            renderInventoryDropdowns();
+            const addon = addons.find(a => a.id == aId);
+            let total = product.finalPrice + (addon ? addon.price : 0);
 
-            const addon = addons.find(a => a.id == addonId);
-            let total = prod.final;
-            if(addon) total += addon.price;
+            // خصم آلي من المخزن
+            product.qty -= 1;
 
             orders.push({
                 id: Date.now(),
                 clientName,
-                clientPhone,
-                productName: prod.name,
+                clientPhone: clientPhone || 'غير متوفر',
+                productName: product.name,
                 addonName: addon ? addon.name : 'بدون',
                 total,
-                notes,
+                notes: notes || 'بدون ملاحظات',
                 status: 'نشط'
             });
 
             document.getElementById("order-client-name").value = "";
             document.getElementById("order-client-phone").value = "";
             document.getElementById("order-notes").value = "";
-            document.getElementById("order-product-preview").style.display = "none";
-
-            renderOrders();
+            
+            showNotification("تم تسجيل الطلبية وخصم قطعة من المخزن بنجاح");
             updateMetrics();
-            showNotification("تم تسجيل الطلبية بنجاح");
+            renderInventoryDropdowns();
+            renderInventoryList();
+            navTo('orders-screen');
         }
 
-        function renderOrders() {
-            const list = document.getElementById("real-orders-list");
-            list.innerHTML = "";
-            const activeOrders = orders.filter(o => o.status === 'نشط');
-
-            if(activeOrders.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:11px;">لا توجد طلبيات نشطة</div>`;
+        function renderOrdersList() {
+            const container = document.getElementById("real-orders-list");
+            if(orders.length === 0) {
+                container.innerHTML = '<p style="font-size:11px; color:var(--text-muted); text-align:center;">لا توجد طلبيات نشطة حالياً</p>';
                 return;
             }
-
-            activeOrders.forEach(o => {
-                list.innerHTML += `
-                    <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
-                        <div style="display:flex; justify-content:space-between; width:100%;">
-                            <strong>العميل: ${o.clientName}</strong>
-                            <span class="badge" style="direction:ltr;">${o.total.toFixed(2)} SAR</span>
-                        </div>
-                        <div style="font-size:10px; color:var(--text-muted);">المنتج: ${o.productName} | الإضافة: ${o.addonName}</div>
-                        <div style="display:flex; gap:6px; width:100%; margin-top:4px;">
-                            <button class="btn" style="padding:5px; font-size:10px; margin-top:0; background:var(--success); color:#fff;" onclick="completeOrder(${o.id})">إتمام وتسليم</button>
-                            <button class="btn" style="padding:5px; font-size:10px; margin-top:0; background:var(--danger); color:#fff;" onclick="cancelOrder(${o.id})">إلغاء</button>
-                        </div>
+            container.innerHTML = orders.map(o => `
+                <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
+                    <div style="display:flex; justify-content:space-width; width:100%;">
+                        <span style="font-weight:bold; color:var(--accent-gold);">${o.clientName}</span>
+                        <span class="badge">${o.status}</span>
                     </div>
-                `;
-            });
+                    <div style="font-size:10px; color:var(--text-muted);">
+                        <div>الجوال: ${o.clientPhone}</div>
+                        <div>القطعة: ${o.productName} | الإضافة: ${o.addonName}</div>
+                        <div>ملاحظات: ${o.notes}</div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; width:100%; align-items:center; border-top:1px solid var(--border); padding-top:4px;">
+                        <span style="color:var(--success); font-weight:bold; direction:ltr;">${o.total} SAR</span>
+                        <button class="btn" style="width:auto; padding:4px 10px; font-size:10px; background:var(--success); color:#fff; margin-top:0;" onclick="completeOrder(${o.id})">إتمام الطلب</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function completeOrder(id) {
             orders = orders.filter(o => o.id !== id);
-            renderOrders();
+            renderOrdersList();
             updateMetrics();
             showNotification("تم إتمام الطلب بنجاح");
         }
 
-        function cancelOrder(id) {
-            orders = orders.filter(o => o.id !== id);
-            renderOrders();
-            updateMetrics();
-            showNotification("تم إلغاء الطلب");
-        }
-
         function renderStaffManagement() {
-            const list = document.getElementById("staff-management-list");
-            list.innerHTML = "";
+            const container = document.getElementById("staff-management-list");
             document.getElementById("staff-count-badge").innerText = staffRegistry.length;
-
-            staffRegistry.forEach(s => {
-                let actionBtn = '';
-                if(s.role !== 'مالك') {
-                    actionBtn = `<button class="btn" style="padding:4px 8px; font-size:9px; background:var(--danger); width:auto; margin-top:0; color:#fff;" onclick="promptFireStaff(${s.id}, '${s.name}')">طرد / حذف</button>`;
-                }
-
-                list.innerHTML += `
-                    <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                        <div style="display:flex; justify-content:space-between; width:100%;">
-                            <strong>${s.name} <span class="badge">${s.role}</span></strong>
-                            <span class="badge" style="background:var(--success); color:#fff;">${s.status}</span>
-                        </div>
-                        <div style="font-size:10px; color:var(--text-muted); direction:ltr; text-align:left;">Email: ${s.email} | Phone: ${s.phone}</div>
-                        ${actionBtn}
+            container.innerHTML = staffRegistry.map(s => `
+                <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <span style="font-weight:bold;">${s.name} (${s.role})</span>
+                        <span class="badge" style="background:${s.status === 'نشط' ? 'rgba(46,139,87,0.2)' : 'rgba(224,82,82,0.2)'}; color:${s.status === 'نشط' ? 'var(--success)' : 'var(--danger)'};">${s.status}</span>
                     </div>
-                `;
-            });
+                    <div style="font-size:10px; color:var(--text-muted); direction:ltr; text-align:right; width:100%;">
+                        البريد: ${s.email} | الجوال: ${s.phone || 'غير مسجل'}
+                    </div>
+                    ${s.role !== 'مالك' ? `
+                        <div style="display:flex; gap:4px; width:100%; margin-top:4px; flex-wrap:wrap;">
+                            <button class="btn" style="flex:1; margin-top:0; padding:4px; font-size:9px; background:var(--warning); color:#fff;" onclick="updateStaffStatus(${s.id}, 'إجازة')">إجازة</button>
+                            <button class="btn" style="flex:1; margin-top:0; padding:4px; font-size:9px; background:var(--danger); color:#fff;" onclick="updateStaffStatus(${s.id}, 'مفصول')">فصل</button>
+                            <button class="btn" style="flex:1; margin-top:0; padding:4px; font-size:9px; background:#555; color:#fff;" onclick="updateStaffStatus(${s.id}, 'مستقيل')">استقالة</button>
+                            <button class="btn" style="flex:1; margin-top:0; padding:4px; font-size:9px; background:var(--success); color:#fff;" onclick="updateStaffStatus(${s.id}, 'نشط')">استعادة</button>
+                            <button class="btn" style="flex:1; margin-top:0; padding:4px; font-size:9px; background:#b22222; color:#fff;" onclick="deleteStaffAccount(${s.id})">حذف نهائي</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
         }
 
-        function promptFireStaff(id, name) {
-            document.getElementById("confirm-title").innerText = "تأكيد طرد المسؤول";
-            document.getElementById("confirm-text").innerText = `هل أنت متأكد من طرد وحذف المسؤول (${name}) نهائياً من النظام؟`;
-            document.getElementById("confirm-yes-btn").onclick = function() {
-                staffRegistry = staffRegistry.filter(s => s.id !== id);
+        function updateStaffStatus(id, newStatus) {
+            const staff = staffRegistry.find(s => s.id === id);
+            if(staff) {
+                staff.status = newStatus;
                 renderStaffManagement();
                 updateMetrics();
-                closeModal('confirm-modal');
-                showNotification("تم طرد المسؤول بنجاح");
-            };
-            document.getElementById("confirm-modal").style.display = "flex";
+                showNotification(`تم تغيير حالة ${staff.name} إلى: ${newStatus}`);
+            }
+        }
+
+        function deleteStaffAccount(id) {
+            staffRegistry = staffRegistry.filter(s => s.id !== id);
+            renderStaffManagement();
+            updateMetrics();
+            showNotification("تم حذف حساب المسؤول نهائياً");
         }
 
         function loadProfileData() {
+            if(!currentUser) return;
             document.getElementById("prof-name").value = currentUser.name;
             document.getElementById("prof-email").value = currentUser.email;
-            document.getElementById("prof-phone").value = currentUser.phone;
-            document.getElementById("prof-dob").value = currentUser.dob;
+            document.getElementById("prof-phone").value = currentUser.phone || '';
+            document.getElementById("prof-dob").value = currentUser.dob || '';
             document.getElementById("profile-view-img").src = currentUser.avatar;
         }
 
         function updateProfileAvatar(input) {
-            if(input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentUser.avatar = e.target.result;
-                    document.getElementById("profile-view-img").src = currentUser.avatar;
-                    document.getElementById("header-avatar").src = currentUser.avatar;
-                    showNotification("تم تحديث الصورة الشخصية");
-                };
-                reader.readAsDataURL(input.files[0]);
+            if (input.files && input.files[0]) {
+                const url = URL.createObjectURL(input.files[0]);
+                currentUser.avatar = url;
+                document.getElementById("profile-view-img").src = url;
+                document.getElementById("header-avatar").src = url;
+                showNotification("تم تحديث الصورة الشخصية");
             }
         }
 
@@ -872,7 +861,7 @@
             currentUser.email = document.getElementById("prof-email").value.trim();
             currentUser.phone = document.getElementById("prof-phone").value.trim();
             currentUser.dob = document.getElementById("prof-dob").value;
-            showNotification("تم حفظ وتحديث الملف الشخصي بنجاح");
+            showNotification("تم حفظ التعديلات الشخصية بنجاح");
         }
 
         function toggleAIChat() {
@@ -882,23 +871,23 @@
 
         function sendAIMessage() {
             const input = document.getElementById("ai-input");
-            const txt = input.value.trim();
-            if(!txt) return;
-
             const list = document.getElementById("ai-messages-list");
-            list.innerHTML += `<div style="margin-bottom:6px; color:var(--text-main);"><strong>أنت:</strong> ${txt}</div>`;
+            const text = input.value.trim();
+            if(!text) return;
+
+            list.innerHTML += `<div style="margin-top:6px; color:var(--text-main);"><b>أنت:</b> ${text}</div>`;
             input.value = "";
 
             setTimeout(() => {
-                let reply = "أهلاً بك يا فهد. بصفتي مساعدك الذكي لمتجر Neris، أؤكد لك أن النظام يعمل بكفاءة تامة، وجميع البيانات مسجلة ومحدثة بدقة عالية.";
-                if(txt.includes("مخزن") || txt.includes("منتج")) {
-                    reply = `إجمالي المنتجات الحالية في المخزن هو ${inventory.length} منتج مسجل بأرقام إنجليزية دقيقة.`;
-                } else if(txt.includes("موظف") || txt.includes("مسؤول")) {
-                    reply = `طاقم الإدارة الحالي يتكون من ${staffRegistry.length} مسؤولين نشطين بصلاحياتهم الكاملة.`;
+                let reply = "أهلاً بك يا فهد. تلقيت أمرك وسأقوم بتنفيذه بدقة داخل نظام Neris OS.";
+                if(text.includes('مخزن') || text.includes('منتج')) {
+                    reply = `حسناً يا فهد، إجمالي المنتجات الحالية بالمخزن هو ${inventory.length} منتج.`;
+                } else if(text.includes('طلب')) {
+                    reply = `يوجد حالياً ${orders.filter(o => o.status === 'نشط').length} طلبات نشطة قيد المتابعة.`;
                 }
-                list.innerHTML += `<div style="margin-bottom:6px; color:var(--accent-gold);"><strong>Neris AI:</strong> ${reply}</div>`;
+                list.innerHTML += `<div style="margin-top:6px; color:var(--accent-gold);"><b>Neris AI:</b> ${reply}</div>`;
                 list.scrollTop = list.scrollHeight;
-            }, 600);
+            }, 500);
         }
     </script>
 </body>
