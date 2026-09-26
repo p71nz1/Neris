@@ -1008,6 +1008,88 @@
             n.innerText = msg; n.classList.add('show');
             setTimeout(() => n.classList.remove('show'), 3000);
         }
+        <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neris - متجر الهدايا والمجوهرات</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fcfbf9;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #bfa15f;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #e6f4ea;
+            color: #137333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>مرحباً بك في متجر Neris </h1>
+        <p>جاري ربط المتجر بالنظام السحابي التجريبي...</p>
+        <div id="connection-status" class="status success">جاري التحقق من الاتصال...</div>
+    </div>
+
+    <!-- سكربت ربط Firebase السحابي -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1wnm1DWwn3z8K-dfwrjk__1-hwmTx-U",
+            authDomain: "neris-ba7c5.firebaseapp.com",
+            databaseURL: "https://neris-ba7c5-default-rtdb.firebaseio.com",
+            projectId: "neris-ba7c5",
+            storageBucket: "neris-ba7c5.appspot.com",
+            messagingSenderId: "852124332521",
+            appId: "1:852124332521:web:dc64e0396f721d05855b78",
+            measurementId: "G-WCFP5BMNMP"
+        };
+
+        // تهيئة Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // تحديث حالة الاتصال على الشاشة فوراً
+        const statusDiv = document.getElementById("connection-status");
+        statusDiv.innerText = "تم الاتصال بقاعدة بيانات Firebase السحابية بنجاح 🚀";
+
+        // حفظ متغيرات النظام لتستخدمها لاحقاً في أي وظيفة داخل المتجر
+        window.db = db;
+        window.ref = ref;
+        window.set = set;
+        window.onValue = onValue;
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
