@@ -142,46 +142,58 @@
 
         .product-thumb { width: 42px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
         
-        /* تصميم بطاقة الموظف الاحترافية والفاخرة */
-        .staff-card {
+        /* تصميم عصري وفاخر لبطاقات فريق العمل والصلاحيات */
+        .staff-profile-card {
             background: var(--bg-dark);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 14px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            position: relative;
         }
-        .staff-card-header {
+        .staff-header-flex {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--border);
         }
-        .staff-avatar-container {
+        .staff-avatar-box {
             position: relative;
             cursor: pointer;
-            width: 55px;
-            height: 55px;
+            width: 60px;
+            height: 60px;
             flex-shrink: 0;
         }
-        .staff-avatar {
-            width: 55px;
-            height: 55px;
+        .staff-avatar-img {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--accent-gold);
+            box-shadow: 0 0 10px rgba(197,160,89,0.3);
         }
-        .staff-avatar-overlay {
+        .staff-avatar-edit-badge {
             position: absolute;
             bottom: 0; right: 0;
             background: var(--accent-gold);
             color: #1c1815;
             font-size: 8px;
-            padding: 1px 4px;
-            border-radius: 4px;
+            padding: 2px 5px;
+            border-radius: 6px;
             font-weight: bold;
+        }
+        .staff-grid-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .staff-actions-row {
+            display: flex;
+            gap: 6px;
         }
 
         .addon-option-card {
@@ -344,11 +356,16 @@
             </div>
         </div>
 
-        <!-- شاشة فريق العمل والصلاحيات المصممة باحترافية تامة -->
+        <!-- شاشة فريق العمل والصلاحيات الجديدة بالكامل مع سلة الاسترجاع -->
         <div id="staff-screen" class="screen">
             <h2 data-t="staff_title">فريق العمل والصلاحيات الشاملة</h2>
-            <p class="subtitle" data-t="staff_sub">إدارة الموظفين، الصور الشخصية، والرتب والحالات</p>
+            <p class="subtitle" data-t="staff_sub">إدارة الموظفين، الصور، وحالات الإجازات واسترجاع المحذوفات</p>
             <div id="staff-management-list"></div>
+            
+            <div class="panel-box" style="margin-top:15px; border-color:var(--warning);">
+                <h4 style="color:var(--warning);" data-t="trash_title">🗑️ سلة المحذوفات واسترجاع الموظفين</h4>
+                <div id="staff-trash-list"><p style="font-size:11px; color:var(--text-muted);">لا توجد حسابات محذوفة.</p></div>
+            </div>
         </div>
 
         <div id="profile-screen" class="screen">
@@ -394,21 +411,25 @@
 
     <script>
         let currentLang = 'ar';
-        let inventoryList = [];
-        let addonsList = [
+        let inventoryList = JSON.parse(localStorage.getItem('neris_inventory')) || [];
+        let addonsList = JSON.parse(localStorage.getItem('neris_addons')) || [
             { id: 1, name: "علبة مخمل فاخرة", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
             { id: 2, name: "كيس هدية بشريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
         ];
-        let staffList = [
+        
+        // إرجاع فاطمة ومحمد مع إيميلاتك الصحيحة والحفظ التلقائي
+        let staffList = JSON.parse(localStorage.getItem('neris_staff')) || [
             { id: 1, name: "محمد", role: "مسؤول", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", chat: [] },
             { id: 2, name: "فاطمة", role: "موظف", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", chat: [] }
         ];
-        let ordersList = [];
+
+        let staffTrash = JSON.parse(localStorage.getItem('neris_staff_trash')) || [];
+        let ordersList = JSON.parse(localStorage.getItem('neris_orders')) || [];
         let activeChatStaffId = null;
 
         const translations = {
             ar: {
-                home: "الواجهة الرئيسية", orders: "إدارة الطلبيات النشطة", inventory: "المخزن (فارغ)", addons: "التغليف والإضافات",
+                home: "الواجهة الرئيسية", orders: "إدارة الطلبيات النشطة", inventory: "المخزن", addons: "التغليف والإضافات",
                 chat: "الرسائل والمحادثات", ai_chat: "مساعد الـ AI الذكي", staff: "فريق العمل والصلاحيات", profile: "الملف الشخصي", logout: "تسجيل الخروج",
                 home_title: "الواجهة الرئيسية ومؤشرات الأداء", home_sub: "مرحباً بك في لوحة تحكم Neris الفاخرة",
                 metrics_title: "مؤشرات الأداء الفعلي للمحل", active_orders_lbl: "طلبات نشطة", inv_count_lbl: "منتج بالمخزن", staff_count_lbl: "فريق الإدارة",
@@ -417,7 +438,8 @@
                 addons_title: "التغليف والإضافات الممتازة", addons_sub: "إدارة عناصر التغليف مع الصور والأسعار", add_addon_btn: "+ إضافة عنصر تغليف جديد", addons_list_title: "عناصر التغليف المتاحة",
                 chat_title: "المحادثات الخاصة (مثل واتساب)", chat_sub: "تواصل مباشر وسجل رسائل محفوظ مع الفريق", select_staff_chat: "اختر الموظف للمحادثة:", send_btn: "إرسال",
                 ai_screen_title: "مساعد الذكاء الاصطناعي المتطور (AI Chat)", ai_screen_sub: "اكتب أي استفسار أو أمر وسيجيبك المساعد فوراً",
-                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، الصور الشخصية، والرتب والحالات",
+                staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، الصور، وحالات الإجازات واسترجاع المحذوفات",
+                trash_title: "🗑️ سلة المحذوفات واسترجاع الموظفين",
                 prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", save_btn: "حفظ التعديلات",
                 add_prod_modal: "إضافة منتج جديد مع صورة", p_name: "اسم المنتج", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
                 add_addon_modal: "إضافة عنصر تغليف مع صورة", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
@@ -434,7 +456,8 @@
                 addons_title: "Packaging & Add-ons", addons_sub: "Manage packaging with images & prices", add_addon_btn: "+ Add Packaging Item", addons_list_title: "Available Packaging",
                 chat_title: "Private Chats (WhatsApp style)", chat_sub: "Direct communication with persistent history", select_staff_chat: "Select staff to chat:", send_btn: "Send",
                 ai_screen_title: "Advanced AI Assistant (AI Chat)", ai_screen_sub: "Type any query or order and the assistant will reply instantly",
-                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, avatars, roles and statuses",
+                staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, avatars, leaves and trash recovery",
+                trash_title: "🗑️ Trash & Staff Recovery",
                 prof_title: "Profile & Account", prof_sub: "Manage your personal account details", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", save_btn: "Save Changes",
                 add_prod_modal: "Add Product with Image", p_name: "Product Name", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
                 add_addon_modal: "Add Packaging with Image", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
@@ -450,6 +473,14 @@
             }, 2500);
             refreshUI();
         };
+
+        function saveDataToStorage() {
+            localStorage.setItem('neris_inventory', JSON.stringify(inventoryList));
+            localStorage.setItem('neris_addons', JSON.stringify(addonsList));
+            localStorage.setItem('neris_staff', JSON.stringify(staffList));
+            localStorage.setItem('neris_staff_trash', JSON.stringify(staffTrash));
+            localStorage.setItem('neris_orders', JSON.stringify(ordersList));
+        }
 
         function handleLogin() {
             const email = document.getElementById('login-email').value.trim();
@@ -511,9 +542,11 @@
             renderAddons();
             renderAddonsCheckboxes();
             renderStaffManagement();
+            renderStaffTrash();
             renderStaffChatContacts();
             renderOrderDropdowns();
             renderOrdersList();
+            saveDataToStorage();
         }
 
         function renderInventory() {
@@ -562,44 +595,78 @@
             cb.checked = !cb.checked;
         }
 
-        // التصميم الجديد الرائع والمنظم لصفحة فريق العمل مع الصور
+        // التصميم الجديد الراقي لصفحة فريق العمل
         function renderStaffManagement() {
             let html = '';
             staffList.forEach(staff => {
-                html += `<div class="staff-card">
-                    <div class="staff-card-header">
-                        <div class="staff-avatar-container" onclick="document.getElementById('file-up-${staff.id}').click()">
-                            <img src="${staff.avatar}" class="staff-avatar" title="تغيير الصورة">
-                            <div class="staff-avatar-overlay">تعديل</div>
+                html += `<div class="staff-profile-card">
+                    <div class="staff-header-flex">
+                        <div class="staff-avatar-box" onclick="document.getElementById('file-up-${staff.id}').click()" title="تغيير الصورة الشخصية">
+                            <img src="${staff.avatar}" class="staff-avatar-img">
+                            <div class="staff-avatar-edit-badge">صورة</div>
                             <input type="file" id="file-up-${staff.id}" accept="image/*" style="display:none;" onchange="updateStaffAvatar(${staff.id}, this)">
                         </div>
                         <div style="flex:1;">
                             <input type="text" value="${staff.name}" onchange="updateStaffField(${staff.id}, 'name', this.value)" style="font-weight:bold; font-size:13px; color:var(--accent-gold); border:none; background:none; width:100%; outline:none;" placeholder="اسم الموظف">
                             <div style="display:flex; gap:6px; margin-top:4px;">
-                                <select onchange="updateStaffField(${staff.id}, 'role', this.value)" style="padding:2px; font-size:10px; width:auto;">
-                                    <option value="مسؤول" ${staff.role==='مسؤول'?'selected':''}>مسؤول</option>
-                                    <option value="موظف" ${staff.role==='موظف'?'selected':''}>موظف</option>
+                                <select onchange="updateStaffField(${staff.id}, 'role', this.value)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--text-main); border:1px solid var(--border); border-radius:4px;">
+                                    <option value="مسؤول" ${staff.role==='مسؤول'?'selected':''}>مسؤول (Manager)</option>
+                                    <option value="موظف" ${staff.role==='موظف'?'selected':''}>موظف (Staff)</option>
                                 </select>
-                                <select onchange="updateStaffField(${staff.id}, 'status', this.value)" style="padding:2px; font-size:10px; color:var(--accent-gold); width:auto;">
-                                    <option value="نشط" ${staff.status==='نشط'?'selected':''}>نشط</option>
-                                    <option value="إجازة" ${staff.status==='إجازة'?'selected':''}>إجازة</option>
-                                    <option value="إيقاف مؤقت" ${staff.status==='إيقاف مؤقت'?'selected':''}>إيقاف مؤقت</option>
-                                    <option value="مستقيل" ${staff.status==='مستقيل'?'selected':''}>استقالة</option>
-                                    <option value="مفصول" ${staff.status==='مفصول'?'selected':''}>طرد</option>
+                                <select onchange="updateStaffField(${staff.id}, 'status', this.value)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--accent-gold); border:1px solid var(--border); border-radius:4px; font-weight:bold;">
+                                    <option value="نشط" ${staff.status==='نشط'?'selected':''}>🟢 نشط</option>
+                                    <option value="إجازة" ${staff.status==='إجازة'?'selected':''}>✈️ إجازة</option>
+                                    <option value="إيقاف مؤقت" ${staff.status==='إيقاف مؤقت'?'selected':''}>⏸️ إيقاف مؤقت</option>
+                                    <option value="مستقيل" ${staff.status==='مستقيل'?'selected':''}>📄 استقالة</option>
+                                    <option value="مفصول" ${staff.status==='مفصول'?'selected':''}>⛔ طرد</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom:8px;">
+                    <div class="staff-grid-fields">
                         <div class="input-group" style="margin-bottom:0;"><label>البريد الإلكتروني</label><input type="text" value="${staff.email}" onchange="updateStaffField(${staff.id}, 'email', this.value)" style="direction:ltr; text-align:left;"></div>
                         <div class="input-group" style="margin-bottom:0;"><label>كلمة المرور</label><input type="text" value="${staff.pass}" onchange="updateStaffField(${staff.id}, 'pass', this.value)" style="direction:ltr; text-align:left;"></div>
                         <div class="input-group" style="margin-bottom:0;"><label>رقم الجوال</label><input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" style="direction:ltr; text-align:left;"></div>
                         <div class="input-group" style="margin-bottom:0;"><label>تاريخ الميلاد</label><input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="direction:ltr; text-align:left;"></div>
                     </div>
-                    <button class="btn" style="background:var(--danger); color:#fff; padding:6px; font-size:10px; margin-top:4px;" onclick="deleteStaff(${staff.id})">حذف حساب الموظف نهائياً</button>
+                    <button class="btn" style="background:var(--danger); color:#fff; padding:6px; font-size:10px; margin-top:6px;" onclick="trashStaff(${staff.id})">حذف ونقل للسلة 🗑️</button>
                 </div>`;
             });
-            document.getElementById('staff-management-list').innerHTML = html;
+            document.getElementById('staff-management-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد حسابات نشطة حالياً.</p>';
+        }
+
+        function renderStaffTrash() {
+            let html = '';
+            staffTrash.forEach(staff => {
+                html += `<div class="card-item" style="border-color:var(--warning);">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="${staff.avatar}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                        <div><strong>${staff.name}</strong> (${staff.email})</div>
+                    </div>
+                    <button class="btn" style="padding:3px 8px; font-size:10px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="restoreStaff(${staff.id})">استرجاع الحساب ↺</button>
+                </div>`;
+            });
+            document.getElementById('staff-trash-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">سلة المحذوفات فارغة تماماً.</p>';
+        }
+
+        function trashStaff(id) {
+            let idx = staffList.findIndex(x => x.id === id);
+            if(idx !== -1) {
+                let removed = staffList.splice(idx, 1)[0];
+                staffTrash.push(removed);
+                showNotification("تم نقل الحساب إلى سلة المحذوفات");
+                refreshUI();
+            }
+        }
+
+        function restoreStaff(id) {
+            let idx = staffTrash.findIndex(x => x.id === id);
+            if(idx !== -1) {
+                let restored = staffTrash.splice(idx, 1)[0];
+                staffList.push(restored);
+                showNotification("تم استرجاع حساب الموظف بنجاح ↺");
+                refreshUI();
+            }
         }
 
         function updateStaffAvatar(id, input) {
@@ -609,7 +676,7 @@
                     let s = staffList.find(x => x.id === id);
                     if(s) {
                         s.avatar = e.target.result;
-                        showNotification("تم تحديث صورة الموظف بنجاح");
+                        showNotification("تم تحديث وحفظ صورة الموظف بنجاح");
                         refreshUI();
                     }
                 }
@@ -619,13 +686,7 @@
 
         function updateStaffField(id, field, val) {
             let s = staffList.find(x => x.id === id);
-            if(s) { s[field] = val; showNotification("تم تحديث بيانات الموظف بنجاح"); }
-        }
-
-        function deleteStaff(id) {
-            staffList = staffList.filter(x => x.id !== id);
-            showNotification("تم حذف الموظف نهائياً");
-            refreshUI();
+            if(s) { s[field] = val; showNotification("تم حفظ التعديلات تلقائياً ✓"); refreshUI(); }
         }
 
         function renderOrderDropdowns() {
@@ -669,7 +730,7 @@
 
             document.getElementById('order-client-name').value = '';
             document.getElementById('order-client-phone').value = '';
-            showNotification("تم تسجيل الطلبية وإسنادها للموظف بنجاح");
+            showNotification("تم تسجيل الطلبية وحفظها بنجاح");
             navTo('orders-screen');
         }
 
@@ -692,7 +753,7 @@
 
         function completeOrder(id) {
             let o = ordersList.find(x => x.id === id);
-            if(o) { o.status = 'مكتمل'; showNotification("تم إنجاز الطلب"); refreshUI(); }
+            if(o) { o.status = 'مكتمل'; showNotification("تم إنجاز الطلب وحفظه"); refreshUI(); }
         }
 
         function renderStaffChatContacts() {
@@ -735,7 +796,7 @@
             input.value = '';
             renderPrivateMessages();
             setTimeout(() => {
-                staff.chat.push({ sender: 'staff', text: "تم الاطلاع يا فهد، جاري التنفيذ بدقة." });
+                staff.chat.push({ sender: 'staff', text: "تم الاطلاع يا فهد، جاري التنفيذ وحفظ التغييرات بدقة." });
                 renderPrivateMessages();
             }, 1000);
         }
@@ -756,8 +817,8 @@
 
             setTimeout(() => {
                 let reply = currentLang === 'ar' ? 
-                    `تحليل الـ AI لطلبك "${q}": النظام يعمل بكفاءة تامة، المخزن يحتوي على ${inventoryList.length} منتجات، وعدد الطلبات النشطة ${ordersList.length}. كل شيء تحت السيطرة يا فهد.` :
-                    `AI Analysis for "${q}": System is operating smoothly, inventory has ${inventoryList.length} products. Everything is optimal.`;
+                    `تحليل الـ AI لطلبك "${q}": النظام يعمل بكفاءة تامة، المخزن يحتوي على ${inventoryList.length} منتجات، وعدد الطلبات النشطة ${ordersList.length}. جميع التغييرات محفوظة تلقائياً يا فهد.` :
+                    `AI Analysis for "${q}": System is operating smoothly, all changes are auto-saved.`;
                 history.innerHTML += `<div style="background:rgba(197,160,89,0.15); padding:6px 8px; border-radius:6px; color:var(--accent-gold);"><b>Neris AI:</b> ${reply}</div>`;
                 history.scrollTop = history.scrollHeight;
             }, 700);
@@ -793,7 +854,7 @@
 
             inventoryList.push({ id: Date.now(), name, color, size, cost, suggestedPrice: suggestedPrice.toFixed(2), image: imgUrl });
             closeModal('add-product-modal');
-            showNotification("تمت إضافة المنتج بنجاح مع حساب السعر عبر AI");
+            showNotification("تمت إضافة المنتج وحفظه بنجاح");
             refreshUI();
         }
 
@@ -814,14 +875,14 @@
 
             addonsList.push({ id: Date.now(), name, price, image: imgUrl });
             closeModal('add-addon-modal');
-            showNotification("تمت إضافة عنصر التغليف بنجاح");
+            showNotification("تمت إضافة عنصر التغليف وحفظه");
             refreshUI();
         }
 
-        function deleteItem(id) { inventoryList = inventoryList.filter(x => x.id !== id); showNotification("تم الحذف"); refreshUI(); }
-        function deleteAddonItem(id) { addonsList = addonsList.filter(x => x.id !== id); showNotification("تم الحذف"); refreshUI(); }
+        function deleteItem(id) { inventoryList = inventoryList.filter(x => x.id !== id); showNotification("تم الحذف والحفظ"); refreshUI(); }
+        function deleteAddonItem(id) { addonsList = addonsList.filter(x => x.id !== id); showNotification("تم الحذف والحفظ"); refreshUI(); }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function saveProfile() { showNotification("تم حفظ التعديلات الشخصية"); }
+        function saveProfile() { showNotification("تم حفظ بيانات الملف الشخصي بنجاح"); }
         function logout() {
             document.getElementById('app-header').style.display = 'none';
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
