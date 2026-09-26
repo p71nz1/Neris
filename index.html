@@ -343,7 +343,6 @@
             </div>
         </div>
 
-        <!-- شاشة فريق العمل والصلاحيات مع زر إضافة موظف -->
         <div id="staff-screen" class="screen">
             <h2 data-t="staff_title">فريق العمل والصلاحيات الشاملة</h2>
             <p class="subtitle" data-t="staff_sub">إدارة الموظفين، إضافة موظف جديد، وصلاحيات النظام</p>
@@ -356,7 +355,6 @@
             </div>
         </div>
 
-        <!-- شاشة الملف الشخصي للمالك والموظفين -->
         <div id="profile-screen" class="screen">
             <h2 data-t="prof_title">الملف الشخصي والحساب</h2>
             <p class="subtitle" data-t="prof_sub">إدارة بيانات حسابك الشخصي، صورتك، وتاريخ ميلادك</p>
@@ -375,7 +373,6 @@
             </div>
         </div>
 
-        <!-- Modal: إضافة موظف جديد -->
         <div class="modal" id="add-staff-modal">
             <div class="modal-content">
                 <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_staff_modal_title">➕ إضافة موظف جديد للنظام</h3>
@@ -424,7 +421,7 @@
 
     <script>
         let currentLang = 'ar';
-        let currentUserRole = 'admin'; // 'admin' (فهد المالك) أو 'staff'
+        let currentUserRole = 'admin';
         let inventoryList = JSON.parse(localStorage.getItem('neris_inventory')) || [];
         let addonsList = JSON.parse(localStorage.getItem('neris_addons')) || [
             { id: 1, name: "علبة مخمل فاخرة", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
@@ -460,7 +457,7 @@
                 add_prod_modal: "إضافة منتج جديد مع صورة", p_name: "اسم المنتج", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
                 add_addon_modal: "إضافة عنصر تغليف مع صورة", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
                 new_order_title: "➕ تسجيل طلبية جديدة وإسنادها لموظف", sel_prod: "اختر المنتج الأساسي:", sel_addons: "اختر التغليف والإضافات المتعددة:", sel_staff: "إسناد الطلب لموظف:", submit_order_btn: "تسجيل وإرسال الطلب",
-                login_title: "تسجيل الدخول الآمن", login_sub: "أدخل بيانات الاعتماد الخاصة بك بدقة", login_btn: "تسجيل دخول", ai_widget_btn: "Neris AI مساعد"
+                login_title: "تسجيل الدخول الآمن", login_sub: "أدخل بيانات الاعتماد الخاصة بك بدقة", login_btn: "تسجيل دخول", ai_widget_btn: "Neris AI مساعد", menu_title: "قائمة التنقل"
             },
             en: {
                 home: "Dashboard", orders: "Active Orders", inventory: "Inventory", addons: "Add-ons & Packaging",
@@ -479,7 +476,7 @@
                 add_prod_modal: "Add Product with Image", p_name: "Product Name", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
                 add_addon_modal: "Add Packaging with Image", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
                 new_order_title: "➕ Register New Order & Assign Staff", sel_prod: "Select Main Product:", sel_addons: "Select Multiple Add-ons & Packaging:", sel_staff: "Assign to Staff:", submit_order_btn: "Register & Send Order",
-                login_title: "Secure Login", login_sub: "Enter your credentials carefully", login_btn: "Login", ai_widget_btn: "Neris AI Assistant"
+                login_title: "Secure Login", login_sub: "Enter your credentials carefully", login_btn: "Login", ai_widget_btn: "Neris AI Assistant", menu_title: "Navigation Menu"
             }
         };
 
@@ -498,7 +495,6 @@
             const email = document.getElementById('login-email').value.trim();
             const pass = document.getElementById('login-password').value.trim();
             
-            // التحقق من حساب المالك أو الموظفين
             let matchedStaff = staffList.find(s => s.email === email && s.pass === pass);
             
             if(email === "fahadfhd47@gmail.com" && pass === "Fahad55003") {
@@ -507,7 +503,7 @@
                 successLogin();
             } else if(matchedStaff) {
                 currentUserRole = 'staff';
-                document.getElementById('drawer-staff-item').style.display = 'none'; // إخفاء فريق العمل عن الموظف
+                document.getElementById('drawer-staff-item').style.display = 'none';
                 successLogin();
             } else {
                 document.getElementById('login-error').style.display = 'block';
@@ -517,7 +513,7 @@
         function successLogin() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-header').style.display = 'flex';
-            document.getElementById('floating-ai-widget').style.display = 'flex'; // إظهار AI بعد الدخول فقط
+            document.getElementById('floating-ai-widget').style.display = 'flex';
             navTo('home-main-screen');
             showNotification(currentLang === 'ar' ? "تم تسجيل الدخول بنجاح" : "Logged in successfully");
         }
@@ -1008,57 +1004,9 @@
             n.innerText = msg; n.classList.add('show');
             setTimeout(() => n.classList.remove('show'), 3000);
         }
-        <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neris - متجر الهدايا والمجوهرات</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #fcfbf9;
-            color: #333;
-            text-align: center;
-            padding: 50px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        h1 {
-            color: #bfa15f;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 16px;
-            color: #666;
-        }
-        .status {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-        .success {
-            background-color: #e6f4ea;
-            color: #137333;
-        }
-    </style>
-</head>
-<body>
+    </script>
 
-    <div class="container">
-        <h1>مرحباً بك في متجر Neris </h1>
-        <p>جاري ربط المتجر بالنظام السحابي التجريبي...</p>
-        <div id="connection-status" class="status success">جاري التحقق من الاتصال...</div>
-    </div>
-
-    <!-- سكربت ربط Firebase السحابي -->
+    <!-- سكربت ربط Firebase السحابي للربط بين الكمبيوتر والجوال -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -1073,31 +1021,10 @@
             appId: "1:852124332521:web:dc64e0396f721d05855b78",
             measurementId: "G-WCFP5BMNMP"
         };
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyA1wnm1DWwn3z8K-dfwrjk__1-hwmTx-U",
-    authDomain: "neris-ba7c5.firebaseapp.com",
-    databaseURL: "https://neris-ba7c5-default-rtdb.firebaseio.com",
-    projectId: "neris-ba7c5",
-    storageBucket: "neris-ba7c5.appspot.com",
-    messagingSenderId: "852124332521",
-    appId: "1:852124332521:web:dc64e0396f721d05855b78",
-    measurementId: "G-WCFP5BMNMP"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-
-  console.log("تم الاتصال بقاعدة البيانات بنجاح!");
-  
-  window.db = db;
-  window.ref = ref;
-  window.set = set;
-  window.onValue = onValue;
-}
-</script>
-</head>
-<body>
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        console.log("تم الاتصال بقاعدة بيانات Neris السحابية بنجاح!");
+    </script>
+</body>
+</html>
