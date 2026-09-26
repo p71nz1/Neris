@@ -142,59 +142,15 @@
 
         .product-thumb { width: 42px; height: 42px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
         
-        /* تصميم عصري وفاخر لبطاقات فريق العمل والصلاحيات */
         .staff-profile-card {
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 14px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            position: relative;
+            background: var(--bg-dark); border: 1px solid var(--border); border-radius: 14px;
+            padding: 14px; margin-bottom: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.3); position: relative;
         }
-        .staff-header-flex {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border);
-        }
-        .staff-avatar-box {
-            position: relative;
-            cursor: pointer;
-            width: 60px;
-            height: 60px;
-            flex-shrink: 0;
-        }
-        .staff-avatar-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--accent-gold);
-            box-shadow: 0 0 10px rgba(197,160,89,0.3);
-        }
-        .staff-avatar-edit-badge {
-            position: absolute;
-            bottom: 0; right: 0;
-            background: var(--accent-gold);
-            color: #1c1815;
-            font-size: 8px;
-            padding: 2px 5px;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-        .staff-grid-fields {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        .staff-actions-row {
-            display: flex;
-            gap: 6px;
-        }
+        .staff-header-flex { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .staff-avatar-box { position: relative; cursor: pointer; width: 60px; height: 60px; flex-shrink: 0; }
+        .staff-avatar-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-gold); box-shadow: 0 0 10px rgba(197,160,89,0.3); }
+        .staff-avatar-edit-badge { position: absolute; bottom: 0; right: 0; background: var(--accent-gold); color: #1c1815; font-size: 8px; padding: 2px 5px; border-radius: 6px; font-weight: bold; }
+        .staff-grid-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
 
         .addon-option-card {
             background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 8px;
@@ -356,7 +312,6 @@
             </div>
         </div>
 
-        <!-- شاشة فريق العمل والصلاحيات الجديدة بالكامل مع سلة الاسترجاع -->
         <div id="staff-screen" class="screen">
             <h2 data-t="staff_title">فريق العمل والصلاحيات الشاملة</h2>
             <p class="subtitle" data-t="staff_sub">إدارة الموظفين، الصور، وحالات الإجازات واسترجاع المحذوفات</p>
@@ -368,10 +323,16 @@
             </div>
         </div>
 
+        <!-- شاشة الملف الشخصي مع زر تغيير الصورة الشخصية -->
         <div id="profile-screen" class="screen">
             <h2 data-t="prof_title">الملف الشخصي والحساب</h2>
-            <p class="subtitle" data-t="prof_sub">إدارة بيانات حسابك الشخصي</p>
-            <div class="panel-box">
+            <p class="subtitle" data-t="prof_sub">إدارة بيانات حسابك الشخصي وصورتك</p>
+            <div class="panel-box" style="text-align:center;">
+                <div style="position:relative; width:70px; height:70px; margin:0 auto 10px auto; cursor:pointer;" onclick="document.getElementById('admin-avatar-input').click()" title="تغيير صورتك الشخصية">
+                    <img id="admin-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-gold);">
+                    <div style="position:absolute; bottom:0; right:0; background:var(--accent-gold); color:#1c1815; font-size:8px; padding:2px 5px; border-radius:6px; font-weight:bold;">صورة</div>
+                    <input type="file" id="admin-avatar-input" accept="image/*" style="display:none;" onchange="updateAdminAvatar(this)">
+                </div>
                 <div class="input-group"><label data-t="name_lbl">الاسم</label><input type="text" id="prof-name" value="فهد راشد الحسين"></div>
                 <div class="input-group"><label data-t="email_lbl">البريد الإلكتروني</label><input type="email" id="prof-email" value="fahadfhd47@gmail.com" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-t="phone_lbl">الجوال</label><input type="text" id="prof-phone" value="0549553395" style="direction:ltr; text-align:left;"></div>
@@ -417,7 +378,6 @@
             { id: 2, name: "كيس هدية بشريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
         ];
         
-        // إرجاع فاطمة ومحمد مع إيميلاتك الصحيحة والحفظ التلقائي
         let staffList = JSON.parse(localStorage.getItem('neris_staff')) || [
             { id: 1, name: "محمد", role: "مسؤول", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", chat: [] },
             { id: 2, name: "فاطمة", role: "موظف", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", chat: [] }
@@ -425,6 +385,7 @@
 
         let staffTrash = JSON.parse(localStorage.getItem('neris_staff_trash')) || [];
         let ordersList = JSON.parse(localStorage.getItem('neris_orders')) || [];
+        let adminAvatar = localStorage.getItem('neris_admin_avatar') || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100";
         let activeChatStaffId = null;
 
         const translations = {
@@ -440,7 +401,7 @@
                 ai_screen_title: "مساعد الذكاء الاصطناعي المتطور (AI Chat)", ai_screen_sub: "اكتب أي استفسار أو أمر وسيجيبك المساعد فوراً",
                 staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، الصور، وحالات الإجازات واسترجاع المحذوفات",
                 trash_title: "🗑️ سلة المحذوفات واسترجاع الموظفين",
-                prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", save_btn: "حفظ التعديلات",
+                prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي وصورتك", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", save_btn: "حفظ التعديلات",
                 add_prod_modal: "إضافة منتج جديد مع صورة", p_name: "اسم المنتج", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
                 add_addon_modal: "إضافة عنصر تغليف مع صورة", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
                 new_order_title: "➕ تسجيل طلبية جديدة وإسنادها لموظف", sel_prod: "اختر المنتج الأساسي:", sel_addons: "اختر التغليف والإضافات المتعددة:", sel_staff: "إسناد الطلب لموظف:", submit_order_btn: "تسجيل وإرسال الطلب",
@@ -458,7 +419,7 @@
                 ai_screen_title: "Advanced AI Assistant (AI Chat)", ai_screen_sub: "Type any query or order and the assistant will reply instantly",
                 staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, avatars, leaves and trash recovery",
                 trash_title: "🗑️ Trash & Staff Recovery",
-                prof_title: "Profile & Account", prof_sub: "Manage your personal account details", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", save_btn: "Save Changes",
+                prof_title: "Profile & Account", prof_sub: "Manage your personal account details & photo", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", save_btn: "Save Changes",
                 add_prod_modal: "Add Product with Image", p_name: "Product Name", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
                 add_addon_modal: "Add Packaging with Image", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
                 new_order_title: "➕ Register New Order & Assign Staff", sel_prod: "Select Main Product:", sel_addons: "Select Multiple Add-ons & Packaging:", sel_staff: "Assign to Staff:", submit_order_btn: "Register & Send Order",
@@ -471,6 +432,8 @@
                 document.getElementById('welcome-intro-screen').style.display = 'none';
                 document.getElementById('login-screen').style.display = 'flex';
             }, 2500);
+            document.getElementById('header-avatar').src = adminAvatar;
+            document.getElementById('admin-avatar-preview').src = adminAvatar;
             refreshUI();
         };
 
@@ -480,6 +443,21 @@
             localStorage.setItem('neris_staff', JSON.stringify(staffList));
             localStorage.setItem('neris_staff_trash', JSON.stringify(staffTrash));
             localStorage.setItem('neris_orders', JSON.stringify(ordersList));
+            localStorage.setItem('neris_admin_avatar', adminAvatar);
+        }
+
+        function updateAdminAvatar(input) {
+            if(input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    adminAvatar = e.target.result;
+                    document.getElementById('header-avatar').src = adminAvatar;
+                    document.getElementById('admin-avatar-preview').src = adminAvatar;
+                    showNotification("تم تحديث صورتك الشخصية بنجاح");
+                    saveDataToStorage();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
         }
 
         function handleLogin() {
@@ -595,7 +573,6 @@
             cb.checked = !cb.checked;
         }
 
-        // التصميم الجديد الراقي لصفحة فريق العمل
         function renderStaffManagement() {
             let html = '';
             staffList.forEach(staff => {
