@@ -1073,23 +1073,31 @@
             appId: "1:852124332521:web:dc64e0396f721d05855b78",
             measurementId: "G-WCFP5BMNMP"
         };
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // تهيئة Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyA1wnm1DWwn3z8K-dfwrjk__1-hwmTx-U",
+    authDomain: "neris-ba7c5.firebaseapp.com",
+    databaseURL: "https://neris-ba7c5-default-rtdb.firebaseio.com",
+    projectId: "neris-ba7c5",
+    storageBucket: "neris-ba7c5.appspot.com",
+    messagingSenderId: "852124332521",
+    appId: "1:852124332521:web:dc64e0396f721d05855b78",
+    measurementId: "G-WCFP5BMNMP"
+  };
 
-        // تحديث حالة الاتصال على الشاشة فوراً
-        const statusDiv = document.getElementById("connection-status");
-        statusDiv.innerText = "تم الاتصال بقاعدة بيانات Firebase السحابية بنجاح 🚀";
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-        // حفظ متغيرات النظام لتستخدمها لاحقاً في أي وظيفة داخل المتجر
-        window.db = db;
-        window.ref = ref;
-        window.set = set;
-        window.onValue = onValue;
-    </script>
-</body>
-</html>
-    </script>
-</body>
-</html>
+  console.log("تم الاتصال بقاعدة البيانات بنجاح!");
+  
+  window.db = db;
+  window.ref = ref;
+  window.set = set;
+  window.onValue = onValue;
+}
+</script>
+</head>
+<body>
