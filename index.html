@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl" id="html-root">
 <head>
@@ -187,7 +186,7 @@
                 <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);">Neris AI Assistant</span>
                 <button onclick="toggleFloatingAIPopup()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
-            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;" data-t="ai_welcome_msg">أهلاً بك يا فهد. نظام الطلبات وتوزيعها متصل بالسحابة!</div>
+            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;" data-t="ai_welcome_msg">أهلاً بك يا فهد. تم إضافة منتجاتك بنجاح للمخزن!</div>
             <div style="display:flex; gap:4px;">
                 <input type="text" id="floating-ai-input" data-t-ph="ai_input_ph" placeholder="اسأل الـ AI..." style="flex:1; padding:6px; font-size:10px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:4px;">
                 <button class="btn" style="margin-top:0; padding:6px 10px; font-size:10px; width:auto;" onclick="sendFloatingAI()" data-t="send_btn">إرسال</button>
@@ -246,7 +245,6 @@
             <h2 data-t="home_title">الواجهة الرئيسية ومؤشرات الأداء</h2>
             <p class="subtitle" data-t="home_sub">مرحباً بك في لوحة تحكم Neris الفاخرة</p>
 
-            <!-- قسم خاص يظهر للموظف بالطلبيات المخصصة له -->
             <div class="panel-box" id="my-assigned-orders-box" style="border-color:var(--success); display:none; background:rgba(46,139,87,0.05);">
                 <h4 style="color:var(--success);" data-t="my_orders_title">🔔 الطلبيات المسندة إليك للتجهيز الآن</h4>
                 <div id="my-assigned-orders-list"></div>
@@ -462,7 +460,29 @@
         window.currentLang = 'ar';
         window.currentLoggedInUserEmail = 'fahadfhd47@gmail.com';
         window.currentUserRole = 'admin';
-        window.inventoryList = [];
+        window.inventoryList = [
+            { id: 101, name: "سوار تنس دائري من النحاس الفضي اللامع", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 24.29, suggestedPrice: (24.29*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 102, name: "سوار زهرة ثنائي الطبقات من الزركونيا", qty: 5, color: "فضي", size: "مقاس واحد", cost: 9.40, suggestedPrice: (9.40*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 103, name: "مجموعة أساور بأسلوب إنستغرام مع راينستون (3 قطع)", qty: 5, color: "متعدد الألوان", size: "مقاس واحد", cost: 10.01, suggestedPrice: (10.01*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 104, name: "سوار زهرة رباعية الأوراق ملون", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 9.35, suggestedPrice: (9.35*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 105, name: "سوار من النحاس بتصميم ورقة البرسيم الرمادي الأزرق", qty: 5, color: "فضي", size: "مقاس واحد", cost: 17.00, suggestedPrice: (17.00*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 106, name: "مجموعة أساور سلسلة مرصعة بالزركونيا والراينستون (3 قطع)", qty: 5, color: "ذهبي أصفر", size: "مقاس واحد", cost: 11.28, suggestedPrice: (11.28*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 107, name: "سوار أصبع من الفولاذ المقاوم للصدأ مع لؤلؤ", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 7.65, suggestedPrice: (7.65*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 108, name: "سوار كاحل بتصميم بحري على شكل سلحفاة", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 10.20, suggestedPrice: (10.20*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 109, name: "سوار تنس من الزركونيا قابل للتعديل", qty: 5, color: "وردي / فضي", size: "مقاس واحد", cost: 10.92, suggestedPrice: (10.92*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 110, name: "خاتم مكعب زركونيا (طقم قطعتين)", qty: 5, color: "أخضر", size: "مقاس 7-8", cost: 9.68, suggestedPrice: (9.68*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 111, name: "قلادة طبقات مزدوجة على شكل قطرة ماء", qty: 5, color: "فضي", size: "مقاس واحد", cost: 6.00, suggestedPrice: (6.00*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 112, name: "قلادة من الفولاذ المقاوم للصدأ بزهرة 8 بتلات", qty: 5, color: "ذهبي أصفر", size: "مقاس واحد", cost: 6.43, suggestedPrice: (6.43*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 113, name: "سوار بشكل قلب كلاسيكي للأطفال", qty: 5, color: "ذهبي أصفر", size: "مقاس واحد", cost: 7.36, suggestedPrice: (7.36*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 114, name: "سوار فاخر من الفولاذ المقاوم للصدأ (برسيم)", qty: 5, color: "أصفر ذهبي", size: "مقاس واحد", cost: 13.36, suggestedPrice: (13.36*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 115, name: "قلادة معلقة بشكل مربع للحلوى (مكعبات السكر)", qty: 5, color: "ذهبي", size: "مقاس واحد", cost: 6.00, suggestedPrice: (6.00*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 116, name: "أقراط التنس اللامعة بالزركونيا (زهرة وأوراق)", qty: 5, color: "ذهبي + أحمر", size: "مقاس واحد", cost: 11.44, suggestedPrice: (11.44*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 117, name: "خاتم مطلي بالذهب عيار 18 قيراط (جوهرة الميلاد)", qty: 5, color: "ذهبي", size: "قابل للتعديل", cost: 13.66, suggestedPrice: (13.66*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 118, name: "سوار مطلي بالذهب عيار 18 قيراط ملون بالزركونيا", qty: 5, color: "متعدد الألوان", size: "مقاس واحد", cost: 13.11, suggestedPrice: (13.11*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 119, name: "مجموعة قلادة وسلسلة بنجمة البحر (قطعتان)", qty: 5, color: "الذهبي", size: "سلسلة الترقوة", cost: 9.68, suggestedPrice: (9.68*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 120, name: "قلادة من الفولاذ المقاوم للصدأ بتصميم قلب أنيق", qty: 5, color: "الذهبي", size: "مقاس واحد", cost: 10.51, suggestedPrice: (10.51*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" },
+            { id: 121, name: "قلادة بزهرة بخمسة بتلات دوارة مرصعة بالزركونيا", qty: 5, color: "وردي", size: "مقاس واحد", cost: 8.50, suggestedPrice: (8.50*1.35).toFixed(2), image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100" }
+        ];
         window.inventoryTrash = [];
         window.addonsList = [
             { id: 1, name: "علبة مخمل فاخرة", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
