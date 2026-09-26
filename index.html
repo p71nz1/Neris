@@ -187,17 +187,17 @@
                 <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);">Neris AI Assistant</span>
                 <button onclick="toggleFloatingAIPopup()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
-            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;">أهلاً بك يا فهد. نظام الطلبات وتوزيعها متصل بالسحابة!</div>
+            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;" data-t="ai_welcome_msg">أهلاً بك يا فهد. نظام الطلبات وتوزيعها متصل بالسحابة!</div>
             <div style="display:flex; gap:4px;">
-                <input type="text" id="floating-ai-input" placeholder="اسأل الـ AI..." style="flex:1; padding:6px; font-size:10px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:4px;">
-                <button class="btn" style="margin-top:0; padding:6px 10px; font-size:10px; width:auto;" onclick="sendFloatingAI()">إرسال</button>
+                <input type="text" id="floating-ai-input" data-t-ph="ai_input_ph" placeholder="اسأل الـ AI..." style="flex:1; padding:6px; font-size:10px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:4px;">
+                <button class="btn" style="margin-top:0; padding:6px 10px; font-size:10px; width:auto;" onclick="sendFloatingAI()" data-t="send_btn">إرسال</button>
             </div>
         </div>
 
         <div id="welcome-intro-screen">
             <div class="splash-logo">💎</div>
-            <h1 style="color:var(--text-main); font-size:20px; font-weight:bold; margin-bottom:6px;">مرحباً بك في نظام نيرسي</h1>
-            <p style="color:var(--accent-gold); font-size:12px;">NERIS CLOUD OS - متصل بالسحابة لحظياً</p>
+            <h1 style="color:var(--text-main); font-size:20px; font-weight:bold; margin-bottom:6px;" data-t="intro_h1">مرحباً بك في نظام نيرسي</h1>
+            <p style="color:var(--accent-gold); font-size:12px;" data-t="intro_p">NERIS CLOUD OS - متصل بالسحابة لحظياً</p>
         </div>
 
         <div id="login-screen" style="display:none;">
@@ -206,9 +206,9 @@
             <p style="color: var(--text-muted); font-size: 11px; margin-bottom: 16px;" data-t="login_sub">أدخل بيانات الاعتماد الخاصة بك بدقة</p>
             
             <div style="width: 100%; max-width: 300px;">
-                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;">البريد أو كلمة المرور غير صحيحة</div>
-                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="البريد الإلكتروني" style="direction:ltr; text-align:left;" value=""></div>
-                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="كلمة المرور" style="direction:ltr; text-align:left;" value=""></div>
+                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;" data-t="login_err">البريد أو كلمة المرور غير صحيحة</div>
+                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" data-t-ph="email_ph" placeholder="البريد الإلكتروني" style="direction:ltr; text-align:left;" value=""></div>
+                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" data-t-ph="pass_ph" placeholder="كلمة المرور" style="direction:ltr; text-align:left;" value=""></div>
                 <button class="btn" onclick="handleLogin()" data-t="login_btn">تسجيل دخول</button>
             </div>
         </div>
@@ -246,38 +246,44 @@
             <h2 data-t="home_title">الواجهة الرئيسية ومؤشرات الأداء</h2>
             <p class="subtitle" data-t="home_sub">مرحباً بك في لوحة تحكم Neris الفاخرة</p>
 
+            <!-- قسم خاص يظهر للموظف بالطلبيات المخصصة له -->
+            <div class="panel-box" id="my-assigned-orders-box" style="border-color:var(--success); display:none; background:rgba(46,139,87,0.05);">
+                <h4 style="color:var(--success);" data-t="my_orders_title">🔔 الطلبيات المسندة إليك للتجهيز الآن</h4>
+                <div id="my-assigned-orders-list"></div>
+            </div>
+
             <div class="panel-box" style="background:linear-gradient(135deg, rgba(197,160,89,0.08), var(--bg-card)); border-color:var(--accent-gold);">
                 <div style="font-size:12px; font-weight:bold; color:var(--accent-gold); margin-bottom:8px;" data-t="metrics_title">مؤشرات الأداء الفعلي للمحل</div>
                 <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:6px; text-align:center; margin-bottom:6px;">
                     <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
                         <span id="metric-unassigned-orders" style="font-size:14px; font-weight:bold; color:var(--warning); direction:ltr; display:inline-block;">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);">بانتظار التوزيع</div>
+                        <div style="font-size:9px; color:var(--text-muted);" data-t="metric_unassigned">بانتظار التوزيع</div>
                     </div>
                     <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
                         <span id="metric-active-orders" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">0</span>
-                        <div style="font-size:9px; color:var(--text-muted);">قيد التجهيز والتنفيذ</div>
+                        <div style="font-size:9px; color:var(--text-muted);" data-t="metric_active">قيد التجهيز والتنفيذ</div>
                     </div>
                 </div>
                 <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; text-align:center;">
                     <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
                         <span id="metric-completed-orders" style="font-size:12px; font-weight:bold; color:var(--success); direction:ltr; display:inline-block;">0</span>
-                        <div style="font-size:8px; color:var(--text-muted);">طلبات منجزة</div>
+                        <div style="font-size:8px; color:var(--text-muted);" data-t="metric_completed">طلبات منجزة</div>
                     </div>
                     <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
                         <span id="metric-inventory-count" style="font-size:12px; font-weight:bold; color:var(--success); direction:ltr; display:inline-block;">0</span>
-                        <div style="font-size:8px; color:var(--text-muted);">منتج بالمخزن</div>
+                        <div style="font-size:8px; color:var(--text-muted);" data-t="inv_count_lbl">منتج بالمخزن</div>
                     </div>
                     <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
                         <span id="metric-staff-count" style="font-size:12px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">0</span>
-                        <div style="font-size:8px; color:var(--text-muted);">فريق العمل (متصل)</div>
+                        <div style="font-size:8px; color:var(--text-muted);" data-t="staff_count_lbl">فريق العمل (متصل)</div>
                     </div>
                 </div>
             </div>
 
             <div class="panel-box">
-                <h4 style="color:var(--accent-gold);">➕ تسجيل طلبية جديدة (عامة للمخزن بدون تعيين مسبق)</h4>
-                <div class="input-group"><input type="text" id="order-client-name" placeholder="اسم العميل"></div>
-                <div class="input-group"><input type="text" id="order-client-phone" placeholder="رقم الجوال" style="direction:ltr; text-align:left;"></div>
+                <h4 style="color:var(--accent-gold);" data-t="new_order_heading">➕ تسجيل طلبية جديدة</h4>
+                <div class="input-group"><input type="text" id="order-client-name" data-t-ph="c_name_ph" placeholder="اسم العميل"></div>
+                <div class="input-group"><input type="text" id="order-client-phone" data-t-ph="c_phone_ph" placeholder="رقم الجوال" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group">
                     <label data-t="sel_prod">اختر المنتج الأساسي:</label>
                     <select id="order-product-select"></select>
@@ -286,13 +292,13 @@
                     <label data-t="sel_addons">اختر التغليف والإضافات المتعددة:</label>
                     <div id="order-addons-container" style="max-height:120px; overflow-y:auto; display:flex; flex-direction:column; gap:4px;"></div>
                 </div>
-                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewOrder()">تسجيل الطلبية وإضافتها للمخزن</button>
+                <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewOrder()" data-t="submit_order_btn">تسجيل الطلبية وإضافتها للمخزن</button>
             </div>
         </div>
 
         <div id="orders-screen" class="screen">
-            <h2 data-t="orders_title">إدارة الطلبيات النشطة وتوزيعها</h2>
-            <p class="subtitle">توزيع الطلبات على الموظفين ومتابعة حالة التجهيز لحظياً</p>
+            <h2 data-t="orders_title">إدارة الطلبيات النشطة والتوزيع</h2>
+            <p class="subtitle" data-t="orders_sub">توزيع الطلبات على الموظفين ومتابعة حالة التجهيز لحظياً</p>
             <div id="real-orders-list"></div>
         </div>
 
@@ -306,8 +312,8 @@
             </div>
             
             <div class="panel-box" style="margin-top:15px; border-color:var(--warning);">
-                <h4 style="color:var(--warning);">🗑️ سلة مهملات المخزن (تسترجع خلال 30 يوم أو تحذف نهائياً)</h4>
-                <div id="inventory-trash-list"><p style="font-size:11px; color:var(--text-muted);">سلة محذوفات المخزن فارغة.</p></div>
+                <h4 style="color:var(--warning);" data-t="inv_trash_title">🗑️ سلة مهملات المخزن (تسترجع خلال 30 يوم أو تحذف نهائياً)</h4>
+                <div id="inventory-trash-list"><p style="font-size:11px; color:var(--text-muted);" data-t="empty_trash">سلة محذوفات المخزن فارغة.</p></div>
             </div>
         </div>
 
@@ -335,7 +341,7 @@
                 </div>
                 <div id="private-messages-list" style="max-height:100px; overflow-y:auto; font-size:11px; margin-bottom:8px; display:flex; flex-direction:column; gap:4px;"></div>
                 <div style="display:flex; gap:6px;">
-                    <input type="text" id="private-msg-input" placeholder="اكتب رسالة..." style="flex:1; padding:6px; font-size:11px;">
+                    <input type="text" id="private-msg-input" data-t-ph="msg_ph" placeholder="اكتب رسالة..." style="flex:1; padding:6px; font-size:11px;">
                     <button class="btn" style="margin-top:0; padding:6px 10px; font-size:11px; width:auto;" onclick="sendPrivateMessage()" data-t="send_btn">إرسال</button>
                 </div>
             </div>
@@ -347,11 +353,11 @@
             <div class="panel-box" style="display:flex; flex-direction:column; height: 600px;">
                 <div id="ai-messages-history" style="flex:1; overflow-y:auto; font-size:11px; display:flex; flex-direction:column; gap:6px; margin-bottom:10px; padding:6px; background:var(--bg-dark); border-radius:8px; border:1px solid var(--border);">
                     <div style="background:rgba(197,160,89,0.15); padding:6px 8px; border-radius:6px; color:var(--accent-gold);">
-                        <b>Neris AI:</b> أهلاً بك يا فهد. أنا مستعد لإجابتك على أي استفسار بخصوص المخزن، الطلبات، أو إدارة المحل.
+                        <b>Neris AI:</b> <span data-t="ai_init_msg">أهلاً بك يا فهد. أنا مستعد لإجابتك على أي استفسار بخصوص المخزن، الطلبات، أو إدارة المحل.</span>
                     </div>
                 </div>
                 <div style="display:flex; gap:6px;">
-                    <input type="text" id="ai-user-input" placeholder="اسأل الـ AI أي شيء..." style="flex:1; padding:8px; font-size:11px;">
+                    <input type="text" id="ai-user-input" data-t-ph="ai_input_ph" placeholder="اسأل الـ AI أي شيء..." style="flex:1; padding:8px; font-size:11px;">
                     <button class="btn" style="margin-top:0; padding:8px 14px; font-size:11px; width:auto;" onclick="sendAIChatQuery()" data-t="send_btn">إرسال</button>
                 </div>
             </div>
@@ -364,8 +370,8 @@
             <div id="staff-management-list"></div>
             
             <div class="panel-box" style="margin-top:15px; border-color:var(--warning);">
-                <h4 style="color:var(--warning);">🗑️ سلة محذوفات فريق العمل</h4>
-                <div id="staff-trash-list"><p style="font-size:11px; color:var(--text-muted);">سلة المحذوفات فارغة تماماً.</p></div>
+                <h4 style="color:var(--warning);" data-t="staff_trash_title">🗑️ سلة محذوفات فريق العمل</h4>
+                <div id="staff-trash-list"><p style="font-size:11px; color:var(--text-muted);" data-t="empty_staff_trash">سلة المحذوفات فارغة تماماً.</p></div>
             </div>
         </div>
 
@@ -375,7 +381,7 @@
             <div class="panel-box" style="text-align:center;">
                 <div style="position:relative; width:70px; height:70px; margin:0 auto 10px auto; cursor:pointer;" onclick="document.getElementById('admin-avatar-input').click()" title="تغيير صورتك الشخصية">
                     <img id="admin-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-gold);">
-                    <div style="position:absolute; bottom:0; right:0; background:var(--accent-gold); color:#1c1815; font-size:8px; padding:2px 5px; border-radius:6px; font-weight:bold;">صورة</div>
+                    <div style="position:absolute; bottom:0; right:0; background:var(--accent-gold); color:#1c1815; font-size:8px; padding:2px 5px; border-radius:6px; font-weight:bold;" data-t="photo_lbl">صورة</div>
                     <input type="file" id="admin-avatar-input" accept="image/*" style="display:none;" onchange="updateAdminAvatar(this)">
                 </div>
                 <div class="input-group"><label data-t="name_lbl">الاسم</label><input type="text" id="prof-name" value="فهد راشد الحسين"></div>
@@ -390,10 +396,10 @@
         <div class="modal" id="add-staff-modal">
             <div class="modal-content">
                 <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_staff_modal_title">➕ إضافة موظف جديد للنظام</h3>
-                <div class="input-group"><label data-t="s_name">اسم الموظف</label><input type="text" id="new-s-name" placeholder="محمد / فاطمة"></div>
-                <div class="input-group"><label data-t="s_role">المسمى الوظيفي</label><input type="text" id="new-s-role" placeholder="مسؤول أو موظف مبيعات"></div>
+                <div class="input-group"><label data-t="s_name">اسم الموظف</label><input type="text" id="new-s-name" data-t-ph="s_name_ph" placeholder="محمد / فاطمة"></div>
+                <div class="input-group"><label data-t="s_role">المسمى الوظيفي</label><input type="text" id="new-s-role" data-t-ph="s_role_ph" placeholder="مسؤول أو موظف مبيعات"></div>
                 <div class="input-group"><label data-t="s_email">البريد الإلكتروني</label><input type="email" id="new-s-email" placeholder="staff@domain.com" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label data-t="s_pass">كلمة المرور</label><input type="text" id="new-s-pass" placeholder="12345" style="direction:ltr; text-align:left;" value="12345"></div>
+                <div class="input-group"><label data-t="s_pass">كلمة المرور</label><input type="text" id="new-s-pass" value="12345" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-t="s_phone">رقم الجوال</label><input type="text" id="new-s-phone" placeholder="05xxxxxxxx" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-t="s_dob">تاريخ الميلاد</label><input type="date" id="new-s-dob" style="direction:ltr; text-align:left;"></div>
                 <div style="display:flex; gap:8px; margin-top:10px;">
@@ -406,10 +412,10 @@
         <div class="modal" id="add-product-modal">
             <div class="modal-content">
                 <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_prod_modal">إضافة منتج جديد مع صورة</h3>
-                <div class="input-group"><label data-t="p_name">اسم المنتج</label><input type="text" id="p-name" placeholder="خاتم ألماس فاخر"></div>
-                <div class="input-group"><label>الكمية المتاحة (المخزون)</label><input type="number" id="p-qty" value="5" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label data-t="p_color">اللون</label><input type="text" id="p-color" placeholder="ذهبي وردي"></div>
-                <div class="input-group"><label data-t="p_size">المقاس</label><input type="text" id="p-size" placeholder="مقاس 7"></div>
+                <div class="input-group"><label data-t="p_name">اسم المنتج</label><input type="text" id="p-name" data-t-ph="p_name_ph" placeholder="خاتم ألماس فاخر"></div>
+                <div class="input-group"><label data-t="p_qty_lbl">الكمية المتاحة (المخزون)</label><input type="number" id="p-qty" value="5" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group"><label data-t="p_color">اللون</label><input type="text" id="p-color" data-t-ph="p_color_ph" placeholder="ذهبي وردي"></div>
+                <div class="input-group"><label data-t="p_size">المقاس</label><input type="text" id="p-size" data-t-ph="p_size_ph" placeholder="مقاس 7"></div>
                 <div class="input-group"><label data-t="p_img">صورة المنتج</label><input type="file" id="p-img-file" accept="image/*" style="direction:ltr; text-align:left; font-size:10px;"></div>
                 <div class="input-group"><label data-t="p_cost">سعر التكلفة (SAR)</label><input type="number" id="p-cost" placeholder="100" style="direction:ltr; text-align:left;" oninput="calcAIBasedPrice()"></div>
                 <div class="input-group"><label data-t="p_suggested">سعر البيع التقريبي (حساب AI تلقائي)</label><input type="text" id="p-suggested" readonly style="color:var(--accent-gold); font-weight:bold; direction:ltr; text-align:left;" value="0 SAR"></div>
@@ -423,7 +429,7 @@
         <div class="modal" id="add-addon-modal">
             <div class="modal-content">
                 <h3 style="margin-bottom:10px; font-size:13px; color:var(--accent-gold);" data-t="add_addon_modal">إضافة عنصر تغليف مع صورة</h3>
-                <div class="input-group"><label data-t="a_name">اسم التغليف</label><input type="text" id="a-name" placeholder="علبة مخمل فاخرة"></div>
+                <div class="input-group"><label data-t="a_name">اسم التغليف</label><input type="text" id="a-name" data-t-ph="a_name_ph" placeholder="علبة مخمل فاخرة"></div>
                 <div class="input-group"><label data-t="a_img">صورة التغليف</label><input type="file" id="a-img-file" accept="image/*" style="direction:ltr; text-align:left; font-size:10px;"></div>
                 <div class="input-group"><label data-t="a_price">السعر (SAR)</label><input type="number" id="a-price" placeholder="50" style="direction:ltr; text-align:left;"></div>
                 <div style="display:flex; gap:8px; margin-top:10px;">
@@ -454,6 +460,7 @@
         const db = getDatabase(app);
 
         window.currentLang = 'ar';
+        window.currentLoggedInUserEmail = 'fahadfhd47@gmail.com';
         window.currentUserRole = 'admin';
         window.inventoryList = [];
         window.inventoryTrash = [];
@@ -476,39 +483,51 @@
                 home: "الواجهة الرئيسية", orders: "إدارة الطلبيات النشطة", inventory: "المخزن", addons: "التغليف والإضافات",
                 chat: "الرسائل والمحادثات", ai_chat: "مساعد الـ AI الذكي", staff: "فريق العمل والصلاحيات", profile: "الملف الشخصي", logout: "تسجيل الخروج",
                 home_title: "الواجهة الرئيسية ومؤشرات الأداء", home_sub: "مرحباً بك في لوحة تحكم Neris الفاخرة",
-                metrics_title: "مؤشرات الأداء الفعلي للمحل", active_orders_lbl: "طلبات نشطة", inv_count_lbl: "منتج بالمخزن", staff_count_lbl: "فريق الإدارة",
-                orders_title: "إدارة الطلبيات النشطة والتوزيع", orders_sub: "متابعة الطلبات المسندة للموظفين",
-                inv_title: "المخزن والمنتجات", inv_sub: "إضافة وتعديل المنتجات مع حساب AI للأسعار", add_prod_btn: "+ إضافة منتج جديد مع صورة", inv_list_title: "قائمة منتجات المخزن",
+                metrics_title: "مؤشرات الأداء الفعلي للمحل", metric_unassigned: "بانتظار التوزيع", metric_active: "قيد التجهيز والتنفيذ", metric_completed: "طلبات منجزة",
+                inv_count_lbl: "منتج بالمخزن", staff_count_lbl: "فريق العمل (متصل)",
+                orders_title: "إدارة الطلبيات النشطة والتوزيع", orders_sub: "توزيع الطلبات على الموظفين ومتابعة حالة التجهيز لحظياً",
+                inv_title: "المخزن والمنتجات", inv_sub: "إضافة وتعديل المنتجات مع حساب AI للأسعار وتنبيهات المخزون", add_prod_btn: "+ إضافة منتج جديد مع صورة", inv_list_title: "قائمة منتجات المخزن",
+                inv_trash_title: "🗑️ سلة مهملات المخزن (تسترجع خلال 30 يوم أو تحذف نهائياً)", empty_trash: "سلة محذوفات المخزن فارغة.",
                 addons_title: "التغليف والإضافات الممتازة", addons_sub: "إدارة عناصر التغليف مع الصور والأسعار", add_addon_btn: "+ إضافة عنصر تغليف جديد", addons_list_title: "عناصر التغليف المتاحة",
                 chat_title: "المحادثات الخاصة (مثل واتساب)", chat_sub: "تواصل مباشر وسجل رسائل محفوظ مع الفريق", select_staff_chat: "اختر الموظف للمحادثة:", send_btn: "إرسال",
                 ai_screen_title: "مساعد الذكاء الاصطناعي المتطور (AI Chat)", ai_screen_sub: "اكتب أي استفسار أو أمر وسيجيبك المساعد فوراً",
                 staff_title: "فريق العمل والصلاحيات الشاملة", staff_sub: "إدارة الموظفين، إضافة موظف جديد، وصلاحيات النظام",
-                add_staff_btn: "+ إضافة موظف جديد", trash_title: "🗑️ سلة المحذوفات واسترجاع الموظفين",
-                prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي، صورتك، وتاريخ ميلادك", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", dob_lbl: "تاريخ الميلاد", age_lbl: "العمر المحسوب تلقائياً", save_btn: "حفظ التعديلات",
+                add_staff_btn: "+ إضافة موظف جديد", staff_trash_title: "🗑️ سلة محذوفات فريق العمل", empty_staff_trash: "سلة المحذوفات فارغة تماماً.",
+                prof_title: "الملف الشخصي والحساب", prof_sub: "إدارة بيانات حسابك الشخصي، صورتك، وتاريخ ميلادك", name_lbl: "الاسم", email_lbl: "البريد الإلكتروني", phone_lbl: "الجوال", dob_lbl: "تاريخ الميلاد", age_lbl: "العمر المحسوب تلقائياً", save_btn: "حفظ التعديلات", photo_lbl: "صورة",
                 add_staff_modal_title: "➕ إضافة موظف جديد للنظام", s_name: "اسم الموظف", s_role: "المسمى الوظيفي", s_email: "البريد الإلكتروني", s_pass: "كلمة المرور", s_phone: "رقم الجوال", s_dob: "تاريخ الميلاد",
-                add_prod_modal: "إضافة منتج جديد مع صورة", p_name: "اسم المنتج", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
+                add_prod_modal: "إضافة منتج جديد مع صورة", p_name: "اسم المنتج", p_qty_lbl: "الكمية المتاحة (المخزون)", p_color: "اللون", p_size: "المقاس", p_img: "صورة المنتج", p_cost: "سعر التكلفة (SAR)", p_suggested: "سعر البيع التقريبي (حساب AI تلقائي)", cancel_btn: "إلغاء",
                 add_addon_modal: "إضافة عنصر تغليف مع صورة", a_name: "اسم التغليف", a_img: "صورة التغليف", a_price: "السعر (SAR)",
-                new_order_title: "➕ تسجيل طلبية جديدة وإسنادها لموظف", sel_prod: "اختر المنتج الأساسي:", sel_addons: "اختر التغليف والإضافات المتعددة:", sel_staff: "إسناد الطلب لموظف:", submit_order_btn: "تسجيل وإرسال الطلب",
-                login_title: "تسجيل الدخول الآمن", login_sub: "أدخل بيانات الاعتماد الخاصة بك بدقة", login_btn: "تسجيل دخول", ai_widget_btn: "Neris AI مساعد", menu_title: "قائمة التنقل"
+                new_order_heading: "➕ تسجيل طلبية جديدة", sel_prod: "اختر المنتج الأساسي:", sel_addons: "اختر التغليف والإضافات المتعددة:", submit_order_btn: "تسجيل الطلبية وإضافتها للمخزن",
+                login_title: "تسجيل الدخول الآمن", login_sub: "أدخل بيانات الاعتماد الخاصة بك بدقة", login_err: "البريد أو كلمة المرور غير صحيحة", login_btn: "تسجيل دخول", ai_widget_btn: "Neris AI مساعد", menu_title: "قائمة التنقل",
+                intro_h1: "مرحباً بك في نظام نيرسي", intro_p: "NERIS CLOUD OS - متصل بالسحابة لحظياً",
+                my_orders_title: "🔔 الطلبيات المسندة إليك للتجهيز الآن", ai_init_msg: "أهلاً بك يا فهد. أنا مستعد لإجابتك على أي استفسار بخصوص المخزن، الطلبات، أو إدارة المحل.",
+                c_name_ph: "اسم العميل", c_phone_ph: "رقم الجوال", msg_ph: "اكتب رسالة...", ai_input_ph: "اسأل الـ AI...",
+                email_ph: "البريد الإلكتروني", pass_ph: "كلمة المرور", s_name_ph: "محمد / فاطمة", s_role_ph: "مسؤول أو موظف مبيعات", p_name_ph: "خاتم ألماس فاخر", p_color_ph: "ذهبي وردي", p_size_ph: "مقاس 7", a_name_ph: "علبة مخمل فاخرة"
             },
             en: {
-                home: "Dashboard", orders: "Active Orders", inventory: "Inventory", addons: "Add-ons & Packaging",
+                home: "Dashboard", orders: "Active Orders", inventory: "Inventory", addons: "Packaging & Add-ons",
                 chat: "Messages & Chats", ai_chat: "Smart AI Assistant", staff: "Staff & Permissions", profile: "Profile", logout: "Logout",
                 home_title: "Dashboard & Performance", home_sub: "Welcome to Neris Elite Dashboard",
-                metrics_title: "Store Performance Metrics", active_orders_lbl: "Active Orders", inv_count_lbl: "Products", staff_count_lbl: "Management Team",
-                orders_title: "Active Orders Management", orders_sub: "Track assigned orders",
-                inv_title: "Inventory & Products", inv_sub: "Add/edit products with AI pricing", add_prod_btn: "+ Add New Product with Image", inv_list_title: "Inventory Products",
-                addons_title: "Packaging & Add-ons", addons_sub: "Manage packaging with images & prices", add_addon_btn: "+ Add Packaging Item", addons_list_title: "Available Packaging",
+                metrics_title: "Store Performance Metrics", metric_unassigned: "Pending Assignment", metric_active: "In Progress", metric_completed: "Completed Orders",
+                inv_count_lbl: "Products", staff_count_lbl: "Active Staff",
+                orders_title: "Active Orders & Distribution", orders_sub: "Distribute orders to staff and track progress",
+                inv_title: "Inventory & Products", inv_sub: "Add/edit products with AI pricing & stock alerts", add_prod_btn: "+ Add New Product with Image", inv_list_title: "Inventory Products",
+                inv_trash_title: "🗑️ Inventory Trash (Restorable for 30 days)", empty_trash: "Inventory trash is empty.",
+                addons_title: "Premium Packaging & Add-ons", addons_sub: "Manage packaging with images & prices", add_addon_btn: "+ Add Packaging Item", addons_list_title: "Available Packaging",
                 chat_title: "Private Chats (WhatsApp style)", chat_sub: "Direct communication with persistent history", select_staff_chat: "Select staff to chat:", send_btn: "Send",
                 ai_screen_title: "Advanced AI Assistant (AI Chat)", ai_screen_sub: "Type any query or order and the assistant will reply instantly",
                 staff_title: "Staff & Comprehensive Permissions", staff_sub: "Manage staff, add new members, and system permissions",
-                add_staff_btn: "+ Add New Staff", trash_title: "🗑️ Trash & Staff Recovery",
-                prof_title: "Profile & Account", prof_sub: "Manage your personal account details, photo and DOB", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", dob_lbl: "Date of Birth", age_lbl: "Calculated Age", save_btn: "Save Changes",
+                add_staff_btn: "+ Add New Staff", staff_trash_title: "🗑️ Staff Trash", empty_staff_trash: "Staff trash is empty.",
+                prof_title: "Profile & Account", prof_sub: "Manage your personal account details, photo and DOB", name_lbl: "Name", email_lbl: "Email", phone_lbl: "Phone", dob_lbl: "Date of Birth", age_lbl: "Calculated Age", save_btn: "Save Changes", photo_lbl: "Photo",
                 add_staff_modal_title: "➕ Add New Staff Member", s_name: "Staff Name", s_role: "Job Title", s_email: "Email", s_pass: "Password", s_phone: "Phone", s_dob: "Date of Birth",
-                add_prod_modal: "Add Product with Image", p_name: "Product Name", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
+                add_prod_modal: "Add Product with Image", p_name: "Product Name", p_qty_lbl: "Available Quantity (Stock)", p_color: "Color", p_size: "Size", p_img: "Product Image", p_cost: "Cost (SAR)", p_suggested: "Suggested Selling Price (AI)", cancel_btn: "Cancel",
                 add_addon_modal: "Add Packaging with Image", a_name: "Packaging Name", a_img: "Packaging Image", a_price: "Price (SAR)",
-                new_order_title: "➕ Register New Order & Assign Staff", sel_prod: "Select Main Product:", sel_addons: "Select Multiple Add-ons & Packaging:", sel_staff: "Assign to Staff:", submit_order_btn: "Register & Send Order",
-                login_title: "Secure Login", login_sub: "Enter your credentials carefully", login_btn: "Login", ai_widget_btn: "Neris AI Assistant", menu_title: "Navigation Menu"
+                new_order_heading: "➕ Register New Order", sel_prod: "Select Main Product:", sel_addons: "Select Multiple Add-ons & Packaging:", submit_order_btn: "Register Order & Add to Inventory",
+                login_title: "Secure Login", login_sub: "Enter your credentials carefully", login_err: "Incorrect email or password", login_btn: "Login", ai_widget_btn: "Neris AI Assistant", menu_title: "Navigation Menu",
+                intro_h1: "Welcome to Neris OS", intro_p: "NERIS CLOUD OS - Realtime Cloud Connected",
+                my_orders_title: "🔔 Orders Assigned to You for Processing", ai_init_msg: "Welcome Fahad. I am ready to answer any inquiries regarding inventory, orders, or store management.",
+                c_name_ph: "Client Name", c_phone_ph: "Phone Number", msg_ph: "Type a message...", ai_input_ph: "Ask AI...",
+                email_ph: "Email", pass_ph: "Password", s_name_ph: "Mohammed / Fatima", s_role_ph: "Manager or Sales Staff", p_name_ph: "Luxury Diamond Ring", p_color_ph: "Rose Gold", p_size_ph: "Size 7", a_name_ph: "Luxury Velvet Box"
             }
         };
 
@@ -558,10 +577,12 @@
             
             if(email === "fahadfhd47@gmail.com" && pass === "Fahad55003") {
                 window.currentUserRole = 'admin';
+                window.currentLoggedInUserEmail = email;
                 document.getElementById('drawer-staff-item').style.display = 'flex';
                 successLogin();
             } else if(matchedStaff) {
                 window.currentUserRole = 'staff';
+                window.currentLoggedInUserEmail = email;
                 document.getElementById('drawer-staff-item').style.display = 'none';
                 successLogin();
             } else {
@@ -587,7 +608,8 @@
             const msgBox = document.getElementById('floating-ai-msg');
             const q = input.value.trim();
             if(!q) return;
-            msgBox.innerHTML = `<b>أنت:</b> ${q}<br><b style="color:var(--accent-gold);">Neris AI:</b> تم تنفيذ طلبك سحابياً بنجاح يا فهد.`;
+            let reply = window.currentLang === 'ar' ? `تم تنفيذ طلبك سحابياً بنجاح يا فهد.` : `Your request was executed successfully via cloud.`;
+            msgBox.innerHTML = `<b>أنت:</b> ${q}<br><b style="color:var(--accent-gold);">Neris AI:</b> ${reply}`;
             input.value = '';
         }
 
@@ -601,7 +623,7 @@
         }
 
         function calcStaffAge(dobStr) {
-            if(!dobStr) return "غير محدد";
+            if(!dobStr) return window.currentLang === 'ar' ? "غير محدد" : "N/A";
             const diff = Date.now() - new Date(dobStr).getTime();
             const ageDate = new Date(diff);
             const age = Math.abs(ageDate.getUTCFullYear() - 1970);
@@ -615,7 +637,7 @@
                     window.adminAvatar = e.target.result;
                     document.getElementById('header-avatar').src = window.adminAvatar;
                     document.getElementById('admin-avatar-preview').src = window.adminAvatar;
-                    showNotification("تم تحديث وحفظ صورتك سحابياً");
+                    showNotification(window.currentLang === 'ar' ? "تم تحديث وحفظ صورتك سحابياً" : "Avatar updated & saved");
                     syncToCloud();
                 }
                 reader.readAsDataURL(input.files[0]);
@@ -633,12 +655,21 @@
                 root.classList.remove('en');
                 ind.innerText = 'EN';
             }
-            document.querySelectorAll('[data-t]').forEach(el => {
-                const key = el.getAttribute('data-t');
-                if(translations[window.currentLang][key]) el.innerText = translations[window.currentLang][key];
-            });
+            applyTranslations();
             calcAdminAge();
             refreshUI();
+        }
+
+        function applyTranslations() {
+            const dict = translations[window.currentLang];
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if(dict[key]) el.innerText = dict[key];
+            });
+            document.querySelectorAll('[data-t-ph]').forEach(el => {
+                const key = el.getAttribute('data-t-ph');
+                if(dict[key]) el.placeholder = dict[key];
+            });
         }
 
         window.toggleTheme = function() {
@@ -682,6 +713,39 @@
             renderStaffChatContacts();
             renderOrderDropdowns();
             renderOrdersList();
+            renderMyAssignedOrders();
+        }
+
+        function renderMyAssignedOrders() {
+            let currentStaff = window.staffList.find(s => s.email === window.currentLoggedInUserEmail);
+            let box = document.getElementById('my-assigned-orders-box');
+            
+            if(window.currentUserRole === 'admin') {
+                box.style.display = 'none';
+                return;
+            }
+
+            if(!currentStaff) {
+                box.style.display = 'none';
+                return;
+            }
+
+            let myOrders = window.ordersList.filter(o => o.assignedStaff === currentStaff.name && o.status !== 'مكتمل');
+            let html = '';
+            myOrders.forEach(o => {
+                html += `<div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border); margin-bottom:6px; font-size:11px;">
+                    <div><strong>العميل: ${o.clientName}</strong> (${o.productName})</div>
+                    <div style="color:var(--text-muted); font-size:10px;">الإضافات: ${o.addons} | الإجمالي: <b style="color:var(--success);">${o.total} SAR</b></div>
+                    <button class="btn" style="padding:4px; font-size:10px; background:var(--success); color:#fff; margin-top:4px; width:auto;" onclick="completeOrder(${o.id})">إنجاز الطلب ✓</button>
+                </div>`;
+            });
+
+            if(myOrders.length > 0) {
+                box.style.display = 'block';
+                document.getElementById('my-assigned-orders-list').innerHTML = html;
+            } else {
+                box.style.display = 'none';
+            }
         }
 
         function renderInventory() {
@@ -690,19 +754,19 @@
                 let qty = item.qty !== undefined ? item.qty : 5;
                 let alertBadge = '';
                 if(qty < 2) {
-                    alertBadge = `<br><span style="color:var(--danger); font-size:9px; font-weight:bold;">🚨 انتهى تقريباً - اطلب الآن! (المتبقي: ${qty})</span>`;
+                    alertBadge = `<br><span style="color:var(--danger); font-size:9px; font-weight:bold;">🚨 ${window.currentLang==='ar'?'انتهى تقريباً - اطلب الآن!':'Almost out - Order now!'} (${qty})</span>`;
                 } else if(qty <= 3) {
-                    alertBadge = `<br><span style="color:var(--warning); font-size:9px;">⚠️ مخزون قليل (المتبقي: ${qty})</span>`;
+                    alertBadge = `<br><span style="color:var(--warning); font-size:9px;">⚠️ ${window.currentLang==='ar'?'مخزون قليل':'Low stock'} (${qty})</span>`;
                 } else {
-                    alertBadge = `<br><span style="color:var(--success); font-size:9px;">🟢 متوفر (المتبقي: ${qty})</span>`;
+                    alertBadge = `<br><span style="color:var(--success); font-size:9px;">🟢 ${window.currentLang==='ar'?'متوفر':'Available'} (${qty})</span>`;
                 }
 
                 html += `<div class="card-item">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img src="${item.image || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100'}" class="product-thumb">
-                        <div><strong>${item.name}</strong> (${item.color} - ${item.size})<br><small style="color:var(--accent-gold);">سعر البيع AI: ${item.suggestedPrice} SAR</small>${alertBadge}</div>
+                        <div><strong>${item.name}</strong> (${item.color} - ${item.size})<br><small style="color:var(--accent-gold);">AI Price: ${item.suggestedPrice} SAR</small>${alertBadge}</div>
                     </div>
-                    <div><span class="badge">${item.cost} SAR</span> <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto;" onclick="trashInventoryItem(${item.id})">حذف 🗑️</button></div>
+                    <div><span class="badge">${item.cost} SAR</span> <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto;" onclick="trashInventoryItem(${item.id})">${window.currentLang==='ar'?'حذف 🗑️':'Delete 🗑️'}</button></div>
                 </div>`;
             });
             document.getElementById('real-inventory-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang === 'ar' ? 'لا توجد منتجات في المخزن حالياً.' : 'No products in inventory.'}</p>`;
@@ -713,7 +777,7 @@
             if(idx !== -1) {
                 let removed = window.inventoryList.splice(idx, 1)[0];
                 window.inventoryTrash.push(removed);
-                showNotification("تم نقل المنتج إلى سلة المحذوفات");
+                showNotification(window.currentLang === 'ar' ? "تم نقل المنتج إلى سلة المحذوفات" : "Product moved to trash");
                 syncToCloud();
             }
         }
@@ -727,12 +791,12 @@
                         <div><strong>${item.name}</strong> (${item.color})</div>
                     </div>
                     <div style="display:flex; gap:4px;">
-                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="restoreInventoryItem(${item.id})">استرجاع ↺</button>
-                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--danger); color:#fff; width:auto; margin-top:0;" onclick="deleteInventoryForever(${item.id})">حذف نهائي ❌</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="restoreInventoryItem(${item.id})">${window.currentLang==='ar'?'استرجاع ↺':'Restore ↺'}</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--danger); color:#fff; width:auto; margin-top:0;" onclick="deleteInventoryForever(${item.id})">${window.currentLang==='ar'?'حذف نهائي ❌':'Delete ❌'}</button>
                     </div>
                 </div>`;
             });
-            document.getElementById('inventory-trash-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">سلة محذوفات المخزن فارغة.</p>';
+            document.getElementById('inventory-trash-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang==='ar'?'سلة محذوفات المخزن فارغة.':'Inventory trash is empty.'}</p>`;
         }
 
         window.restoreInventoryItem = function(id) {
@@ -740,14 +804,14 @@
             if(idx !== -1) {
                 let restored = window.inventoryTrash.splice(idx, 1)[0];
                 window.inventoryList.push(restored);
-                showNotification("تم استرجاع المنتج بنجاح للمخزن");
+                showNotification(window.currentLang === 'ar' ? "تم استرجاع المنتج بنجاح للمخزن" : "Product restored");
                 syncToCloud();
             }
         }
 
         window.deleteInventoryForever = function(id) {
             window.inventoryTrash = window.inventoryTrash.filter(x => x.id !== id);
-            showNotification("تم حذف المنتج نهائياً من النظام");
+            showNotification(window.currentLang === 'ar' ? "تم حذف المنتج نهائياً من النظام" : "Product deleted permanently");
             syncToCloud();
         }
 
@@ -759,7 +823,7 @@
                         <img src="${item.image || 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100'}" class="product-thumb">
                         <div><strong>${item.name}</strong></div>
                     </div>
-                    <div><span class="badge">${item.price} SAR</span> <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto;" onclick="deleteAddonItem(${item.id})">حذف</button></div>
+                    <div><span class="badge">${item.price} SAR</span> <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto;" onclick="deleteAddonItem(${item.id})">${window.currentLang==='ar'?'حذف':'Delete'}</button></div>
                 </div>`;
             });
             document.getElementById('addons-list-container').innerHTML = html;
@@ -775,7 +839,7 @@
                     <span class="badge">+${item.price} SAR</span>
                 </div>`;
             });
-            document.getElementById('order-addons-container').innerHTML = html || '<span style="font-size:10px; color:var(--text-muted);">لا توجد إضافات تغليف متاحة</span>';
+            document.getElementById('order-addons-container').innerHTML = html || `<span style="font-size:10px; color:var(--text-muted);">${window.currentLang==='ar'?'لا توجد إضافات تغليف متاحة':'No packaging options available'}</span>`;
         }
 
         window.toggleAddonCheck = function(card) {
@@ -791,7 +855,7 @@
                     <div class="staff-header-flex">
                         <div class="staff-avatar-box" onclick="document.getElementById('file-up-${staff.id}').click()" title="تغيير الصورة الشخصية">
                             <img src="${staff.avatar}" class="staff-avatar-img">
-                            <div class="staff-avatar-edit-badge">صورة</div>
+                            <div class="staff-avatar-edit-badge">${window.currentLang==='ar'?'صورة':'Photo'}</div>
                             <input type="file" id="file-up-${staff.id}" accept="image/*" style="display:none;" onchange="updateStaffAvatar(${staff.id}, this)">
                         </div>
                         <div style="flex:1;">
@@ -802,25 +866,25 @@
                             <div style="display:flex; gap:6px; margin-top:4px;">
                                 <input type="text" value="${staff.role}" onchange="updateStaffField(${staff.id}, 'role', this.value)" placeholder="المسمى الوظيفي" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--accent-gold); border:1px solid var(--border); border-radius:4px; flex:1;">
                                 <select onchange="updateStaffField(${staff.id}, 'status', this.value)" style="padding:3px 6px; font-size:10px; background:var(--bg-card); color:var(--success); border:1px solid var(--border); border-radius:4px; font-weight:bold;">
-                                    <option value="نشط" ${staff.status==='نشط'?'selected':''}>🟢 نشط</option>
-                                    <option value="إجازة" ${staff.status==='إجازة'?'selected':''}>✈️ إجازة</option>
-                                    <option value="إيقاف مؤقت" ${staff.status==='إيقاف مؤقت'?'selected':''}>⏸️ إيقاف مؤقت</option>
-                                    <option value="مستقيل" ${staff.status==='مستقيل'?'selected':''}>📄 استقالة</option>
-                                    <option value="مفصول" ${staff.status==='مفصول'?'selected':''}>⛔ طرد</option>
+                                    <option value="نشط" ${staff.status==='نشط'?'selected':''}>🟢 Active</option>
+                                    <option value="إجازة" ${staff.status==='إجازة'?'selected':''}>✈️ Leave</option>
+                                    <option value="إيقاف مؤقت" ${staff.status==='إيقاف مؤقت'?'selected':''}>⏸️ Paused</option>
+                                    <option value="مستقيل" ${staff.status==='مستقيل'?'selected':''}>📄 Resigned</option>
+                                    <option value="مفصول" ${staff.status==='مفصول'?'selected':''}>⛔ Fired</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="staff-grid-fields">
-                        <div class="input-group" style="margin-bottom:0;"><label>البريد الإلكتروني</label><input type="text" value="${staff.email}" onchange="updateStaffField(${staff.id}, 'email', this.value)" style="direction:ltr; text-align:left;"></div>
-                        <div class="input-group" style="margin-bottom:0;"><label>كلمة المرور</label><input type="text" value="${staff.pass}" onchange="updateStaffField(${staff.id}, 'pass', this.value)" style="direction:ltr; text-align:left;"></div>
-                        <div class="input-group" style="margin-bottom:0;"><label>رقم الجوال</label><input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" style="direction:ltr; text-align:left;"></div>
-                        <div class="input-group" style="margin-bottom:0;"><label>تاريخ الميلاد (العمر: <b style="color:var(--accent-gold);">${ageText}</b>)</label><input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="direction:ltr; text-align:left;"></div>
+                        <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'البريد الإلكتروني':'Email'}</label><input type="text" value="${staff.email}" onchange="updateStaffField(${staff.id}, 'email', this.value)" style="direction:ltr; text-align:left;"></div>
+                        <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'كلمة المرور':'Password'}</label><input type="text" value="${staff.pass}" onchange="updateStaffField(${staff.id}, 'pass', this.value)" style="direction:ltr; text-align:left;"></div>
+                        <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'رقم الجوال':'Phone'}</label><input type="text" value="${staff.phone || ''}" onchange="updateStaffField(${staff.id}, 'phone', this.value)" style="direction:ltr; text-align:left;"></div>
+                        <div class="input-group" style="margin-bottom:0;"><label>${window.currentLang==='ar'?'تاريخ الميلاد (العمر: ':'DOB (Age: '}<b style="color:var(--accent-gold);">${ageText}</b>)</label><input type="date" value="${staff.dob || ''}" onchange="updateStaffField(${staff.id}, 'dob', this.value)" style="direction:ltr; text-align:left;"></div>
                     </div>
-                    ${staff.id !== 0 ? `<button class="btn" style="background:var(--danger); color:#fff; padding:6px; font-size:10px; margin-top:6px;" onclick="trashStaff(${staff.id})">حذف ونقل للسلة 🗑️</button>` : ''}
+                    ${staff.id !== 0 ? `<button class="btn" style="background:var(--danger); color:#fff; padding:6px; font-size:10px; margin-top:6px;" onclick="trashStaff(${staff.id})">${window.currentLang==='ar'?'حذف ونقل للسلة 🗑️':'Delete & Trash 🗑️'}</button>` : ''}
                 </div>`;
             });
-            document.getElementById('staff-management-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد حسابات نشطة حالياً.</p>';
+            document.getElementById('staff-management-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang==='ar'?'لا توجد حسابات نشطة حالياً.':'No active staff.'}</p>`;
         }
 
         window.openAddStaffModal = function() {
@@ -840,7 +904,7 @@
             let phone = document.getElementById('new-s-phone').value.trim();
             let dob = document.getElementById('new-s-dob').value;
 
-            if(!name || !email) { alert("يرجى إدخال اسم الموظف والبريد الإلكتروني على الأقل!"); return; }
+            if(!name || !email) { alert(window.currentLang==='ar'?"يرجى إدخال اسم الموظف والبريد الإلكتروني!":"Please enter staff name and email!"); return; }
 
             window.staffList.push({
                 id: Date.now(), name, role, email, pass, phone, dob, status: 'نشط',
@@ -848,7 +912,7 @@
             });
 
             closeModal('add-staff-modal');
-            showNotification("تمت إضافة الموظف الجديد وحفظه سحابياً");
+            showNotification(window.currentLang==='ar'?"تمت إضافة الموظف الجديد وحفظه سحابياً":"New staff added successfully");
             syncToCloud();
         }
 
@@ -861,12 +925,12 @@
                         <div><strong>${staff.name}</strong> (${staff.email})</div>
                     </div>
                     <div style="display:flex; gap:4px;">
-                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="restoreStaff(${staff.id})">استرجاع ↺</button>
-                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--danger); color:#fff; width:auto; margin-top:0;" onclick="deleteStaffForever(${staff.id})">حذف نهائي ❌</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="restoreStaff(${staff.id})">${window.currentLang==='ar'?'استرجاع ↺':'Restore ↺'}</button>
+                        <button class="btn" style="padding:3px 6px; font-size:9px; background:var(--danger); color:#fff; width:auto; margin-top:0;" onclick="deleteStaffForever(${staff.id})">${window.currentLang==='ar'?'حذف نهائي ❌':'Delete ❌'}</button>
                     </div>
                 </div>`;
             });
-            document.getElementById('staff-trash-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">سلة المحذوفات فارغة تماماً.</p>';
+            document.getElementById('staff-trash-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang==='ar'?'سلة المحذوفات فارغة تماماً.':'Staff trash is empty.'}</p>`;
         }
 
         window.trashStaff = function(id) {
@@ -874,7 +938,7 @@
             if(idx !== -1) {
                 let removed = window.staffList.splice(idx, 1)[0];
                 window.staffTrash.push(removed);
-                showNotification("تم نقل الحساب إلى سلة المحذوفات");
+                showNotification(window.currentLang==='ar'?"تم نقل الحساب إلى سلة المحذوفات":"Staff moved to trash");
                 syncToCloud();
             }
         }
@@ -884,14 +948,14 @@
             if(idx !== -1) {
                 let restored = window.staffTrash.splice(idx, 1)[0];
                 window.staffList.push(restored);
-                showNotification("تم استرجاع حساب الموظف بنجاح ↺");
+                showNotification(window.currentLang==='ar'?"تم استرجاع حساب الموظف بنجاح ↺":"Staff restored ↺");
                 syncToCloud();
             }
         }
 
         window.deleteStaffForever = function(id) {
             window.staffTrash = window.staffTrash.filter(x => x.id !== id);
-            showNotification("تم حذف الموظف نهائياً من النظام");
+            showNotification(window.currentLang==='ar'?"تم حذف الموظف نهائياً من النظام":"Staff deleted permanently");
             syncToCloud();
         }
 
@@ -902,7 +966,7 @@
                     let s = window.staffList.find(x => x.id === id);
                     if(s) {
                         s.avatar = e.target.result;
-                        showNotification("تم تحديث وحفظ صورة الموظف سحابياً");
+                        showNotification(window.currentLang==='ar'?"تم تحديث وحفظ صورة الموظف سحابياً":"Staff avatar updated");
                         syncToCloud();
                     }
                 }
@@ -912,12 +976,12 @@
 
         window.updateStaffField = function(id, field, val) {
             let s = window.staffList.find(x => x.id === id);
-            if(s) { s[field] = val; showNotification("تم حفظ التعديلات سحابياً ✓"); syncToCloud(); }
+            if(s) { s[field] = val; showNotification(window.currentLang==='ar'?"تم حفظ التعديلات سحابياً ✓":"Changes saved ✓"); syncToCloud(); }
         }
 
         function renderOrderDropdowns() {
-            let pHtml = '<option value="">-- اختر المنتج الأساسي --</option>';
-            window.inventoryList.forEach(i => { pHtml += `<option value="${i.id}">${i.name} (سعر البيع AI: ${i.suggestedPrice} SAR)</option>`; });
+            let pHtml = `<option value="">-- ${window.currentLang==='ar'?'اختر المنتج الأساسي':'Select Main Product'} --</option>`;
+            window.inventoryList.forEach(i => { pHtml += `<option value="${i.id}">${i.name} (AI Price: ${i.suggestedPrice} SAR)</option>`; });
             document.getElementById('order-product-select').innerHTML = pHtml;
         }
 
@@ -927,7 +991,7 @@
             const pId = document.getElementById('order-product-select').value;
 
             if(!clientName || !pId) {
-                alert("يرجى إدخال اسم العميل واختيار المنتج الأساسي على الأقل!");
+                alert(window.currentLang==='ar'?"يرجى إدخال اسم العميل واختيار المنتج الأساسي على الأقل!":"Please enter client name and select a main product!");
                 return;
             }
 
@@ -944,64 +1008,77 @@
             });
 
             window.ordersList.unshift({
-                id: Date.now(), clientName, clientPhone: clientPhone || 'غير متوفر',
-                productName: product.name, addons: selectedAddonsText.length > 0 ? selectedAddonsText.join(' + ') : 'بدون تغليف',
-                total, assignedStaff: 'غير مسند', status: 'بانتظار التوزيع'
+                id: Date.now(), clientName, clientPhone: clientPhone || 'N/A',
+                productName: product.name, addons: selectedAddonsText.length > 0 ? selectedAddonsText.join(' + ') : (window.currentLang==='ar'?'بدون تغليف':'No packaging'),
+                total, assignedStaff: window.currentLang==='ar'?'غير مسند':'Unassigned', status: window.currentLang==='ar'?'بانتظار التوزيع':'Pending Assignment'
             });
 
             document.getElementById('order-client-name').value = '';
             document.getElementById('order-client-phone').value = '';
-            showNotification("تم تسجيل الطلبية وإضافتها للمخزن العام بانتظار التوزيع");
+            showNotification(window.currentLang==='ar'?"تم تسجيل الطلبية وإضافتها للمخزن العام بانتظار التوزيع":"Order registered & added to pending queue");
             syncToCloud();
             navTo('orders-screen');
         }
 
         function renderOrdersList() {
             let html = '';
-            let staffOptions = '<option value="">-- اختر موظف لإسناد الطلب --</option>';
+            let staffOptions = `<option value="">-- ${window.currentLang==='ar'?'اختر موظف لإسناد الطلب':'Select Staff to Assign'} --</option>`;
             window.staffList.filter(s => s.status === 'نشط').forEach(s => {
                 staffOptions += `<option value="${s.name}">${s.name} (${s.role})</option>`;
             });
 
             window.ordersList.forEach(o => {
-                let isUnassigned = !o.assignedStaff || o.assignedStaff === 'غير مسند';
+                let isUnassigned = !o.assignedStaff || o.assignedStaff === 'غير مسند' || o.assignedStaff === 'Unassigned';
                 html += `<div class="panel-box" style="border-color:${isUnassigned ? 'var(--warning)' : 'var(--accent-gold)'};">
                     <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                        <strong>العميل: ${o.clientName}</strong> <span class="badge">${o.status}</span>
+                        <strong>Client: ${o.clientName}</strong> <span class="badge">${o.status}</span>
                     </div>
                     <div style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">
-                        القطعة: ${o.productName} | الإضافات: ${o.addons}<br>
-                        الإجمالي النهائي: <b style="color:var(--success);">${o.total} SAR</b> | المسؤول الحالي: <b style="color:var(--accent-gold);">${o.assignedStaff || 'غير مسند'}</b>
+                        Item: ${o.productName} | Add-ons: ${o.addons}<br>
+                        Total: <b style="color:var(--success);">${o.total} SAR</b> | Assigned: <b style="color:var(--accent-gold);">${o.assignedStaff || 'Unassigned'}</b>
                     </div>
                     <div style="display:flex; gap:6px; align-items:center; margin-top:6px;">
                         <select id="assign-select-${o.id}" style="padding:4px; font-size:10px; background:var(--bg-dark); color:var(--text-main); border:1px solid var(--border); border-radius:4px; flex:1;">
                             ${staffOptions}
                         </select>
-                        <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--accent-gold); color:#1c1815; width:auto; margin-top:0;" onclick="assignOrderToStaff(${o.id})">إسناد وتجهيز ➔</button>
-                        ${o.status !== 'مكتمل' ? `<button class="btn" style="padding:4px 8px; font-size:10px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="completeOrder(${o.id})">إنجاز ✓</button>` : ''}
+                        <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--accent-gold); color:#1c1815; width:auto; margin-top:0;" onclick="assignOrderToStaff(${o.id})">${window.currentLang==='ar'?'إسناد وتجهيز ➔':'Assign ➔'}</button>
+                        ${o.status !== 'مكتمل' && o.status !== 'Completed' ? `<button class="btn" style="padding:4px 8px; font-size:10px; background:var(--success); color:#fff; width:auto; margin-top:0;" onclick="completeOrder(${o.id})">${window.currentLang==='ar'?'إنجاز ✓':'Done ✓'}</button>` : ''}
+                        <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--danger); color:#fff; width:auto; margin-top:0;" onclick="deleteOrder(${o.id})" title="إلغاء وحذف الطلبية">إلغاء ❌</button>
                     </div>
                 </div>`;
             });
-            document.getElementById('real-orders-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد طلبيات مسجلة حالياً.</p>';
+            document.getElementById('real-orders-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang==='ar'?'لا توجد طلبيات مسجلة حالياً.':'No orders registered.'}</p>`;
         }
 
         window.assignOrderToStaff = function(orderId) {
             let selectEl = document.getElementById(`assign-select-${orderId}`);
             let staffName = selectEl.value;
-            if(!staffName) { alert("يرجى اختيار موظف أولاً لإسناد الطلب إليه!"); return; }
+            if(!staffName) { alert(window.currentLang==='ar'?"يرجى اختيار موظف أولاً لإسناد الطلب إليه!":"Please select a staff member first!"); return; }
 
             let o = window.ordersList.find(x => x.id === orderId);
             if(o) {
                 o.assignedStaff = staffName;
-                o.status = 'قيد التجهيز';
-                showNotification(`تم إسناد الطلب للموظف (${staffName}) وابدأ التجهيز`);
+                o.status = window.currentLang==='ar'?'قيد التجهيز':'In Progress';
+                showNotification(window.currentLang==='ar'?`تم إسناد الطلب للموظف (${staffName})`:`Order assigned to (${staffName})`);
                 syncToCloud();
             }
         }
 
         window.completeOrder = function(id) {
             let o = window.ordersList.find(x => x.id === id);
-            if(o) { o.status = 'مكتمل'; showNotification("تم إنجاز الطلب وحفظه سحابياً"); syncToCloud(); }
+            if(o) { 
+                o.status = window.currentLang==='ar'?'مكتمل':'Completed'; 
+                showNotification(window.currentLang==='ar'?"تم إنجاز الطلب وحفظه سحابياً":"Order completed and saved"); 
+                syncToCloud(); 
+            }
+        }
+
+        window.deleteOrder = function(id) {
+            if(confirm(window.currentLang==='ar'?"هل أنت متأكد من إلغاء وحذف هذه الطلبية نهائياً؟":"Are you sure you want to cancel and delete this order?")) {
+                window.ordersList = window.ordersList.filter(x => x.id !== id);
+                showNotification(window.currentLang==='ar'?"تم إلغاء وحذف الطلبية بنجاح":"Order cancelled & deleted");
+                syncToCloud();
+            }
         }
 
         function renderStaffChatContacts() {
@@ -1012,7 +1089,7 @@
                         <img src="${staff.avatar}" style="width:28px; height:28px; border-radius:50%; object-fit:cover;">
                         <div><strong>${staff.name}</strong> <span class="online-dot"></span> <span class="badge">${staff.role}</span></div>
                     </div>
-                    <span style="color:var(--accent-gold); font-size:11px;">مراسلة 💬</span>
+                    <span style="color:var(--accent-gold); font-size:11px;">${window.currentLang==='ar'?'مراسلة 💬':'Chat 💬'}</span>
                 </div>`;
             });
             document.getElementById('staff-chat-contacts').innerHTML = html;
@@ -1020,7 +1097,7 @@
 
         window.openPrivateChat = function(staffId, staffName) {
             window.activeChatStaffId = staffId;
-            document.getElementById('active-chat-title').innerText = `المحادثة مع: ${staffName}`;
+            document.getElementById('active-chat-title').innerText = `${window.currentLang==='ar'?'المحادثة مع: ':'Chat with: '}${staffName}`;
             document.getElementById('private-chat-box').style.display = 'block';
             renderPrivateMessages();
         }
@@ -1031,10 +1108,10 @@
             let html = '';
             if(staff.chat) {
                 staff.chat.forEach(msg => {
-                    html += `<div style="text-align:${msg.sender==='admin'?'right':'left'}; background:var(--bg-dark); padding:4px 8px; border-radius:6px;">${msg.sender==='admin'?'أنت':'الموظف'}: ${msg.text}</div>`;
+                    html += `<div style="text-align:${msg.sender==='admin'?'right':'left'}; background:var(--bg-dark); padding:4px 8px; border-radius:6px;">${msg.sender==='admin'?(window.currentLang==='ar'?'أنت':'You'):staff.name}: ${msg.text}</div>`;
                 });
             }
-            document.getElementById('private-messages-list').innerHTML = html || '<div style="color:var(--text-muted);">لا توجد رسائل سابقة. ابدأ المحادثة...</div>';
+            document.getElementById('private-messages-list').innerHTML = html || `<div style="color:var(--text-muted);">${window.currentLang==='ar'?'لا توجد رسائل سابقة. ابدأ المحادثة...':'No messages yet.'}</div>`;
         }
 
         window.sendPrivateMessage = function() {
@@ -1060,12 +1137,12 @@
             const q = input.value.trim();
             if(!q) return;
 
-            history.innerHTML += `<div style="text-align:right; color:var(--text-main);"><b>أنت:</b> ${q}</div>`;
+            history.innerHTML += `<div style="text-align:right; color:var(--text-main);"><b>${window.currentLang==='ar'?'أنت':'You'}:</b> ${q}</div>`;
             input.value = '';
 
             setTimeout(() => {
                 let reply = window.currentLang === 'ar' ? 
-                    `تحليل الـ AI لطلبك "${q}": النظام متصل بالسحابة وتوزيع الطلبات يعمل بكفاءة تامة.` :
+                    `تحليل الـ AI لطلبك "${q}": النظام متصل بالسحابة وتوزيع الطلبات والمنتجات تعمل بكفاءة.` :
                     `AI Analysis for "${q}": System is operating smoothly via cloud sync.`;
                 history.innerHTML += `<div style="background:rgba(197,160,89,0.15); padding:6px 8px; border-radius:6px; color:var(--accent-gold);"><b>Neris AI:</b> ${reply}</div>`;
                 history.scrollTop = history.scrollHeight;
@@ -1097,14 +1174,14 @@
             let suggestedPrice = parseFloat(document.getElementById('p-suggested').value) || (cost * 1.35);
             let imgFile = document.getElementById('p-img-file').files[0];
 
-            if(!name || cost <= 0) { alert("أدخل اسم المنتج وسعر التكلفة صحيحاً"); return; }
+            if(!name || cost <= 0) { alert(window.currentLang==='ar'?"أدخل اسم المنتج وسعر التكلفة صحيحاً":"Enter product name and valid cost"); return; }
 
             let imgUrl = "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100";
             if(imgFile) imgUrl = URL.createObjectURL(imgFile);
 
             window.inventoryList.push({ id: Date.now(), name, qty, color, size, cost, suggestedPrice: suggestedPrice.toFixed(2), image: imgUrl });
             closeModal('add-product-modal');
-            showNotification("تمت إضافة المنتج وحفظه سحابياً");
+            showNotification(window.currentLang==='ar'?"تمت إضافة المنتج وحفظه سحابياً":"Product added successfully");
             syncToCloud();
         }
 
@@ -1118,20 +1195,20 @@
             let name = document.getElementById('a-name').value.trim();
             let price = parseFloat(document.getElementById('a-price').value) || 0;
             let imgFile = document.getElementById('a-img-file').files[0];
-            if(!name || price <= 0) { alert("أدخل اسم التغليف والسعر"); return; }
+            if(!name || price <= 0) { alert(window.currentLang==='ar'?"أدخل اسم التغليف والسعر":"Enter packaging name and price"); return; }
 
             let imgUrl = "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100";
             if(imgFile) imgUrl = URL.createObjectURL(imgFile);
 
             window.addonsList.push({ id: Date.now(), name, price, image: imgUrl });
             closeModal('add-addon-modal');
-            showNotification("تمت إضافة عنصر التغليف سحابياً");
+            showNotification(window.currentLang==='ar'?"تمت إضافة عنصر التغليف سحابياً":"Packaging added successfully");
             syncToCloud();
         }
 
         window.deleteAddonItem = function(id) { 
             window.addonsList = window.addonsList.filter(x => x.id !== id); 
-            showNotification("تم الحذف والتحديث سحابياً"); 
+            showNotification(window.currentLang==='ar'?"تم الحذف والتحديث سحابياً":"Deleted & synced"); 
             syncToCloud(); 
         }
 
@@ -1139,7 +1216,7 @@
         
         window.saveProfile = function() { 
             calcAdminAge();
-            showNotification("تم حفظ بيانات الملف الشخصي سحابياً"); 
+            showNotification(window.currentLang==='ar'?"تم حفظ بيانات الملف الشخصي سحابياً":"Profile saved successfully"); 
             syncToCloud();
         }
 
@@ -1150,7 +1227,7 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('main-drawer').classList.remove('open');
-            showNotification("تم تسجيل الخروج");
+            showNotification(window.currentLang==='ar'?"تم تسجيل الخروج":"Logged out");
         }
 
         function showNotification(msg) {
