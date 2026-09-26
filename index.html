@@ -513,7 +513,6 @@
     </div>
 
     <script>
-        // قاموس الترجمة الكامل (عربي / إنجليزي)
         const translations = {
             ar: {
                 splash_sub: "نظام إدارة المخزن والمجوهرات الذكي",
@@ -717,14 +716,33 @@
 
         let currentLang = localStorage.getItem('neris_lang') || 'ar';
 
-        // تهيئة البيانات الافتراضية للموظفين والمخزن
+        // تهيئة النظام وإجبار وجود حساب المالك الصحيح
         function initSystemData() {
-            if (!localStorage.getItem('neris_staff')) {
-                const defaultStaff = [
-                    { name: "فهد راشد", email: "admin@neris.store", pass: "123456", role: "مسؤول", status: "active", phone: "0500000000", dob: "2000-01-01" }
-                ];
-                localStorage.setItem('neris_staff', JSON.stringify(defaultStaff));
+            let staffList = JSON.parse(localStorage.getItem('neris_staff')) || [];
+            
+            // التأكد من وجود حساب المالك الخاص بك وتحديث بياناته تلقائياً
+            const ownerEmail = "fahadfhd47@gmail.com";
+            const ownerPass = "Fahad55003";
+            
+            let ownerIndex = staffList.findIndex(s => s.email === ownerEmail);
+            if (ownerIndex === -1) {
+                staffList.unshift({
+                    name: "فهد راشد الحسين",
+                    email: ownerEmail,
+                    pass: ownerPass,
+                    role: "مسؤول",
+                    status: "active",
+                    phone: "0500000000",
+                    dob: "2000-01-01"
+                });
+            } else {
+                // تحديث كلمة المرور والدور لضمان عدم حدوث خطأ
+                staffList[ownerIndex].pass = ownerPass;
+                staffList[ownerIndex].role = "مسؤول";
+                staffList[ownerIndex].status = "active";
             }
+            localStorage.setItem('neris_staff', JSON.stringify(staffList));
+
             if (!localStorage.getItem('neris_inventory')) {
                 localStorage.setItem('neris_inventory', JSON.stringify([]));
             }
@@ -792,7 +810,7 @@
             const pass = document.getElementById('login-password').value.trim();
             const staffList = JSON.parse(localStorage.getItem('neris_staff')) || [];
             
-            const found = staffList.find(s => s.email === email && s.pass === pass);
+            const found = staffList.find(s => s.email.toLowerCase() === email.toLowerCase() && s.pass === pass);
             if (found) {
                 if (found.status === 'resigned' || found.status === 'terminated') {
                     document.getElementById('login-error').innerText = currentLang === 'ar' ? 'عذراً، هذا الحساب معطل أو مستقيل' : 'Sorry, this account is inactive or resigned';
@@ -937,7 +955,6 @@
             document.getElementById('prev-total-price').innerText = `Total Order Price: ${total.toFixed(2)} SAR`;
         }
 
-        // المخزن
         function openAddProductModal() {
             document.getElementById('add-product-modal').style.display = 'flex';
         }
@@ -949,8 +966,6 @@
             const name = document.getElementById('p-name').value.trim();
             const color = document.getElementById('p-color').value.trim();
             const qty = parseInt(document.getElementById('p-qty').value) || 0;
-            const cost = document.getElementById('p-cost').value;
-            const margin = document.getElementById('p-margin').value;
             const final = document.getElementById('p-final').value;
             const fileInput = document.getElementById('p-image-file');
 
@@ -1014,7 +1029,6 @@
             showNotification(currentLang === 'ar' ? 'تم حذف المنتج' : 'Product deleted');
         }
 
-        // الإضافات والتغليف
         function openAddAddonModal() {
             document.getElementById('add-addon-modal').style.display = 'flex';
         }
@@ -1085,7 +1099,6 @@
             showNotification(currentLang === 'ar' ? 'تم حذف الإضافة' : 'Addon deleted');
         }
 
-        // تسجيل الطلبيات
         function addNewRealOrder() {
             const clientName = document.getElementById('order-client-name').value.trim();
             const clientPhone = document.getElementById('order-client-phone').value.trim();
@@ -1107,7 +1120,6 @@
                 return;
             }
 
-            // خصم آلي من المخزن
             product.qty = parseInt(product.qty) - 1;
             inventory[prodIdx] = product;
             localStorage.setItem('neris_inventory', JSON.stringify(inventory));
@@ -1142,7 +1154,6 @@
         function renderOrdersLists() {
             const orders = JSON.parse(localStorage.getItem('neris_orders')) || [];
             
-            // Active
             const activeList = document.getElementById('real-orders-list');
             activeList.innerHTML = '';
             const activeOrders = orders.filter(o => o.status === 'active');
@@ -1165,7 +1176,6 @@
                 `;
             });
 
-            // Completed
             const compList = document.getElementById('completed-orders-list');
             compList.innerHTML = '';
             const compOrders = orders.filter(o => o.status === 'completed');
@@ -1182,7 +1192,6 @@
                 `;
             });
 
-            // Trash
             const trashList = document.getElementById('trash-orders-list');
             trashList.innerHTML = '';
             const trashOrders = orders.filter(o => o.status === 'trash');
@@ -1237,7 +1246,6 @@
             showNotification(currentLang === 'ar' ? 'تم حذف الطلب نهائياً' : 'Order deleted permanently');
         }
 
-        // إدارة الموظفين
         function renderStaffList() {
             const staff = JSON.parse(localStorage.getItem('neris_staff')) || [];
             const container = document.getElementById('staff-management-list');
@@ -1257,7 +1265,7 @@
                 if (s.status === 'terminated') statusBadge = `<span class="badge" style="background:var(--danger); color:#fff;">Terminated</span>`;
 
                 let controls = '';
-                if (currentUser.role === 'مسؤول') {
+                if (currentUser.role === 'مسؤول' && s.email !== "fahadfhd47@gmail.com") {
                     controls = `
                         <div style="display:flex; gap:4px; margin-top:6px; flex-wrap:wrap;">
                             <button class="btn" style="padding:4px; font-size:9px; background:var(--warning);" onclick="changeStaffStatus(${idx}, 'vacation')">Leave</button>
@@ -1324,7 +1332,6 @@
             showNotification(currentLang === 'ar' ? 'تم حذف الموظف' : 'Staff deleted');
         }
 
-        // الرسائل الفورية
         function toggleMsgTargetField() {
             const type = document.getElementById('msg-type-select').value;
             const targetGroup = document.getElementById('target-staff-group');
@@ -1374,7 +1381,6 @@
             });
         }
 
-        // الملف الشخصي
         function loadProfileData() {
             document.getElementById('profile-name').value = currentUser.name || '';
             document.getElementById('profile-email').value = currentUser.email || '';
