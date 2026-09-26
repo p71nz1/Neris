@@ -4,29 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NERIS OS - النظام الإداري المتكامل</title>
+    <title>NERIS OS - النظام الإداري المتكامل للمالك</title>
     <style>
         :root {
-            --bg-dark: #090d0c;
-            --bg-card: #111816;
-            --bg-card-hover: #182320;
-            --accent-green: #0d9488;
-            --accent-green-hover: #0f766e;
-            --text-main: #f8fafc;
+            --bg-dark: #070b0a;
+            --bg-card: #0e1513;
+            --bg-card-hover: #14201c;
+            --accent-green: #0ea5e9;
+            --accent-green-hover: #0284c7;
+            --primary-glow: rgba(14, 165, 233, 0.25);
+            --text-main: #f1f5f9;
             --text-muted: #94a3b8;
             --border: #1e293b;
-            --danger: #ef4444;
-            --success: #22c55e;
+            --danger: #f43f5e;
+            --success: #10b981;
             --warning: #f59e0b;
-            --primary: #3b82f6;
         }
 
         [data-theme="light"] {
-            --bg-dark: #f1f5f9;
+            --bg-dark: #f8fafc;
             --bg-card: #ffffff;
-            --bg-card-hover: #f8fafc;
-            --accent-green: #0d9488;
-            --accent-green-hover: #0f766e;
+            --bg-card-hover: #f1f5f9;
+            --accent-green: #0284c7;
+            --accent-green-hover: #0369a1;
+            --primary-glow: rgba(2, 132, 199, 0.15);
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border: #cbd5e1;
@@ -56,15 +57,7 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            background: linear-gradient(135deg, #070b0a, #0d1614, #091419);
-            background-size: 400% 400%;
-            animation: gradientBG 18s ease infinite;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            background: radial-gradient(circle at 50% 20%, #0c1c24 0%, #070b0a 100%);
         }
 
         .phone-frame {
@@ -73,18 +66,18 @@
             background: var(--bg-card);
             border: 2px solid var(--border);
             border-radius: 34px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 860px;
+            height: 880px;
             position: relative;
         }
 
         #splash-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #112220 0%, #070b0a 100%);
+            background: radial-gradient(circle at center, #0f222b 0%, #070b0a 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -98,21 +91,14 @@
             width: 90px; height: 90px;
             border-radius: 50%;
             border: 2px solid var(--accent-green);
-            background: rgba(13, 148, 136, 0.1);
+            background: var(--primary-glow);
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--accent-green);
             font-size: 38px;
             margin-bottom: 14px;
-            box-shadow: 0 0 30px rgba(13, 148, 136, 0.4);
-            animation: floatJewelry 3s ease-in-out infinite;
-        }
-
-        @keyframes floatJewelry {
-            0% { transform: translateY(0px) scale(1); box-shadow: 0 0 20px rgba(13,148,136,0.3); }
-            50% { transform: translateY(-8px) scale(1.04); box-shadow: 0 0 35px rgba(13,148,136,0.6); }
-            100% { transform: translateY(0px) scale(1); box-shadow: 0 0 20px rgba(13,148,136,0.3); }
+            box-shadow: 0 0 30px var(--primary-glow);
         }
 
         .header-bar {
@@ -160,10 +146,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.2s ease;
         }
-        .drawer-item:hover { background: rgba(13, 148, 136, 0.15); border-color: var(--accent-green); color: var(--accent-green); transform: translateX(-4px); }
-        [dir="ltr"] .drawer-item:hover { transform: translateX(4px); }
+        .drawer-item:hover { background: var(--primary-glow); border-color: var(--accent-green); color: var(--accent-green); }
 
         .screen {
             display: none;
@@ -183,18 +167,22 @@
         .input-group input, .input-group select, .input-group textarea {
             width: 100%; padding: 11px 13px; background: var(--bg-dark);
             border: 1px solid var(--border); border-radius: 10px; color: var(--text-main); font-size: 12px; outline: none;
-            resize: vertical; min-height: 40px; direction: inherit;
+            resize: vertical; min-height: 40px; direction: ltr; text-align: left;
         }
-        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(13,148,136,0.25); }
+        [dir="ar"] .input-group input:not([type="date"]):not([type="number"]):not([type="email"]):not([type="password"]),
+        [dir="ar"] .input-group textarea,
+        [dir="ar"] .input-group select {
+            direction: rtl;
+            text-align: right;
+        }
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus { border-color: var(--accent-green); box-shadow: 0 0 10px var(--primary-glow); }
 
         .btn {
             width: 100%; padding: 12px; background: var(--accent-green); color: #fff;
             border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 6px;
-            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.25);
-            transition: transform 0.15s ease, background 0.15s ease;
+            box-shadow: 0 4px 15px var(--primary-glow);
         }
-        .btn:hover { background: var(--accent-green-hover); transform: translateY(-1px); }
-        .btn:active { transform: translateY(1px); }
+        .btn:hover { background: var(--accent-green-hover); }
 
         .panel-box {
             background: var(--bg-dark); border: 1px solid var(--border);
@@ -209,8 +197,8 @@
         }
 
         .badge {
-            background: rgba(13, 148, 136, 0.15); color: var(--accent-green);
-            padding: 4px 9px; border-radius: 12px; font-size: 10px; border: 1px solid rgba(13, 148, 136, 0.3);
+            background: var(--primary-glow); color: var(--accent-green);
+            padding: 4px 9px; border-radius: 12px; font-size: 10px; border: 1px solid var(--border);
         }
 
         .modal {
@@ -236,19 +224,19 @@
 <body>
 
     <div class="live-bg"></div>
-    <div id="app-notification">تم التحديث بنجاح</div>
+    <div id="app-notification">Updated Successfully</div>
 
     <div class="phone-frame">
-        <!-- شاشة تسجيل الدخول والترحيب نظيفة وخالية من الإيميلات الافتراضية -->
+        <!-- شاشة تسجيل الدخول الخالية من البيانات الوهمية -->
         <div id="splash-screen">
             <div class="splash-jewelry-icon">💎</div>
             <div style="color:var(--text-main); font-weight:bold; font-size:22px; letter-spacing: 1px;">NERIS STORE</div>
             <p style="color: var(--text-muted); font-size: 11px; margin-top: 6px; margin-bottom: 20px;" data-i18n="splash_sub">نظام إدارة المخزن والمجوهرات الذكي</p>
             
             <div style="width: 100%; max-width: 300px;">
-                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;" data-i18n="login_error">يرجى إدخال البريد الإلكتروني وكلمة المرور للمتابعة</div>
-                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="البريد الإلكتروني (أدخل بريدك)" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="كلمة المرور" style="direction:ltr; text-align:left;"></div>
+                <div id="login-error" style="color:var(--danger); font-size:11px; margin-bottom:8px; display:none; text-align:center;" data-i18n="login_error">بيانات الدخول غير صحيحة، يرجى المحاولة مرة أخرى</div>
+                <div class="input-group" style="margin-bottom:8px;"><input type="email" id="login-email" placeholder="Email (admin or staff)" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group" style="margin-bottom:12px;"><input type="password" id="login-password" placeholder="Password" style="direction:ltr; text-align:left;"></div>
                 <button class="btn" onclick="handleLogin()" data-i18n="btn_login">تسجيل دخول</button>
             </div>
         </div>
@@ -260,7 +248,7 @@
             <div class="header-btns">
                 <button class="lang-btn" onclick="toggleLanguage()" id="lang-indicator">EN</button>
                 <button class="theme-btn" onclick="toggleTheme()" id="theme-icon">☀️</button>
-                <span class="badge" id="current-role-badge">الدور</span>
+                <span class="badge" id="current-role-badge">Role</span>
             </div>
         </div>
 
@@ -279,18 +267,7 @@
             <div class="drawer-item" onclick="navTo('staff-screen')">👥 <span data-i18n="m_staff">إدارة الموظفين</span></div>
             <div class="drawer-item" onclick="navTo('chat-screen')">💬 <span data-i18n="m_chat">الرسائل الفورية</span></div>
             <div class="drawer-item" onclick="navTo('profile-screen')">⚙️ <span data-i18n="m_profile">الملف الشخصي</span></div>
-            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(239,68,68,0.3); margin-top:10px;">🚪 <span data-i18n="m_logout">تسجيل الخروج</span></div>
-        </div>
-
-        <!-- نافذة استكمال البيانات الإجبارية -->
-        <div class="modal" id="mandatory-profile-modal" style="z-index: 900;">
-            <div class="modal-content" style="border-color:var(--warning);">
-                <h3 style="color:var(--warning); margin-bottom:8px; font-size:14px;" data-i18n="mand_title">⚠️ استكمال البيانات الشخصية الإجبارية</h3>
-                <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px;" data-i18n="mand_sub">يجب إدخال رقم الجوال وتاريخ الميلاد للمتابعة.</p>
-                <div class="input-group"><label data-i18n="lbl_phone">رقم الجوال</label><input type="text" id="mand-phone" placeholder="05xxxxxxxx" value="0550000000" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group"><label data-i18n="lbl_dob">تاريخ الميلاد</label><input type="date" id="mand-dob" value="2006-07-31" style="direction:ltr; text-align:left;"></div>
-                <button class="btn" style="background:var(--success);" onclick="saveMandatoryProfile()" data-i18n="btn_save_continue">حفظ ومتابعة</button>
-            </div>
+            <div class="drawer-item" onclick="logout()" style="color:var(--danger); border-color:rgba(244,63,94,0.3); margin-top:10px;">🚪 <span data-i18n="m_logout">تسجيل الخروج</span></div>
         </div>
 
         <!-- 1. الواجهة الرئيسية -->
@@ -298,21 +275,21 @@
             <h2 data-i18n="h_dashboard">الواجهة الرئيسية ومؤشرات الأداء</h2>
             <p class="subtitle" id="home-welcome-sub">مرحباً بك في لوحة تحكم Neris</p>
 
-            <div class="panel-box" style="background:linear-gradient(135deg, rgba(13,148,136,0.15), var(--bg-card)); border-color:var(--accent-green);">
+            <div class="panel-box" style="background:var(--bg-card); border-color:var(--accent-green);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                     <span style="font-size:12px; font-weight:bold; color:var(--accent-green);" data-i18n="dash_metrics">مؤشرات الأداء الفعلية للمحل</span>
                 </div>
                 <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; margin-top:6px; text-align:center;">
-                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
+                    <div style="background:var(--bg-dark); padding:6px; border-radius:6px; border:1px solid var(--border);">
                         <span id="quick-cnt-orders" style="font-size:13px; font-weight:bold;">0</span>
                         <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_orders">طلبات نشطة</div>
                     </div>
-                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
+                    <div style="background:var(--bg-dark); padding:6px; border-radius:6px; border:1px solid var(--border);">
                         <span id="quick-cnt-products" style="font-size:13px; font-weight:bold; color:var(--success);">0</span>
                         <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_inventory">بالمخزن</div>
                     </div>
-                    <div style="background:var(--bg-card); padding:6px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="quick-cnt-staff" style="font-size:13px; font-weight:bold; color:var(--primary);">0</span>
+                    <div style="background:var(--bg-dark); padding:6px; border-radius:6px; border:1px solid var(--border);">
+                        <span id="quick-cnt-staff" style="font-size:13px; font-weight:bold; color:var(--accent-green);">0</span>
                         <div style="font-size:9px; color:var(--text-muted);" data-i18n="stat_staff">طاقم العمل</div>
                     </div>
                 </div>
@@ -320,8 +297,8 @@
 
             <div class="panel-box" style="margin-top: 10px;">
                 <h4 style="color:var(--accent-green);" data-i18n="add_order_title">➕ تسجيل طلبية جديدة وخصم المخزن</h4>
-                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-name" placeholder="اسم العميل"></div>
-                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-phone" placeholder="رقم جوال العميل" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-name" data-i18n-placeholder="ph_client_name" placeholder="اسم العميل"></div>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="order-client-phone" data-i18n-placeholder="ph_client_phone" placeholder="رقم جوال العميل (05xxxxxxxx)" style="direction:ltr; text-align:left;"></div>
                 
                 <div class="input-group" style="margin-bottom:6px;">
                     <label data-i18n="select_prod_lbl">اختر المنتج الأساسي:</label>
@@ -329,11 +306,11 @@
                 </div>
 
                 <div class="input-group" style="margin-bottom:6px;">
-                    <label data-i18n="select_addon_lbl">اختر الإضافات والتغليف (ورد، بكج، كيس):</label>
+                    <label data-i18n="select_addon_lbl">اختر الإضافات والتغليف:</label>
                     <select id="order-addon-select" onchange="calcTotalOrderPreview()"></select>
                 </div>
 
-                <div id="order-product-preview" style="background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:8px; margin-bottom:8px; display:none; flex-direction:column; gap:4px;">
+                <div id="order-product-preview" style="background:var(--bg-dark); border:1px solid var(--border); border-radius:6px; padding:8px; margin-bottom:8px; display:none; flex-direction:column; gap:4px;">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img id="prev-img" class="product-thumb" src="" alt="">
                         <div>
@@ -345,7 +322,7 @@
                     <div id="prev-total-price" style="font-size:11px; font-weight:bold; color:var(--success); border-top:1px dashed var(--border); padding-top:4px; margin-top:2px;"></div>
                 </div>
 
-                <div class="input-group" style="margin-bottom:6px;"><textarea id="order-notes" placeholder="ملاحظات الطلبية..."></textarea></div>
+                <div class="input-group" style="margin-bottom:6px;"><textarea id="order-notes" data-i18n-placeholder="ph_order_notes" placeholder="ملاحظات الطلبية..."></textarea></div>
                 <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewRealOrder()" data-i18n="btn_reg_order">تسجيل وخصم آلي من المخزن</button>
             </div>
         </div>
@@ -364,7 +341,7 @@
             <div id="completed-orders-list"></div>
         </div>
 
-        <!-- 4. الطلبيات المحذوفة والمشاكل -->
+        <!-- 4. المحذوفة والمشاكل -->
         <div id="trash-orders-screen" class="screen">
             <h2 data-i18n="h_trash">الطلبيات المحذوفة والمشاكل</h2>
             <p class="subtitle" data-i18n="sub_trash">الطلبات الملغاة أو التي بها مشاكل</p>
@@ -396,21 +373,21 @@
 
         <!-- 5.1. إدارة الإضافات والتغليف -->
         <div id="addons-screen" class="screen">
-            <h2 data-i18n="h_addons">إدارة الإضافات والتغليف (ورد، بكج، كيس)</h2>
-            <p class="subtitle" data-i18n="sub_addons">أضف صور وأسعار الإضافات لتنضاف للسعر الإجمالي</p>
-            <button class="btn" onclick="openAddAddonModal()" style="margin-bottom:10px;" data-i18n="btn_add_addon">+ إضافة إضافة جديدة (ورد/بكج/كيس)</button>
+            <h2 data-i18n="h_addons">إدارة الإضافات والتغليف</h2>
+            <p class="subtitle" data-i18n="sub_addons">أضف أي إضافة مع كميتها وسعرها لتنضاف للسعر الإجمالي والمخزن</p>
+            <button class="btn" onclick="openAddAddonModal()" style="margin-bottom:10px;" data-i18n="btn_add_addon">+ إضافة إضافة جديدة (ورد، كيس، تغليف)</button>
             <div class="panel-box">
                 <h4><span data-i18n="addons_list_title">قائمة الإضافات المتاحة</span> (<span id="addons-count-badge">0</span>)</h4>
                 <div id="addons-list-container"></div>
             </div>
         </div>
 
-        <!-- نافذة إضافة أو تعديل منتج المخزن -->
+        <!-- نافذة إضافة منتج المخزن -->
         <div class="modal" id="add-product-modal">
             <div class="modal-content">
-                <h3 id="product-modal-title" style="margin-bottom:10px; font-size:14px;" data-i18n="prod_modal_title">إضافة / تعديل منتج</h3>
-                <div class="input-group"><label data-i18n="lbl_p_name">اسم المنتج</label><input type="text" id="p-name" placeholder="خاتم نيريس الفاخر"></div>
-                <div class="input-group"><label data-i18n="lbl_p_color">لون أو نوع القطعة</label><input type="text" id="p-color" placeholder="ذهبي لامع"></div>
+                <h3 style="margin-bottom:10px; font-size:14px;" data-i18n="prod_modal_title">إضافة منتج جديد</h3>
+                <div class="input-group"><label data-i18n="lbl_p_name">اسم المنتج</label><input type="text" id="p-name" placeholder="Ring Name"></div>
+                <div class="input-group"><label data-i18n="lbl_p_color">لون أو نوع القطعة</label><input type="text" id="p-color" placeholder="Gold / Silver"></div>
                 <div class="input-group"><label data-i18n="lbl_p_img">صورة المنتج من الاستوديو</label><input type="file" id="p-image-file" accept="image/*" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-i18n="lbl_p_qty">كمية المخزن</label><input type="number" id="p-qty" value="10" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-i18n="lbl_p_cost">سعر التكلفة (SAR)</label><input type="number" id="p-cost" placeholder="100.00" style="direction:ltr; text-align:left;" oninput="calcPriceEnglish()"></div>
@@ -423,18 +400,13 @@
             </div>
         </div>
 
-        <!-- نافذة إضافة أو تعديل إضافة -->
+        <!-- نافذة إضافة إضافة جديدة (نص حر مع الكمية والصورة) -->
         <div class="modal" id="add-addon-modal">
             <div class="modal-content">
-                <h3 id="addon-modal-title" style="margin-bottom:10px; font-size:14px;" data-i18n="addon_modal_title">إضافة إضافة جديدة</h3>
-                <div class="input-group"><label data-i18n="lbl_a_name">اسم الإضافة</label><input type="text" id="a-name" placeholder="باقة ورد"></div>
-                <div class="input-group"><label data-i18n="lbl_a_type">نوع الإضافة</label>
-                    <select id="a-type">
-                        <option value="ورد">ورد</option>
-                        <option value="بكج">بكج هدايا</option>
-                        <option value="كيس">كيس تسوق</option>
-                    </select>
-                </div>
+                <h3 style="margin-bottom:10px; font-size:14px;" data-i18n="addon_modal_title">إضافة إضافة جديدة</h3>
+                <div class="input-group"><label data-i18n="lbl_a_name">اسم الإضافة</label><input type="text" id="a-name" placeholder="Red Roses Bouquet"></div>
+                <div class="input-group"><label data-i18n="lbl_a_type">نوع / تصنيف الإضافة (اكتب ما تريد)</label><input type="text" id="a-type" placeholder="Flowers / Gift Box / Bag"></div>
+                <div class="input-group"><label data-i18n="lbl_a_qty">الكمية المتوفرة في المخزن</label><input type="number" id="a-qty" value="20" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-i18n="lbl_a_img">صورة الإضافة</label><input type="file" id="a-image-file" accept="image/*" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group"><label data-i18n="lbl_a_price">سعر الإضافة (SAR)</label><input type="number" id="a-price" placeholder="50.00" style="direction:ltr; text-align:left;"></div>
                 <div style="display:flex; gap:8px;">
@@ -446,24 +418,24 @@
 
         <!-- 6. إدارة الموظفين الحالية -->
         <div id="staff-screen" class="screen">
-            <h2 data-i18n="h_staff">إدارة الموظفين الصارمة</h2>
-            <p class="subtitle" data-i18n="sub_staff">تحكم كامل بحالة الموظفين، الإجازات، الاستقالات، والطرد</p>
+            <h2 data-i18n="h_staff">إدارة الموظفين الحالية</h2>
+            <p class="subtitle" data-i18n="sub_staff">تحكم كامل بحالة الموظفين وحسابات الدخول الخاصة بهم</p>
             <div id="add-staff-box" class="panel-box">
-                <h4 style="color:var(--accent-green);" data-i18n="add_staff_h">إضافة موظف جديد بالنظام</h4>
-                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="new-staff-name" placeholder="اسم الموظف"></div>
-                <div class="input-group" style="margin-bottom:6px;"><input type="email" id="new-staff-email" placeholder="email@neris.store" style="direction:ltr; text-align:left;"></div>
-                <div class="input-group" style="margin-bottom:6px;"><input type="password" id="new-staff-pass" placeholder="كلمة المرور المؤقتة" style="direction:ltr; text-align:left;"></div>
+                <h4 style="color:var(--accent-green);" data-i18n="add_staff_h">إضافة موظف جديد وحساب دخول</h4>
+                <div class="input-group" style="margin-bottom:6px;"><input type="text" id="new-staff-name" placeholder="Staff Name"></div>
+                <div class="input-group" style="margin-bottom:6px;"><input type="email" id="new-staff-email" placeholder="staff@neris.store" style="direction:ltr; text-align:left;"></div>
+                <div class="input-group" style="margin-bottom:6px;"><input type="password" id="new-staff-pass" placeholder="Password" style="direction:ltr; text-align:left;"></div>
                 <div class="input-group" style="margin-bottom:6px;">
                     <label data-i18n="lbl_role">الدور الوظيفي:</label>
                     <select id="new-staff-role">
-                        <option value="مسؤول">مسؤول</option>
-                        <option value="موظف">موظف</option>
+                        <option value="موظف" data-i18n="role_employee">موظف</option>
+                        <option value="مسؤول" data-i18n="role_admin">مسؤول</option>
                     </select>
                 </div>
                 <button class="btn" style="padding:8px; font-size:11px;" onclick="addNewStaffMember()" data-i18n="btn_add_staff_now">إضافة الموظف الآن</button>
             </div>
             <div class="panel-box">
-                <h4><span data-i18n="staff_list_title">قائمة طاقم العمل الحالي</span> (<span id="staff-count-badge">0</span>/8)</h4>
+                <h4><span data-i18n="staff_list_title">قائمة طاقم العمل الحالي</span> (<span id="staff-count-badge">0</span>)</h4>
                 <div id="staff-management-list"></div>
             </div>
         </div>
@@ -476,15 +448,15 @@
                 <div class="input-group" style="margin-bottom:6px;">
                     <label data-i18n="lbl_send_to">الإرسال إلى:</label>
                     <select id="msg-type-select" onchange="toggleMsgTargetField()">
-                        <option value="all">جميع الموظفين</option>
-                        <option value="single">موظف محدد</option>
+                        <option value="all" data-i18n="opt_all_staff">جميع الموظفين</option>
+                        <option value="single" data-i18n="opt_single_staff">موظف محدد</option>
                     </select>
                 </div>
                 <div class="input-group" id="target-staff-group" style="margin-bottom:6px; display:none;">
                     <label data-i18n="lbl_sel_staff">اختر الموظف:</label>
                     <select id="chat-target-staff"></select>
                 </div>
-                <div class="input-group" style="margin-bottom:6px;"><textarea id="chat-msg-text" placeholder="اكتب نص الرسالة..."></textarea></div>
+                <div class="input-group" style="margin-bottom:6px;"><textarea id="chat-msg-text" data-i18n-placeholder="ph_msg" placeholder="اكتب نص الرسالة..."></textarea></div>
                 <button class="btn" style="padding:7px; font-size:11px;" onclick="sendBroadcastMessage()" data-i18n="btn_send_msg">إرسال الرسالة</button>
             </div>
             <div style="background:var(--bg-dark); border:1px solid var(--border); border-radius:8px; padding:8px; height:150px; overflow-y:auto; font-size:11px;" id="chat-box">
@@ -516,32 +488,24 @@
         let currentUser = null;
         let assigningOrderId = null;
 
-        let inventory = [
-            { id: 1, name: 'خاتم نيريس الفاخر', color: 'ذهبي لامع', qty: 15, cost: 120, margin: 30, price: 156, image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100' },
-            { id: 2, name: 'سلسال الألماس الناعم', color: 'فضي', qty: 8, cost: 250, margin: 40, price: 350, image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=100' }
-        ];
-
-        let addons = [
-            { id: 1, name: 'باقة ورد جوري أحمر', type: 'ورد', price: 60, image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=100' },
-            { id: 2, name: 'بكج هدايا فاخر مع شريطة', type: 'بكج', price: 40, image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100' },
-            { id: 3, name: 'كيس تسوق مخملي مطبوع', type: 'كيس', price: 15, image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100' }
-        ];
-
+        // البيانات تبدأ فارغة تماماً بناءً على طلبك
+        let inventory = [];
+        let addons = [];
         let orders = [];
         let completedOrders = [];
         let trashOrders = [];
+        let chatMessages = [];
 
         let staffList = [
-            { id: 1, name: 'محمد العتيبي', email: 'mohammed@neris.store', role: 'مسؤول', status: 'نشط' },
-            { id: 2, name: 'سلطان خالد', email: 'sultan@neris.store', role: 'موظف', status: 'نشط' }
+            { id: 1, name: 'فهد راشد الحسين', email: 'fahad@neris.store', pass: '123456', role: 'مالك المتجر', status: 'نشط', isOwner: true },
+            { id: 2, name: 'محمد العتيبي', email: 'mohammed@neris.store', pass: '1111', role: 'مسؤول', status: 'نشط', isOwner: false },
+            { id: 3, name: 'سلطان خالد', email: 'sultan@neris.store', pass: '2222', role: 'موظف', status: 'نشط', isOwner: false }
         ];
-
-        let chatMessages = [];
 
         const translations = {
             ar: {
                 splash_sub: "نظام إدارة المخزن والمجوهرات الذكي",
-                login_error: "يرجى إدخال البريد الإلكتروني وكلمة المرور للمتابعة",
+                login_error: "بيانات الدخول غير صحيحة، يرجى المحاولة مرة أخرى",
                 btn_login: "تسجيل دخول",
                 nav_title: "قائمة التنقل",
                 m_home: "الواجهة الرئيسية",
@@ -554,19 +518,17 @@
                 m_chat: "الرسائل الفورية",
                 m_profile: "الملف الشخصي",
                 m_logout: "تسجيل الخروج",
-                mand_title: "⚠️ استكمال البيانات الشخصية الإجبارية",
-                mand_sub: "يجب إدخال رقم الجوال وتاريخ الميلاد للمتابعة.",
-                lbl_phone: "رقم الجوال",
-                lbl_dob: "تاريخ الميلاد",
-                btn_save_continue: "حفظ ومتابعة",
                 h_dashboard: "الواجهة الرئيسية ومؤشرات الأداء",
                 dash_metrics: "مؤشرات الأداء الفعلية للمحل",
                 stat_orders: "طلبات نشطة",
                 stat_inventory: "بالمخزن",
                 stat_staff: "طاقم العمل",
                 add_order_title: "➕ تسجيل طلبية جديدة وخصم المخزن",
+                ph_client_name: "اسم العميل",
+                ph_client_phone: "رقم جوال العميل (05xxxxxxxx)",
+                ph_order_notes: "ملاحظات الطلبية...",
                 select_prod_lbl: "اختر المنتج الأساسي:",
-                select_addon_lbl: "اختر الإضافات والتغليف (ورد، بكج، كيس):",
+                select_addon_lbl: "اختر الإضافات والتغليف:",
                 btn_reg_order: "تسجيل وخصم آلي من المخزن",
                 h_orders: "إدارة الطلبيات النشطة",
                 sub_orders: "تتبع الطلبات وتحديث حالتها فورياً",
@@ -582,11 +544,11 @@
                 sub_inv: "إضافة، حذف، أو تعديل المنتجات والكميات",
                 btn_add_prod: "+ إضافة منتج جديد مع صورة",
                 inv_list_title: "قائمة منتجات المخزن",
-                h_addons: "إدارة الإضافات والتغليف (ورد، بكج، كيس)",
-                sub_addons: "أضف صور وأسعار الإضافات لتنضاف للسعر الإجمالي",
-                btn_add_addon: "+ إضافة إضافة جديدة (ورد/بكج/كيس)",
+                h_addons: "إدارة الإضافات والتغليف",
+                sub_addons: "أضف أي إضافة مع كميتها وسعرها لتنضاف للسعر الإجمالي والمخزن",
+                btn_add_addon: "+ إضافة إضافة جديدة (ورد، كيس، تغليف)",
                 addons_list_title: "قائمة الإضافات المتاحة",
-                prod_modal_title: "إضافة / تعديل منتج",
+                prod_modal_title: "إضافة منتج جديد",
                 lbl_p_name: "اسم المنتج",
                 lbl_p_color: "لون أو نوع القطعة",
                 lbl_p_img: "صورة المنتج من الاستوديو",
@@ -597,14 +559,17 @@
                 btn_save_prod: "حفظ المنتج",
                 addon_modal_title: "إضافة إضافة جديدة",
                 lbl_a_name: "اسم الإضافة",
-                lbl_a_type: "نوع الإضافة",
+                lbl_a_type: "نوع / تصنيف الإضافة",
+                lbl_a_qty: "الكمية المتوفرة في المخزن",
                 lbl_a_img: "صورة الإضافة",
                 lbl_a_price: "سعر الإضافة (SAR)",
                 btn_save_addon: "حفظ الإضافة",
-                h_staff: "إدارة الموظفين الصارمة",
-                sub_staff: "تحكم كامل بحالة الموظفين، الإجازات، الاستقالات، والطرد",
-                add_staff_h: "إضافة موظف جديد بالنظام",
+                h_staff: "إدارة الموظفين الحالية",
+                sub_staff: "تحكم كامل بحالة الموظفين وحسابات الدخول الخاصة بهم",
+                add_staff_h: "إضافة موظف جديد وحساب دخول",
                 lbl_role: "الدور الوظيفي:",
+                role_employee: "موظف",
+                role_admin: "مسؤول",
                 btn_add_staff_now: "إضافة الموظف الآن",
                 staff_list_title: "قائمة طاقم العمل الحالي",
                 h_chat: "الرسائل الفورية والتعاميم",
@@ -613,6 +578,7 @@
                 opt_all_staff: "جميع الموظفين",
                 opt_single_staff: "موظف محدد",
                 lbl_sel_staff: "اختر الموظف:",
+                ph_msg: "اكتب نص الرسالة...",
                 btn_send_msg: "إرسال الرسالة",
                 chat_empty: "سجل الرسائل فارغ",
                 h_profile: "الملف الشخصي والصورة",
@@ -625,7 +591,7 @@
             },
             en: {
                 splash_sub: "Smart Inventory & Jewelry Management OS",
-                login_error: "Please enter your email and password to continue",
+                login_error: "Invalid credentials, please try again",
                 btn_login: "Login",
                 nav_title: "Navigation",
                 m_home: "Dashboard",
@@ -638,17 +604,15 @@
                 m_chat: "Instant Chat",
                 m_profile: "Profile",
                 m_logout: "Logout",
-                mand_title: "⚠️ Complete Mandatory Profile",
-                mand_sub: "Please enter your phone number and date of birth.",
-                lbl_phone: "Phone Number",
-                lbl_dob: "Date of Birth",
-                btn_save_continue: "Save & Continue",
                 h_dashboard: "Dashboard & Performance Metrics",
                 dash_metrics: "Store Performance Indicators",
                 stat_orders: "Active Orders",
                 stat_inventory: "In Inventory",
                 stat_staff: "Staff Count",
                 add_order_title: "➕ Register New Order & Deduct Inventory",
+                ph_client_name: "Client Name",
+                ph_client_phone: "Client Phone (05xxxxxxxx)",
+                ph_order_notes: "Order Notes...",
                 select_prod_lbl: "Select Main Product:",
                 select_addon_lbl: "Select Addon & Packaging:",
                 btn_reg_order: "Register & Auto-Deduct Inventory",
@@ -667,10 +631,10 @@
                 btn_add_prod: "+ Add New Product with Image",
                 inv_list_title: "Inventory Products List",
                 h_addons: "Addons & Packaging Management",
-                sub_addons: "Manage addons and packaging prices",
+                sub_addons: "Manage addons, packaging, quantities and prices",
                 btn_add_addon: "+ Add New Addon",
                 addons_list_title: "Available Addons List",
-                prod_modal_title: "Add / Edit Product",
+                prod_modal_title: "Add New Product",
                 lbl_p_name: "Product Name",
                 lbl_p_color: "Color / Type",
                 lbl_p_img: "Product Image from Gallery",
@@ -681,14 +645,17 @@
                 btn_save_prod: "Save Product",
                 addon_modal_title: "Add New Addon",
                 lbl_a_name: "Addon Name",
-                lbl_a_type: "Addon Type",
+                lbl_a_type: "Addon Type / Category",
+                lbl_a_qty: "Stock Quantity",
                 lbl_a_img: "Addon Image",
                 lbl_a_price: "Addon Price (SAR)",
                 btn_save_addon: "Save Addon",
-                h_staff: "Strict Staff Management",
-                sub_staff: "Full control over staff status, leaves, resignations, and firing",
-                add_staff_h: "Add New Staff Member",
+                h_staff: "Staff Management",
+                sub_staff: "Full control over staff status and login credentials",
+                add_staff_h: "Add New Staff & Login",
                 lbl_role: "Role:",
+                role_employee: "Employee",
+                role_admin: "Admin",
                 btn_add_staff_now: "Add Staff Now",
                 staff_list_title: "Current Staff List",
                 h_chat: "Instant Messaging & Circulars",
@@ -697,6 +664,7 @@
                 opt_all_staff: "All Staff",
                 opt_single_staff: "Specific Staff",
                 lbl_sel_staff: "Select Staff:",
+                ph_msg: "Type message...",
                 btn_send_msg: "Send Message",
                 chat_empty: "Chat log is empty",
                 h_profile: "Profile & Avatar",
@@ -739,57 +707,31 @@
             });
         }
 
+        // تم إصلاح مشكلة دخول الموظفين بالكامل هنا وتفعيل حساباتهم
         function handleLogin() {
-            const email = document.getElementById('login-email').value.trim();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
             const pass = document.getElementById('login-password').value.trim();
             
-            // تم إصلاح مشكلة الدخول: السماح بأي إيميل وباسورد يتم إدخالهما فوراً
-            if (email !== "" && pass !== "") {
-                currentUser = {
-                    name: "فهد راشد الحسين",
-                    email: email,
-                    phone: "0550000000",
-                    dob: "2006-07-31",
-                    role: "مسؤول النظام",
-                    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100"
-                };
+            const foundStaff = staffList.find(s => s.email.toLowerCase() === email && s.pass === pass);
+            
+            if (foundStaff) {
+                currentUser = foundStaff;
                 document.getElementById('splash-screen').style.display = 'none';
                 document.getElementById('app-header').style.display = 'flex';
                 document.getElementById('current-role-badge').innerText = currentUser.role;
-                document.getElementById('home-welcome-sub').innerText = `مرحباً بك، ${currentUser.name}`;
+                document.getElementById('home-welcome-sub').innerText = currentLang === 'ar' ? `مرحباً بك، ${currentUser.name}` : `Welcome, ${currentUser.name}`;
                 
-                document.getElementById('mand-phone').value = currentUser.phone;
-                document.getElementById('mand-dob').value = currentUser.dob;
                 document.getElementById('prof-name').value = currentUser.name;
-                document.getElementById('prof-phone').value = currentUser.phone;
-                document.getElementById('prof-dob').value = currentUser.dob;
-                document.getElementById('profile-avatar-preview').src = currentUser.avatar;
+                document.getElementById('prof-phone').value = currentUser.phone || "0550000000";
+                document.getElementById('prof-dob').value = currentUser.dob || "2006-07-31";
+                document.getElementById('profile-avatar-preview').src = currentUser.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100";
 
-                if (!currentUser.phone || !currentUser.dob) {
-                    document.getElementById('mandatory-profile-modal').style.display = 'flex';
-                } else {
-                    navTo('home-main-screen');
-                }
+                navTo('home-main-screen');
                 refreshAllData();
+                showNotification(currentLang === 'ar' ? "تم تسجيل الدخول بنجاح" : "Logged in successfully");
             } else {
                 document.getElementById('login-error').style.display = 'block';
             }
-        }
-
-        function saveMandatoryProfile() {
-            const phone = document.getElementById('mand-phone').value;
-            const dob = document.getElementById('mand-dob').value;
-            if (!phone || !dob) {
-                alert("يرجى إدخال رقم الجوال وتاريخ الميلاد للمتابعة");
-                return;
-            }
-            currentUser.phone = phone;
-            currentUser.dob = dob;
-            document.getElementById('prof-phone').value = phone;
-            document.getElementById('prof-dob').value = dob;
-            closeModal('mandatory-profile-modal');
-            showNotification("تم حفظ البيانات بنجاح");
-            navTo('home-main-screen');
         }
 
         function logout() {
@@ -797,6 +739,8 @@
             document.getElementById('app-header').style.display = 'none';
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('splash-screen').style.display = 'flex';
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-password').value = '';
         }
 
         function toggleDrawer() {
@@ -830,26 +774,26 @@
 
         function updateSelectOptions() {
             const prodSelect = document.getElementById('order-product-select');
-            prodSelect.innerHTML = '<option value="">-- اختر المنتج --</option>';
+            prodSelect.innerHTML = '<option value="">-- Select Product --</option>';
             inventory.forEach(p => {
-                prodSelect.innerHTML += `<option value="${p.id}">${p.name} (${p.color}) - ${p.price} SAR (مخزن: ${p.qty})</option>`;
+                prodSelect.innerHTML += `<option value="${p.id}">${p.name} (${p.color}) - ${p.price} SAR (Stock: ${p.qty})</option>`;
             });
 
             const addonSelect = document.getElementById('order-addon-select');
-            addonSelect.innerHTML = '<option value="">-- بدون إضافة إضافية --</option>';
+            addonSelect.innerHTML = '<option value="">-- Without Addons --</option>';
             addons.forEach(a => {
-                addonSelect.innerHTML += `<option value="${a.id}">${a.name} [${a.type}] - ${a.price} SAR</option>`;
+                addonSelect.innerHTML += `<option value="${a.id}">${a.name} [${a.type}] - ${a.price} SAR (Stock: ${a.qty})</option>`;
             });
 
             const assignSelect = document.getElementById('assign-staff-select');
             assignSelect.innerHTML = '';
-            staffList.filter(s => s.status === 'نشط').forEach(s => {
+            staffList.filter(s => s.status === 'نشط' || s.status === 'Active').forEach(s => {
                 assignSelect.innerHTML += `<option value="${s.name}">${s.name} (${s.role})</option>`;
             });
 
             const chatTarget = document.getElementById('chat-target-staff');
             chatTarget.innerHTML = '';
-            staffList.filter(s => s.status === 'نشط').forEach(s => {
+            staffList.filter(s => s.status === 'نشط' || s.status === 'Active').forEach(s => {
                 chatTarget.innerHTML += `<option value="${s.name}">${s.name}</option>`;
             });
         }
@@ -870,18 +814,18 @@
             previewBox.style.display = 'flex';
             document.getElementById('prev-img').src = prod.image || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100';
             document.getElementById('prev-title').innerText = `${prod.name} (${prod.color})`;
-            document.getElementById('prev-price').innerText = `سعر المنتج الأساسي: ${prod.price} SAR`;
+            document.getElementById('prev-price').innerText = `Base Price: ${prod.price} SAR`;
 
             let total = prod.price;
             const addonInfo = document.getElementById('prev-addon-info');
             if (addon) {
                 addonInfo.style.display = 'block';
-                addonInfo.innerText = `+ الإضافة: ${addon.name} (+${addon.price} SAR)`;
+                addonInfo.innerText = `+ Addon: ${addon.name} (+${addon.price} SAR)`;
                 total += addon.price;
             } else {
                 addonInfo.style.display = 'none';
             }
-            document.getElementById('prev-total-price').innerText = `الإجمالي الكلي للطلبية: ${total} SAR`;
+            document.getElementById('prev-total-price').innerText = `Total Order Price: ${total} SAR`;
         }
 
         function addNewRealOrder() {
@@ -892,36 +836,41 @@
             const notes = document.getElementById('order-notes').value;
 
             if (!clientName || !pId) {
-                alert("يرجى إدخال اسم العميل واختيار المنتج الأساسي");
+                alert("Please enter client name and select a product.");
                 return;
             }
 
             const prod = inventory.find(p => p.id == pId);
             if (prod.qty <= 0) {
-                alert("عذراً، نفدت كمية هذا المنتج من المخزن!");
+                alert("Sorry, this product is out of stock!");
                 return;
             }
 
             const addon = addons.find(a => a.id == aId);
+            if (addon && addon.qty <= 0) {
+                alert(`Sorry, the addon (${addon.name}) is out of stock!`);
+                return;
+            }
+
+            prod.qty -= 1;
             let total = prod.price;
-            let addonName = 'بدون';
+            let addonName = 'None';
             if (addon) {
+                addon.qty -= 1;
                 total += addon.price;
                 addonName = addon.name;
             }
 
-            prod.qty -= 1;
-
             const newOrd = {
                 id: Date.now(),
                 clientName,
-                clientPhone: clientPhone || 'غير متوفر',
+                clientPhone: clientPhone || 'N/A',
                 productName: `${prod.name} (${prod.color})`,
                 addonName,
                 totalPrice: total,
-                notes: notes || 'لا توجد ملاحظات',
-                assignedStaff: 'لم يتم الإسناد بعد',
-                status: 'نشط'
+                notes: notes || 'No notes',
+                assignedStaff: 'Unassigned',
+                status: 'Active'
             };
 
             orders.push(newOrd);
@@ -932,7 +881,7 @@
             document.getElementById('order-addon-select').value = '';
             document.getElementById('order-product-preview').style.display = 'none';
 
-            showNotification("تم تسجيل الطلبية وخصم الكمية من المخزن بنجاح");
+            showNotification("Order registered & stock deducted successfully");
             refreshAllData();
             navTo('orders-screen');
         }
@@ -941,7 +890,7 @@
             const container = document.getElementById('real-orders-list');
             container.innerHTML = '';
             if (orders.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">لا توجد طلبات نشطة حالياً</div>`;
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No active orders</div>`;
                 return;
             }
 
@@ -952,13 +901,13 @@
                             <strong>👤 ${o.clientName} (${o.clientPhone})</strong>
                             <span class="badge">${o.totalPrice} SAR</span>
                         </div>
-                        <div style="font-size:10px; color:var(--text-muted);">المنتج: ${o.productName} | الإضافة: ${o.addonName}</div>
-                        <div style="font-size:10px; color:var(--warning);">الملاحظات: ${o.notes}</div>
-                        <div style="font-size:10px; color:var(--primary);">المسؤول المعين: <strong>${o.assignedStaff}</strong></div>
+                        <div style="font-size:10px; color:var(--text-muted);">Product: ${o.productName} | Addon: ${o.addonName}</div>
+                        <div style="font-size:10px; color:var(--warning);">Notes: ${o.notes}</div>
+                        <div style="font-size:10px; color:var(--accent-green);">Assigned Staff: <strong>${o.assignedStaff}</strong></div>
                         <div style="display:flex; gap:6px; width:100%; margin-top:4px;">
-                            <button class="btn" style="padding:6px; font-size:10px; background:var(--primary); margin:0;" onclick="openAssignModal(${o.id})">إسناد لموظف</button>
-                            <button class="btn" style="padding:6px; font-size:10px; background:var(--success); margin:0;" onclick="completeOrder(${o.id})">إنهاء الطلب</button>
-                            <button class="btn" style="padding:6px; font-size:10px; background:var(--danger); margin:0;" onclick="trashOrder(${o.id})">حذف / مشكلة</button>
+                            <button class="btn" style="padding:6px; font-size:10px; background:var(--accent-green); margin:0;" onclick="openAssignModal(${o.id})">Assign</button>
+                            <button class="btn" style="padding:6px; font-size:10px; background:var(--success); margin:0;" onclick="completeOrder(${o.id})">Complete</button>
+                            <button class="btn" style="padding:6px; font-size:10px; background:var(--danger); margin:0;" onclick="trashOrder(${o.id})">Delete</button>
                         </div>
                     </div>
                 `;
@@ -975,7 +924,7 @@
             const ord = orders.find(o => o.id === assigningOrderId);
             if (ord) {
                 ord.assignedStaff = staffName;
-                showNotification(`تم إسناد الطلب للموظف: ${staffName}`);
+                showNotification(`Order assigned to ${staffName}`);
             }
             closeModal('assign-order-modal');
             renderOrdersList();
@@ -985,9 +934,9 @@
             const idx = orders.findIndex(o => o.id === orderId);
             if (idx > -1) {
                 const [ord] = orders.splice(idx, 1);
-                ord.status = 'منتهي';
+                ord.status = 'Completed';
                 completedOrders.push(ord);
-                showNotification("تم نقل الطلبية إلى الطلبيات المنتهية");
+                showNotification("Order moved to completed");
                 refreshAllData();
             }
         }
@@ -996,9 +945,9 @@
             const idx = orders.findIndex(o => o.id === orderId);
             if (idx > -1) {
                 const [ord] = orders.splice(idx, 1);
-                ord.status = 'محذوف';
+                ord.status = 'Trash';
                 trashOrders.push(ord);
-                showNotification("تم نقل الطلبية إلى المحذوفة والمشاكل");
+                showNotification("Order moved to trash");
                 refreshAllData();
             }
         }
@@ -1007,7 +956,7 @@
             const container = document.getElementById('completed-orders-list');
             container.innerHTML = '';
             if (completedOrders.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">لا توجد طلبات منتهية</div>`;
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No completed orders</div>`;
                 return;
             }
             completedOrders.forEach(o => {
@@ -1015,9 +964,9 @@
                     <div class="card-item">
                         <div>
                             <strong>${o.clientName}</strong> - <span style="color:var(--success);">${o.productName}</span>
-                            <div style="font-size:9px; color:var(--text-muted);">السعر: ${o.totalPrice} SAR | المسؤول: ${o.assignedStaff}</div>
+                            <div style="font-size:9px; color:var(--text-muted);">Price: ${o.totalPrice} SAR | Staff: ${o.assignedStaff}</div>
                         </div>
-                        <span class="badge" style="background:rgba(34,197,94,0.15); color:var(--success); border-color:var(--success);">مكتمل</span>
+                        <span class="badge" style="background:rgba(16,185,129,0.15); color:var(--success); border-color:var(--success);">Completed</span>
                     </div>
                 `;
             });
@@ -1027,7 +976,7 @@
             const container = document.getElementById('trash-orders-list');
             container.innerHTML = '';
             if (trashOrders.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">سجل المحذوفة فارغ</div>`;
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">Trash is empty</div>`;
                 return;
             }
             trashOrders.forEach(o => {
@@ -1035,9 +984,9 @@
                     <div class="card-item" style="border-color:var(--danger);">
                         <div>
                             <strong style="color:var(--danger);">${o.clientName}</strong> - ${o.productName}
-                            <div style="font-size:9px; color:var(--text-muted);">السبب/الملاحظة: ${o.notes}</div>
+                            <div style="font-size:9px; color:var(--text-muted);">Notes: ${o.notes}</div>
                         </div>
-                        <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--success); width:auto; margin:0;" onclick="restoreTrashOrder(${o.id})">استعادة</button>
+                        <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--success); width:auto; margin:0;" onclick="restoreTrashOrder(${o.id})">Restore</button>
                     </div>
                 `;
             });
@@ -1047,9 +996,9 @@
             const idx = trashOrders.findIndex(o => o.id === orderId);
             if (idx > -1) {
                 const [ord] = trashOrders.splice(idx, 1);
-                ord.status = 'نشط';
+                ord.status = 'Active';
                 orders.push(ord);
-                showNotification("تمت استعادة الطلبية بنجاح");
+                showNotification("Order restored successfully");
                 refreshAllData();
             }
         }
@@ -1059,6 +1008,11 @@
             container.innerHTML = '';
             document.getElementById('inv-count-badge').innerText = inventory.length;
 
+            if (inventory.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:15px; font-size:11px;">No products in inventory yet. Click below to add.</div>`;
+                return;
+            }
+
             inventory.forEach(p => {
                 container.innerHTML += `
                     <div class="card-item">
@@ -1066,11 +1020,11 @@
                             <img class="product-thumb" src="${p.image}" alt="">
                             <div>
                                 <strong>${p.name}</strong> (${p.color})
-                                <div style="font-size:9px; color:var(--text-muted);">التكلفة: ${p.cost} SAR | الهامش: ${p.margin}% | السعر: <strong style="color:var(--accent-green);">${p.price} SAR</strong></div>
+                                <div style="font-size:9px; color:var(--text-muted);">Cost: ${p.cost} | Margin: ${p.margin}% | Price: <strong style="color:var(--accent-green);">${p.price} SAR</strong></div>
                             </div>
                         </div>
                         <div style="display:flex; align-items:center; gap:6px;">
-                            <span class="badge">مخزن: ${p.qty}</span>
+                            <span class="badge">Stock: ${p.qty}</span>
                             <button onclick="deleteProduct(${p.id})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:14px;">🗑️</button>
                         </div>
                     </div>
@@ -1105,7 +1059,7 @@
             const fileInput = document.getElementById('p-image-file');
 
             if (!name) {
-                alert("يرجى إدخال اسم المنتج");
+                alert("Please enter product name");
                 return;
             }
 
@@ -1117,7 +1071,7 @@
             inventory.push({
                 id: Date.now(),
                 name,
-                color: color || 'عادي',
+                color: color || 'Default',
                 qty,
                 cost,
                 margin,
@@ -1126,13 +1080,13 @@
             });
 
             closeModal('add-product-modal');
-            showNotification("تم إضافة المنتج بنجاح للمخزن");
+            showNotification("Product added to inventory");
             refreshAllData();
         }
 
         function deleteProduct(id) {
             inventory = inventory.filter(p => p.id !== id);
-            showNotification("تم حذف المنتج");
+            showNotification("Product deleted");
             refreshAllData();
         }
 
@@ -1141,6 +1095,11 @@
             container.innerHTML = '';
             document.getElementById('addons-count-badge').innerText = addons.length;
 
+            if (addons.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:15px; font-size:11px;">No addons added yet.</div>`;
+                return;
+            }
+
             addons.forEach(a => {
                 container.innerHTML += `
                     <div class="card-item">
@@ -1148,10 +1107,13 @@
                             <img class="product-thumb" src="${a.image}" alt="">
                             <div>
                                 <strong>${a.name}</strong>
-                                <div style="font-size:9px; color:var(--text-muted);">النوع: ${a.type} | السعر: <strong style="color:var(--accent-green);">${a.price} SAR</strong></div>
+                                <div style="font-size:9px; color:var(--text-muted);">Type: ${a.type} | Price: <strong style="color:var(--accent-green);">${a.price} SAR</strong></div>
                             </div>
                         </div>
-                        <button onclick="deleteAddon(${a.id})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:14px;">🗑️</button>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <span class="badge">Stock: ${a.qty}</span>
+                            <button onclick="deleteAddon(${a.id})" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:14px;">🗑️</button>
+                        </div>
                     </div>
                 `;
             });
@@ -1159,6 +1121,8 @@
 
         function openAddAddonModal() {
             document.getElementById('a-name').value = '';
+            document.getElementById('a-type').value = '';
+            document.getElementById('a-qty').value = '20';
             document.getElementById('a-price').value = '';
             document.getElementById('add-addon-modal').style.display = 'flex';
         }
@@ -1166,11 +1130,12 @@
         function saveAddonData() {
             const name = document.getElementById('a-name').value;
             const type = document.getElementById('a-type').value;
+            const qty = parseInt(document.getElementById('a-qty').value) || 0;
             const price = parseFloat(document.getElementById('a-price').value) || 0;
             const fileInput = document.getElementById('a-image-file');
 
             if (!name || !price) {
-                alert("يرجى إدخال اسم الإضافة والسعر");
+                alert("Please enter addon name and price");
                 return;
             }
 
@@ -1182,19 +1147,20 @@
             addons.push({
                 id: Date.now(),
                 name,
-                type,
+                type: type || 'General',
+                qty,
                 price,
                 image: imgSrc
             });
 
             closeModal('add-addon-modal');
-            showNotification("تم حفظ الإضافة بنجاح");
+            showNotification("Addon saved successfully");
             refreshAllData();
         }
 
         function deleteAddon(id) {
             addons = addons.filter(a => a.id !== id);
-            showNotification("تم حذف الإضافة");
+            showNotification("Addon deleted");
             refreshAllData();
         }
 
@@ -1204,10 +1170,10 @@
             document.getElementById('staff-count-badge').innerText = staffList.length;
 
             staffList.forEach(s => {
-                let statusBadge = `<span class="badge" style="background:rgba(34,197,94,0.15); color:var(--success); border-color:var(--success);">${s.status}</span>`;
-                if (s.status === 'في إجازة') statusBadge = `<span class="badge" style="background:rgba(245,158,11,0.15); color:var(--warning); border-color:var(--warning);">في إجازة</span>`;
-                if (s.status === 'مستقيل') statusBadge = `<span class="badge" style="background:rgba(239,68,68,0.15); color:var(--danger); border-color:var(--danger);">مستقيل</span>`;
-                if (s.status === 'مطرود') statusBadge = `<span class="badge" style="background:rgba(239,68,68,0.2); color:var(--danger); border-color:var(--danger);">مطرود</span>`;
+                let statusBadge = `<span class="badge" style="background:rgba(16,185,129,0.15); color:var(--success); border-color:var(--success);">${s.status}</span>`;
+                if (s.status === 'On Leave') statusBadge = `<span class="badge" style="background:rgba(245,158,11,0.15); color:var(--warning); border-color:var(--warning);">On Leave</span>`;
+                if (s.status === 'Resigned') statusBadge = `<span class="badge" style="background:rgba(244,63,94,0.15); color:var(--danger); border-color:var(--danger);">Resigned</span>`;
+                if (s.status === 'Fired') statusBadge = `<span class="badge" style="background:rgba(244,63,94,0.2); color:var(--danger); border-color:var(--danger);">Fired</span>`;
 
                 container.innerHTML += `
                     <div class="card-item" style="flex-direction:column; align-items:flex-start; gap:6px;">
@@ -1215,16 +1181,18 @@
                             <strong>👤 ${s.name} (${s.role})</strong>
                             ${statusBadge}
                         </div>
-                        <div style="font-size:10px; color:var(--text-muted);">البريد: ${s.email}</div>
+                        <div style="font-size:10px; color:var(--text-muted);">Email: ${s.email} | Pass: ${s.pass}</div>
                         <div style="display:flex; gap:4px; flex-wrap:wrap; width:100%; margin-top:4px;">
-                            ${s.status === 'مستقيل' || s.status === 'مطرود' ? `
-                                <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--success); width:auto; margin:0;" onclick="restoreStaff(${s.id})">إرجاع الموظف</button>
-                            ` : `
-                                <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--warning); width:auto; margin:0;" onclick="toggleStaffStatus(${s.id}, 'إجازة')">إجازة</button>
-                                <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--danger); width:auto; margin:0;" onclick="toggleStaffStatus(${s.id}, 'استقالة')">استقالة</button>
-                                <button class="btn" style="padding:4px 8px; font-size:10px; background:#b91c1c; width:auto; margin:0;" onclick="toggleStaffStatus(${s.id}, 'طرد')">طرد</button>
+                            ${s.isOwner ? `<span style="font-size:10px; color:var(--accent-green); font-weight:bold;">Store Owner (Protected)</span>` : `
+                                ${s.status === 'Resigned' || s.status === 'Fired' ? `
+                                    <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--success); width:auto; margin:0;" onclick="restoreStaff(${s.id})">Restore</button>
+                                ` : `
+                                    <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--warning); width:auto; margin:0;" onclick="toggleStaffStatus(${s.id}, 'Leave')">Leave</button>
+                                    <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--danger); width:auto; margin:0;" onclick="toggleStaffStatus(${s.id}, 'Resign')">Resign</button>
+                                    <button class="btn" style="padding:4px 8px; font-size:10px; background:#991b1b; width:auto; margin:0;" onclick="toggleStaffStatus(${s.id}, 'Fire')">Fire</button>
+                                `}
+                                <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--danger); width:auto; margin:0;" onclick="deleteStaffFinal(${s.id})">Delete</button>
                             `}
-                            <button class="btn" style="padding:4px 8px; font-size:10px; background:var(--danger); width:auto; margin:0;" onclick="deleteStaffFinal(${s.id})">حذف نهائي</button>
                         </div>
                     </div>
                 `;
@@ -1234,15 +1202,11 @@
         function addNewStaffMember() {
             const name = document.getElementById('new-staff-name').value;
             const email = document.getElementById('new-staff-email').value;
+            const pass = document.getElementById('new-staff-pass').value;
             const role = document.getElementById('new-staff-role').value;
 
-            if (!name || !email) {
-                alert("يرجى إدخال اسم الموظف والبريد الإلكتروني");
-                return;
-            }
-
-            if (staffList.length >= 8) {
-                alert("تم بلوغ الحد الأقصى لطاقم العمل (8 موظفين)");
+            if (!name || !email || !pass) {
+                alert("Please enter staff name, email and password");
                 return;
             }
 
@@ -1250,24 +1214,26 @@
                 id: Date.now(),
                 name,
                 email,
+                pass,
                 role,
-                status: 'نشط'
+                status: 'نشط',
+                isOwner: false
             });
 
             document.getElementById('new-staff-name').value = '';
             document.getElementById('new-staff-email').value = '';
             document.getElementById('new-staff-pass').value = '';
-            showNotification("تم إضافة الموظف الجديد بنجاح");
+            showNotification("Staff member added successfully with login credentials");
             refreshAllData();
         }
 
         function toggleStaffStatus(id, actionType) {
             const s = staffList.find(st => st.id === id);
-            if (!s) return;
-            if (actionType === 'إجازة') s.status = 'في إجازة';
-            if (actionType === 'استقالة') s.status = 'مستقيل';
-            if (actionType === 'طرد') s.status = 'مطرود';
-            showNotification(`تم تحديث حالة الموظف ${s.name}`);
+            if (!s || s.isOwner) return;
+            if (actionType === 'Leave') s.status = 'On Leave';
+            if (actionType === 'Resign') s.status = 'Resigned';
+            if (actionType === 'Fire') s.status = 'Fired';
+            showNotification(`Staff status updated for ${s.name}`);
             refreshAllData();
         }
 
@@ -1275,14 +1241,14 @@
             const s = staffList.find(st => st.id === id);
             if (s) {
                 s.status = 'نشط';
-                showNotification(`تمت إرجاع الموظف ${s.name} للعمل بنجاح`);
+                showNotification(`Staff ${s.name} restored to work`);
                 refreshAllData();
             }
         }
 
         function deleteStaffFinal(id) {
             staffList = staffList.filter(s => s.id !== id);
-            showNotification("تم حذف الموظف نهائياً من النظام");
+            showNotification("Staff member deleted");
             refreshAllData();
         }
 
@@ -1297,20 +1263,20 @@
             const target = document.getElementById('chat-target-staff').value;
 
             if (!text) {
-                alert("يرجى كتابة نص الرسالة");
+                alert("Please type a message");
                 return;
             }
 
             chatMessages.push({
                 sender: currentUser.name,
-                target: type === 'all' ? 'جميع الموظفين' : target,
+                target: type === 'all' ? 'All Staff' : target,
                 text,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             });
 
             document.getElementById('chat-msg-text').value = '';
             renderChatBox();
-            showNotification("تم إرسال الرسالة بنجاح");
+            showNotification("Message sent");
         }
 
         function renderChatBox() {
@@ -1338,7 +1304,7 @@
                 const url = URL.createObjectURL(event.target.files[0]);
                 document.getElementById('profile-avatar-preview').src = url;
                 currentUser.avatar = url;
-                showNotification("تم تحديث الصورة الشخصية");
+                showNotification("Avatar updated");
             }
         }
 
@@ -1346,8 +1312,8 @@
             currentUser.name = document.getElementById('prof-name').value;
             currentUser.phone = document.getElementById('prof-phone').value;
             currentUser.dob = document.getElementById('prof-dob').value;
-            document.getElementById('home-welcome-sub').innerText = `مرحباً بك، ${currentUser.name}`;
-            showNotification("تم حفظ بيانات الملف الشخصي بنجاح");
+            document.getElementById('home-welcome-sub').innerText = currentLang === 'ar' ? `مرحباً بك، ${currentUser.name}` : `Welcome, ${currentUser.name}`;
+            showNotification("Profile settings saved");
         }
     </script>
 </body>
