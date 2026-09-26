@@ -152,7 +152,6 @@
         .staff-avatar-edit-badge { position: absolute; bottom: 0; right: 0; background: var(--accent-gold); color: #1c1815; font-size: 8px; padding: 2px 5px; border-radius: 6px; font-weight: bold; }
         .staff-grid-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
 
-        /* Floating AI Widget (hidden during login) */
         #floating-ai-widget {
             position: absolute; bottom: 15px; left: 15px; z-index: 2000;
             background: var(--bg-card); border: 1px solid var(--accent-gold);
@@ -177,7 +176,6 @@
     <div id="app-notification">Updated successfully</div>
 
     <div class="phone-frame">
-        <!-- Floating AI Widget (Only visible after login) -->
         <div id="floating-ai-widget" onclick="toggleFloatingAIPopup()">
             <span>✨</span> <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);" data-t="ai_widget_btn">Neris AI مساعد</span>
         </div>
@@ -187,7 +185,7 @@
                 <span style="font-size:11px; font-weight:bold; color:var(--accent-gold);">Neris AI Assistant</span>
                 <button onclick="toggleFloatingAIPopup()" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">✕</button>
             </div>
-            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;">أهلاً بك يا فهد. هل تحتاج أي مساعدة أو استفسار بخصوص النظام الآن؟</div>
+            <div id="floating-ai-msg" style="font-size:11px; color:var(--text-main); margin-bottom:8px;">أهلاً بك يا فهد. السحابية متصلة وتعمل بنجاح تام!</div>
             <div style="display:flex; gap:4px;">
                 <input type="text" id="floating-ai-input" placeholder="اسأل الـ AI..." style="flex:1; padding:6px; font-size:10px; background:var(--bg-dark); border:1px solid var(--border); color:var(--text-main); border-radius:4px;">
                 <button class="btn" style="margin-top:0; padding:6px 10px; font-size:10px; width:auto;" onclick="sendFloatingAI()">إرسال</button>
@@ -197,7 +195,7 @@
         <div id="welcome-intro-screen">
             <div class="splash-logo">💎</div>
             <h1 style="color:var(--text-main); font-size:20px; font-weight:bold; margin-bottom:6px;">مرحباً بك في نظام نيرسي</h1>
-            <p style="color:var(--accent-gold); font-size:12px;">NERIS ELITE OS - نظام إدارة المجوهرات</p>
+            <p style="color:var(--accent-gold); font-size:12px;">NERIS CLOUD OS - متصل بالسحابة لحظياً</p>
         </div>
 
         <div id="login-screen" style="display:none;">
@@ -215,7 +213,7 @@
 
         <div class="header-bar" id="app-header" style="display:none;">
             <button class="menu-btn" onclick="toggleDrawer()">☰</button>
-            <div class="brand-title">NERIS OS</div>
+            <div class="brand-title">NERIS CLOUD</div>
             <div class="header-btns">
                 <button class="lang-btn" onclick="toggleLanguage()" id="lang-indicator">EN</button>
                 <button class="theme-btn" onclick="toggleTheme()" id="theme-icon">☀️</button>
@@ -255,7 +253,7 @@
                         <div style="font-size:9px; color:var(--text-muted);" data-t="inv_count_lbl">منتج بالمخزن</div>
                     </div>
                     <div style="background:var(--bg-card); padding:8px; border-radius:6px; border:1px solid var(--border);">
-                        <span id="metric-staff-count" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">2</span>
+                        <span id="metric-staff-count" style="font-size:14px; font-weight:bold; color:var(--accent-gold); direction:ltr; display:inline-block;">0</span>
                         <div style="font-size:9px; color:var(--text-muted);" data-t="staff_count_lbl">فريق الإدارة</div>
                     </div>
                 </div>
@@ -419,25 +417,41 @@
         </div>
     </div>
 
-    <script>
-        let currentLang = 'ar';
-        let currentUserRole = 'admin';
-        let inventoryList = JSON.parse(localStorage.getItem('neris_inventory')) || [];
-        let addonsList = JSON.parse(localStorage.getItem('neris_addons')) || [
+    <!-- سكربت الربط السحابي والتشغيل الشامل -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1wnm1DWwn3z8K-dfwrjk__1-hwmTx-U",
+            authDomain: "neris-ba7c5.firebaseapp.com",
+            databaseURL: "https://neris-ba7c5-default-rtdb.firebaseio.com",
+            projectId: "neris-ba7c5",
+            storageBucket: "neris-ba7c5.appspot.com",
+            messagingSenderId: "852124332521",
+            appId: "1:852124332521:web:dc64e0396f721d05855b78",
+            measurementId: "G-WCFP5BMNMP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        window.currentLang = 'ar';
+        window.currentUserRole = 'admin';
+        window.inventoryList = [];
+        window.addonsList = [
             { id: 1, name: "علبة مخمل فاخرة", price: 50, image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100" },
             { id: 2, name: "كيس هدية بشريطة ذهبية", price: 25, image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=100" }
         ];
-        
-        let staffList = JSON.parse(localStorage.getItem('neris_staff')) || [
+        window.staffList = [
             { id: 0, name: "فهد راشد الحسين (المالك)", role: "المالك (Owner / Admin)", email: "fahadfhd47@gmail.com", pass: "Fahad55003", phone: "0549553395", dob: "2006-07-31", status: "نشط", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", chat: [] },
             { id: 1, name: "محمد", role: "مسؤول (Manager)", email: "Walhan_3003@hotmail.com", pass: "12345", phone: "0511111111", dob: "2000-01-01", status: "نشط", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", chat: [] },
             { id: 2, name: "فاطمة", role: "موظف (Staff)", email: "fa6oom.2014@gmail.com", pass: "12345", phone: "0533333333", dob: "2003-03-03", status: "نشط", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", chat: [] }
         ];
-
-        let staffTrash = JSON.parse(localStorage.getItem('neris_staff_trash')) || [];
-        let ordersList = JSON.parse(localStorage.getItem('neris_orders')) || [];
-        let adminAvatar = localStorage.getItem('neris_admin_avatar') || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100";
-        let activeChatStaffId = null;
+        window.staffTrash = [];
+        window.ordersList = [];
+        window.adminAvatar = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100";
+        window.activeChatStaffId = null;
 
         const translations = {
             ar: {
@@ -480,29 +494,56 @@
             }
         };
 
+        // الاستماع للتحديثات السحابية لحظياً (Realtime Sync)
+        onValue(ref(db, 'neris_store'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                if (data.inventory) window.inventoryList = data.inventory;
+                if (data.addons) window.addonsList = data.addons;
+                if (data.staff) window.staffList = data.staff;
+                if (data.staffTrash) window.staffTrash = data.staffTrash;
+                if (data.orders) window.ordersList = data.orders;
+                if (data.adminAvatar) window.adminAvatar = data.adminAvatar;
+            } else {
+                // حفظ البيانات الافتراضية لأول مرة
+                syncToCloud();
+            }
+            document.getElementById('header-avatar').src = window.adminAvatar;
+            document.getElementById('admin-avatar-preview').src = window.adminAvatar;
+            calcAdminAge();
+            refreshUI();
+        });
+
+        window.syncToCloud = function() {
+            set(ref(db, 'neris_store'), {
+                inventory: window.inventoryList,
+                addons: window.addonsList,
+                staff: window.staffList,
+                staffTrash: window.staffTrash,
+                orders: window.ordersList,
+                adminAvatar: window.adminAvatar
+            });
+        }
+
         window.onload = function() {
             setTimeout(() => {
                 document.getElementById('welcome-intro-screen').style.display = 'none';
                 document.getElementById('login-screen').style.display = 'flex';
             }, 2500);
-            document.getElementById('header-avatar').src = adminAvatar;
-            document.getElementById('admin-avatar-preview').src = adminAvatar;
-            calcAdminAge();
-            refreshUI();
         };
 
-        function handleLogin() {
+        window.handleLogin = function() {
             const email = document.getElementById('login-email').value.trim();
             const pass = document.getElementById('login-password').value.trim();
             
-            let matchedStaff = staffList.find(s => s.email === email && s.pass === pass);
+            let matchedStaff = window.staffList.find(s => s.email === email && s.pass === pass);
             
             if(email === "fahadfhd47@gmail.com" && pass === "Fahad55003") {
-                currentUserRole = 'admin';
+                window.currentUserRole = 'admin';
                 document.getElementById('drawer-staff-item').style.display = 'flex';
                 successLogin();
             } else if(matchedStaff) {
-                currentUserRole = 'staff';
+                window.currentUserRole = 'staff';
                 document.getElementById('drawer-staff-item').style.display = 'none';
                 successLogin();
             } else {
@@ -515,30 +556,30 @@
             document.getElementById('app-header').style.display = 'flex';
             document.getElementById('floating-ai-widget').style.display = 'flex';
             navTo('home-main-screen');
-            showNotification(currentLang === 'ar' ? "تم تسجيل الدخول بنجاح" : "Logged in successfully");
+            showNotification(window.currentLang === 'ar' ? "تم تسجيل الدخول بنجاح" : "Logged in successfully");
         }
 
-        function toggleFloatingAIPopup() {
+        window.toggleFloatingAIPopup = function() {
             const p = document.getElementById('floating-ai-popup');
             p.style.display = p.style.display === 'block' ? 'none' : 'block';
         }
 
-        function sendFloatingAI() {
+        window.sendFloatingAI = function() {
             const input = document.getElementById('floating-ai-input');
             const msgBox = document.getElementById('floating-ai-msg');
             const q = input.value.trim();
             if(!q) return;
-            msgBox.innerHTML = `<b>أنت:</b> ${q}<br><b style="color:var(--accent-gold);">Neris AI:</b> تم تنفيذ طلبك وحفظه بنجاح يا فهد. المحل يعمل بأفضل حال!`;
+            msgBox.innerHTML = `<b>أنت:</b> ${q}<br><b style="color:var(--accent-gold);">Neris AI:</b> تم تنفيذ طلبك سحابياً بنجاح يا فهد.`;
             input.value = '';
         }
 
-        function calcAdminAge() {
+        window.calcAdminAge = function() {
             const dob = document.getElementById('prof-dob').value;
             if(!dob) { document.getElementById('prof-age-calc').value = "0"; return; }
             const diff = Date.now() - new Date(dob).getTime();
             const ageDate = new Date(diff);
             const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-            document.getElementById('prof-age-calc').value = age + (currentLang === 'ar' ? " سنة" : " Years");
+            document.getElementById('prof-age-calc').value = age + (window.currentLang === 'ar' ? " سنة" : " Years");
         }
 
         function calcStaffAge(dobStr) {
@@ -546,37 +587,28 @@
             const diff = Date.now() - new Date(dobStr).getTime();
             const ageDate = new Date(diff);
             const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-            return age + (currentLang === 'ar' ? " سنة" : " Years");
+            return age + (window.currentLang === 'ar' ? " سنة" : " Years");
         }
 
-        function saveDataToStorage() {
-            localStorage.setItem('neris_inventory', JSON.stringify(inventoryList));
-            localStorage.setItem('neris_addons', JSON.stringify(addonsList));
-            localStorage.setItem('neris_staff', JSON.stringify(staffList));
-            localStorage.setItem('neris_staff_trash', JSON.stringify(staffTrash));
-            localStorage.setItem('neris_orders', JSON.stringify(ordersList));
-            localStorage.setItem('neris_admin_avatar', adminAvatar);
-        }
-
-        function updateAdminAvatar(input) {
+        window.updateAdminAvatar = function(input) {
             if(input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    adminAvatar = e.target.result;
-                    document.getElementById('header-avatar').src = adminAvatar;
-                    document.getElementById('admin-avatar-preview').src = adminAvatar;
-                    showNotification("تم تحديث صورتك الشخصية بنجاح");
-                    saveDataToStorage();
+                    window.adminAvatar = e.target.result;
+                    document.getElementById('header-avatar').src = window.adminAvatar;
+                    document.getElementById('admin-avatar-preview').src = window.adminAvatar;
+                    showNotification("تم تحديث وحفظ صورتك سحابياً");
+                    syncToCloud();
                 }
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        window.toggleLanguage = function() {
+            window.currentLang = window.currentLang === 'ar' ? 'en' : 'ar';
             const root = document.getElementById('html-root');
             const ind = document.getElementById('lang-indicator');
-            if(currentLang === 'en') {
+            if(window.currentLang === 'en') {
                 root.classList.add('en');
                 ind.innerText = 'AR';
             } else {
@@ -585,13 +617,13 @@
             }
             document.querySelectorAll('[data-t]').forEach(el => {
                 const key = el.getAttribute('data-t');
-                if(translations[currentLang][key]) el.innerText = translations[currentLang][key];
+                if(translations[window.currentLang][key]) el.innerText = translations[window.currentLang][key];
             });
             calcAdminAge();
             refreshUI();
         }
 
-        function toggleTheme() {
+        window.toggleTheme = function() {
             const root = document.getElementById('html-root');
             const icon = document.getElementById('theme-icon');
             if(root.getAttribute('data-theme') === 'light') {
@@ -603,19 +635,19 @@
             }
         }
 
-        function toggleDrawer() { document.getElementById('main-drawer').classList.toggle('open'); }
+        window.toggleDrawer = function() { document.getElementById('main-drawer').classList.toggle('open'); }
 
-        function navTo(screenId) {
+        window.navTo = function(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
             document.getElementById('main-drawer').classList.remove('open');
             refreshUI();
         }
 
-        function refreshUI() {
-            document.getElementById('metric-active-orders').innerText = ordersList.filter(o => o.status !== 'مكتمل').length;
-            document.getElementById('metric-inventory-count').innerText = inventoryList.length;
-            document.getElementById('metric-staff-count').innerText = staffList.length;
+        window.refreshUI = function() {
+            document.getElementById('metric-active-orders').innerText = window.ordersList.filter(o => o.status !== 'مكتمل').length;
+            document.getElementById('metric-inventory-count').innerText = window.inventoryList.length;
+            document.getElementById('metric-staff-count').innerText = window.staffList.length;
             renderInventory();
             renderAddons();
             renderAddonsCheckboxes();
@@ -624,12 +656,11 @@
             renderStaffChatContacts();
             renderOrderDropdowns();
             renderOrdersList();
-            saveDataToStorage();
         }
 
         function renderInventory() {
             let html = '';
-            inventoryList.forEach(item => {
+            window.inventoryList.forEach(item => {
                 html += `<div class="card-item">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img src="${item.image || 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100'}" class="product-thumb">
@@ -638,12 +669,12 @@
                     <div><span class="badge">${item.cost} SAR</span> <button class="btn" style="padding:2px 6px; font-size:9px; background:var(--danger); width:auto;" onclick="deleteItem(${item.id})">حذف</button></div>
                 </div>`;
             });
-            document.getElementById('real-inventory-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${currentLang === 'ar' ? 'لا توجد منتجات في المخزن حالياً.' : 'No products in inventory.'}</p>`;
+            document.getElementById('real-inventory-list').innerHTML = html || `<p style="font-size:11px; color:var(--text-muted);">${window.currentLang === 'ar' ? 'لا توجد منتجات في المخزن حالياً.' : 'No products in inventory.'}</p>`;
         }
 
         function renderAddons() {
             let html = '';
-            addonsList.forEach(item => {
+            window.addonsList.forEach(item => {
                 html += `<div class="card-item">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img src="${item.image || 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100'}" class="product-thumb">
@@ -657,7 +688,7 @@
 
         function renderAddonsCheckboxes() {
             let html = '';
-            addonsList.forEach(item => {
+            window.addonsList.forEach(item => {
                 html += `<div class="addon-option-card" onclick="toggleAddonCheck(this)">
                     <input type="checkbox" name="order-addon" value="${item.id}" style="cursor:pointer;">
                     <img src="${item.image || 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100'}" style="width:28px; height:28px; border-radius:4px; object-fit:cover;">
@@ -668,14 +699,14 @@
             document.getElementById('order-addons-container').innerHTML = html || '<span style="font-size:10px; color:var(--text-muted);">لا توجد إضافات تغليف متاحة</span>';
         }
 
-        function toggleAddonCheck(card) {
+        window.toggleAddonCheck = function(card) {
             const cb = card.querySelector('input[type="checkbox"]');
             cb.checked = !cb.checked;
         }
 
         function renderStaffManagement() {
             let html = '';
-            staffList.forEach(staff => {
+            window.staffList.forEach(staff => {
                 let ageText = calcStaffAge(staff.dob);
                 html += `<div class="staff-profile-card">
                     <div class="staff-header-flex">
@@ -710,7 +741,7 @@
             document.getElementById('staff-management-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد حسابات نشطة حالياً.</p>';
         }
 
-        function openAddStaffModal() {
+        window.openAddStaffModal = function() {
             document.getElementById('new-s-name').value = '';
             document.getElementById('new-s-role').value = '';
             document.getElementById('new-s-email').value = '';
@@ -719,7 +750,7 @@
             document.getElementById('add-staff-modal').style.display = 'flex';
         }
 
-        function saveNewStaff() {
+        window.saveNewStaff = function() {
             let name = document.getElementById('new-s-name').value.trim();
             let role = document.getElementById('new-s-role').value.trim() || 'موظف';
             let email = document.getElementById('new-s-email').value.trim();
@@ -729,19 +760,19 @@
 
             if(!name || !email) { alert("يرجى إدخال اسم الموظف والبريد الإلكتروني على الأقل!"); return; }
 
-            staffList.push({
+            window.staffList.push({
                 id: Date.now(), name, role, email, pass, phone, dob, status: 'نشط',
                 avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100", chat: []
             });
 
             closeModal('add-staff-modal');
-            showNotification("تمت إضافة الموظف الجديد بنجاح");
-            refreshUI();
+            showNotification("تمت إضافة الموظف الجديد وحفظه سحابياً");
+            syncToCloud();
         }
 
         function renderStaffTrash() {
             let html = '';
-            staffTrash.forEach(staff => {
+            window.staffTrash.forEach(staff => {
                 html += `<div class="card-item" style="border-color:var(--warning);">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img src="${staff.avatar}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
@@ -753,57 +784,57 @@
             document.getElementById('staff-trash-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">سلة المحذوفات فارغة تماماً.</p>';
         }
 
-        function trashStaff(id) {
-            let idx = staffList.findIndex(x => x.id === id);
+        window.trashStaff = function(id) {
+            let idx = window.staffList.findIndex(x => x.id === id);
             if(idx !== -1) {
-                let removed = staffList.splice(idx, 1)[0];
-                staffTrash.push(removed);
-                showNotification("تم نقل الحساب إلى سلة المحذوفات");
-                refreshUI();
+                let removed = window.staffList.splice(idx, 1)[0];
+                window.staffTrash.push(removed);
+                showNotification("تم نقل الحساب إلى سلة المحذوفات سحابياً");
+                syncToCloud();
             }
         }
 
-        function restoreStaff(id) {
-            let idx = staffTrash.findIndex(x => x.id === id);
+        window.restoreStaff = function(id) {
+            let idx = window.staffTrash.findIndex(x => x.id === id);
             if(idx !== -1) {
-                let restored = staffTrash.splice(idx, 1)[0];
-                staffList.push(restored);
-                showNotification("تم استرجاع حساب الموظف بنجاح ↺");
-                refreshUI();
+                let restored = window.staffTrash.splice(idx, 1)[0];
+                window.staffList.push(restored);
+                showNotification("تم استرجاع حساب الموظف سحابياً ↺");
+                syncToCloud();
             }
         }
 
-        function updateStaffAvatar(id, input) {
+        window.updateStaffAvatar = function(id, input) {
             if(input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    let s = staffList.find(x => x.id === id);
+                    let s = window.staffList.find(x => x.id === id);
                     if(s) {
                         s.avatar = e.target.result;
-                        showNotification("تم تحديث وحفظ صورة الموظف بنجاح");
-                        refreshUI();
+                        showNotification("تم تحديث وحفظ صورة الموظف سحابياً");
+                        syncToCloud();
                     }
                 }
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function updateStaffField(id, field, val) {
-            let s = staffList.find(x => x.id === id);
-            if(s) { s[field] = val; showNotification("تم حفظ التعديلات تلقائياً ✓"); refreshUI(); }
+        window.updateStaffField = function(id, field, val) {
+            let s = window.staffList.find(x => x.id === id);
+            if(s) { s[field] = val; showNotification("تم حفظ التعديلات سحابياً ✓"); syncToCloud(); }
         }
 
         function renderOrderDropdowns() {
             let pHtml = '<option value="">-- اختر المنتج --</option>';
-            inventoryList.forEach(i => { pHtml += `<option value="${i.id}">${i.name} (سعر البيع AI: ${i.suggestedPrice} SAR)</option>`; });
+            window.inventoryList.forEach(i => { pHtml += `<option value="${i.id}">${i.name} (سعر البيع AI: ${i.suggestedPrice} SAR)</option>`; });
             document.getElementById('order-product-select').innerHTML = pHtml;
 
             let sHtml = '<option value="">-- اختر الموظف --</option>';
-            staffList.filter(s => s.status === 'نشط').forEach(s => { sHtml += `<option value="${s.name}">${s.name} (${s.role})</option>`; });
+            window.staffList.filter(s => s.status === 'نشط').forEach(s => { sHtml += `<option value="${s.name}">${s.name} (${s.role})</option>`; });
             document.getElementById('order-assigned-staff').innerHTML = sHtml;
         }
 
-        function addNewOrder() {
+        window.addNewOrder = function() {
             const clientName = document.getElementById('order-client-name').value.trim();
             const clientPhone = document.getElementById('order-client-phone').value.trim();
             const pId = document.getElementById('order-product-select').value;
@@ -814,19 +845,19 @@
                 return;
             }
 
-            const product = inventoryList.find(i => i.id == pId);
+            const product = window.inventoryList.find(i => i.id == pId);
             let total = parseFloat(product.suggestedPrice) || product.cost;
             let selectedAddonsText = [];
 
             document.querySelectorAll('input[name="order-addon"]:checked').forEach(cb => {
-                let addon = addonsList.find(a => a.id == cb.value);
+                let addon = window.addonsList.find(a => a.id == cb.value);
                 if(addon) {
                     total += addon.price;
                     selectedAddonsText.push(addon.name);
                 }
             });
 
-            ordersList.unshift({
+            window.ordersList.unshift({
                 id: Date.now(), clientName, clientPhone: clientPhone || 'غير متوفر',
                 productName: product.name, addons: selectedAddonsText.length > 0 ? selectedAddonsText.join(' + ') : 'بدون تغليف',
                 total, assignedStaff: staffName, status: 'قيد التنفيذ'
@@ -834,13 +865,14 @@
 
             document.getElementById('order-client-name').value = '';
             document.getElementById('order-client-phone').value = '';
-            showNotification("تم تسجيل الطلبية وحفظها بنجاح");
+            showNotification("تم تسجيل الطلبية وحفظها سحابياً");
+            syncToCloud();
             navTo('orders-screen');
         }
 
         function renderOrdersList() {
             let html = '';
-            ordersList.forEach(o => {
+            window.ordersList.forEach(o => {
                 html += `<div class="panel-box" style="border-color:var(--accent-gold);">
                     <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                         <strong>العميل: ${o.clientName}</strong> <span class="badge">${o.status}</span>
@@ -855,14 +887,14 @@
             document.getElementById('real-orders-list').innerHTML = html || '<p style="font-size:11px; color:var(--text-muted);">لا توجد طلبيات نشطة حالياً.</p>';
         }
 
-        function completeOrder(id) {
-            let o = ordersList.find(x => x.id === id);
-            if(o) { o.status = 'مكتمل'; showNotification("تم إنجاز الطلب وحفظه"); refreshUI(); }
+        window.completeOrder = function(id) {
+            let o = window.ordersList.find(x => x.id === id);
+            if(o) { o.status = 'مكتمل'; showNotification("تم إنجاز الطلب وحفظه سحابياً"); syncToCloud(); }
         }
 
         function renderStaffChatContacts() {
             let html = '';
-            staffList.forEach(staff => {
+            window.staffList.forEach(staff => {
                 html += `<div class="card-item" onclick="openPrivateChat(${staff.id}, '${staff.name}')" style="cursor:pointer;">
                     <div style="display:flex; align-items:center; gap:8px;">
                         <img src="${staff.avatar}" style="width:28px; height:28px; border-radius:50%; object-fit:cover;">
@@ -874,43 +906,43 @@
             document.getElementById('staff-chat-contacts').innerHTML = html;
         }
 
-        function openPrivateChat(staffId, staffName) {
-            activeChatStaffId = staffId;
+        window.openPrivateChat = function(staffId, staffName) {
+            window.activeChatStaffId = staffId;
             document.getElementById('active-chat-title').innerText = `المحادثة مع: ${staffName}`;
             document.getElementById('private-chat-box').style.display = 'block';
             renderPrivateMessages();
         }
 
         function renderPrivateMessages() {
-            let staff = staffList.find(x => x.id === activeChatStaffId);
+            let staff = window.staffList.find(x => x.id === window.activeChatStaffId);
             if(!staff) return;
             let html = '';
-            staff.chat.forEach(msg => {
-                html += `<div style="text-align:${msg.sender==='admin'?'right':'left'}; background:var(--bg-dark); padding:4px 8px; border-radius:6px;">${msg.sender==='admin'?'أنت':'الموظف'}: ${msg.text}</div>`;
-            });
+            if(staff.chat) {
+                staff.chat.forEach(msg => {
+                    html += `<div style="text-align:${msg.sender==='admin'?'right':'left'}; background:var(--bg-dark); padding:4px 8px; border-radius:6px;">${msg.sender==='admin'?'أنت':'الموظف'}: ${msg.text}</div>`;
+                });
+            }
             document.getElementById('private-messages-list').innerHTML = html || '<div style="color:var(--text-muted);">لا توجد رسائل سابقة. ابدأ المحادثة...</div>';
         }
 
-        function sendPrivateMessage() {
+        window.sendPrivateMessage = function() {
             let input = document.getElementById('private-msg-input');
             let val = input.value.trim();
-            if(!val || !activeChatStaffId) return;
-            let staff = staffList.find(x => x.id === activeChatStaffId);
+            if(!val || window.activeChatStaffId === null) return;
+            let staff = window.staffList.find(x => x.id === window.activeChatStaffId);
+            if(!staff.chat) staff.chat = [];
             staff.chat.push({ sender: 'admin', text: val });
             input.value = '';
+            syncToCloud();
             renderPrivateMessages();
-            setTimeout(() => {
-                staff.chat.push({ sender: 'staff', text: "تم الاطلاع يا فهد، جاري التنفيذ وحفظ التغييرات بدقة." });
-                renderPrivateMessages();
-            }, 1000);
         }
 
-        function closePrivateChat() {
+        window.closePrivateChat = function() {
             document.getElementById('private-chat-box').style.display = 'none';
-            activeChatStaffId = null;
+            window.activeChatStaffId = null;
         }
 
-        function sendAIChatQuery() {
+        window.sendAIChatQuery = function() {
             const input = document.getElementById('ai-user-input');
             const history = document.getElementById('ai-messages-history');
             const q = input.value.trim();
@@ -920,15 +952,15 @@
             input.value = '';
 
             setTimeout(() => {
-                let reply = currentLang === 'ar' ? 
-                    `تحليل الـ AI لطلبك "${q}": النظام يعمل بكفاءة تامة، المخزن يحتوي على ${inventoryList.length} منتجات، وعدد الطلبات النشطة ${ordersList.length}. جميع التغييرات محفوظة تلقائياً يا فهد.` :
-                    `AI Analysis for "${q}": System is operating smoothly, all changes are auto-saved.`;
+                let reply = window.currentLang === 'ar' ? 
+                    `تحليل الـ AI لطلبك "${q}": النظام متصل بالسحابة بكفاءة، المخزن يحتوي على ${window.inventoryList.length} منتجات، وعدد الطلبات النشطة ${window.ordersList.length}.` :
+                    `AI Analysis for "${q}": System is operating smoothly via cloud sync.`;
                 history.innerHTML += `<div style="background:rgba(197,160,89,0.15); padding:6px 8px; border-radius:6px; color:var(--accent-gold);"><b>Neris AI:</b> ${reply}</div>`;
                 history.scrollTop = history.scrollHeight;
             }, 700);
         }
 
-        function openAddProductModal() {
+        window.openAddProductModal = function() {
             document.getElementById('p-name').value = '';
             document.getElementById('p-color').value = '';
             document.getElementById('p-size').value = '';
@@ -937,13 +969,13 @@
             document.getElementById('add-product-modal').style.display = 'flex';
         }
 
-        function calcAIBasedPrice() {
+        window.calcAIBasedPrice = function() {
             const cost = parseFloat(document.getElementById('p-cost').value) || 0;
             const suggested = cost > 0 ? (cost * 1.35).toFixed(2) + ' SAR' : '0 SAR';
             document.getElementById('p-suggested').value = suggested;
         }
 
-        function saveProduct() {
+        window.saveProduct = function() {
             let name = document.getElementById('p-name').value.trim();
             let color = document.getElementById('p-color').value.trim();
             let size = document.getElementById('p-size').value.trim();
@@ -956,19 +988,19 @@
             let imgUrl = "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=100";
             if(imgFile) imgUrl = URL.createObjectURL(imgFile);
 
-            inventoryList.push({ id: Date.now(), name, color, size, cost, suggestedPrice: suggestedPrice.toFixed(2), image: imgUrl });
+            window.inventoryList.push({ id: Date.now(), name, color, size, cost, suggestedPrice: suggestedPrice.toFixed(2), image: imgUrl });
             closeModal('add-product-modal');
-            showNotification("تمت إضافة المنتج وحفظه بنجاح");
-            refreshUI();
+            showNotification("تمت إضافة المنتج وحفظه سحابياً");
+            syncToCloud();
         }
 
-        function openAddAddonModal() {
+        window.openAddAddonModal = function() {
             document.getElementById('a-name').value = '';
             document.getElementById('a-price').value = '';
             document.getElementById('add-addon-modal').style.display = 'flex';
         }
 
-        function saveAddon() {
+        window.saveAddon = function() {
             let name = document.getElementById('a-name').value.trim();
             let price = parseFloat(document.getElementById('a-price').value) || 0;
             let imgFile = document.getElementById('a-img-file').files[0];
@@ -977,20 +1009,33 @@
             let imgUrl = "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=100";
             if(imgFile) imgUrl = URL.createObjectURL(imgFile);
 
-            addonsList.push({ id: Date.now(), name, price, image: imgUrl });
+            window.addonsList.push({ id: Date.now(), name, price, image: imgUrl });
             closeModal('add-addon-modal');
-            showNotification("تمت إضافة عنصر التغليف وحفظه");
-            refreshUI();
+            showNotification("تمت إضافة عنصر التغليف سحابياً");
+            syncToCloud();
         }
 
-        function deleteItem(id) { inventoryList = inventoryList.filter(x => x.id !== id); showNotification("تم الحذف والحفظ"); refreshUI(); }
-        function deleteAddonItem(id) { addonsList = addonsList.filter(x => x.id !== id); showNotification("تم الحذف والحفظ"); refreshUI(); }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function saveProfile() { 
-            calcAdminAge();
-            showNotification("تم حفظ بيانات الملف الشخصي وتاريخ الميلاد بنجاح"); 
+        window.deleteItem = function(id) { 
+            window.inventoryList = window.inventoryList.filter(x => x.id !== id); 
+            showNotification("تم الحذف والتحديث سحابياً"); 
+            syncToCloud(); 
         }
-        function logout() {
+
+        window.deleteAddonItem = function(id) { 
+            window.addonsList = window.addonsList.filter(x => x.id !== id); 
+            showNotification("تم الحذف والتحديث سحابياً"); 
+            syncToCloud(); 
+        }
+
+        window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; }
+        
+        window.saveProfile = function() { 
+            calcAdminAge();
+            showNotification("تم حفظ بيانات الملف الشخصي سحابياً"); 
+            syncToCloud();
+        }
+
+        window.logout = function() {
             document.getElementById('app-header').style.display = 'none';
             document.getElementById('floating-ai-widget').style.display = 'none';
             document.getElementById('floating-ai-popup').style.display = 'none';
@@ -999,32 +1044,12 @@
             document.getElementById('main-drawer').classList.remove('open');
             showNotification("تم تسجيل الخروج");
         }
+
         function showNotification(msg) {
             const n = document.getElementById('app-notification');
             n.innerText = msg; n.classList.add('show');
             setTimeout(() => n.classList.remove('show'), 3000);
         }
-    </script>
-
-    <!-- سكربت ربط Firebase السحابي للربط بين الكمبيوتر والجوال -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA1wnm1DWwn3z8K-dfwrjk__1-hwmTx-U",
-            authDomain: "neris-ba7c5.firebaseapp.com",
-            databaseURL: "https://neris-ba7c5-default-rtdb.firebaseio.com",
-            projectId: "neris-ba7c5",
-            storageBucket: "neris-ba7c5.appspot.com",
-            messagingSenderId: "852124332521",
-            appId: "1:852124332521:web:dc64e0396f721d05855b78",
-            measurementId: "G-WCFP5BMNMP"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        console.log("تم الاتصال بقاعدة بيانات Neris السحابية بنجاح!");
     </script>
 </body>
 </html>
